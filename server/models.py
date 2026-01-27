@@ -199,3 +199,22 @@ class OrderItem(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<OrderItem id={self.id} order_id={self.order_id} qty={self.quantity}>"
 
+
+class TableBooking(db.Model, SerializerMixin):
+    __tablename__ = "table_bookings"
+    serialize_rules = ("-customer.table_bookings", "-order.table_booking")
+    
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
+    table_number = db.Column(db.Integer, nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    booking_time = db.Column(db.DateTime, nullable=False)
+    duration_minutes = db.Column(db.Integer, default=60)
+    status = db.Column(db.String(20), nullable=False, default='pending')
+    is_available = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # relationships
+    customer = db.relationship("Customer", back_populates="table_bookings")
+    order = db.relationship("Order", back_populates="table_booking", uselist=False)
+ 
