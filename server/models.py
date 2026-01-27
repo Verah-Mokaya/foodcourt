@@ -168,3 +168,19 @@ class Order(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f"<Order id={self.id} status={self.status} total={self.total_amount}>"
+
+
+class OrderItem(db.Model, SerializerMixin):
+    __tablename__ = "order_items"
+    serialize_rules = ("-order.order_items", "-menu_item.order_items")
+    
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
+    menu_item_id = db.Column(db.Integer, db.ForeignKey("menu_items.id"), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    
+    # relationships
+    order = db.relationship("Order", back_populates="order_items")
+    menu_item = db.relationship("MenuItem", back_populates="order_items")
+ 
