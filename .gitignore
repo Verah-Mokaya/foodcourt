@@ -18,6 +18,7 @@ venv/
 instance/
 .mypy_cache/
 .pytest_cache/
+.venv 
 
 # =========================
 # Flask specific
