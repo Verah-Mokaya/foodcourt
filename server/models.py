@@ -26,3 +26,19 @@ class Customer(db.Model, SerializerMixin):
     # relationships
     orders = db.relationship("Order", back_populates="customer", cascade="all, delete-orphan")
     table_bookings = db.relationship("TableBooking", back_populates="customer", cascade="all, delete-orphan")
+    
+    # validations
+    @validates("email")
+    def validate_email(self, key, value):
+        if "@" not in value or "." not in value:
+            raise ValueError("Invalid email address")
+        return value.lower()
+    
+    @validates("first_name", "last_name")
+    def validate_name(self, key, value):
+        if not value or len(value.strip()) == 0:
+            raise ValueError(f"{key} cannot be empty")
+        return value.strip()
+    
+    def __repr__(self):
+        return f"<Customer id={self.id} email={self.email}>"
