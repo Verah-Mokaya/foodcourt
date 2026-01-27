@@ -182,4 +182,20 @@ class OrderItem(db.Model, SerializerMixin):
     # relationships
     order = db.relationship("Order", back_populates="order_items")
     menu_item = db.relationship("MenuItem", back_populates="order_items")
- 
+    
+    #validations
+    @validates("quantity")
+    def validate_quantity(self, key, value):
+        if value <= 0:
+            raise ValueError("quantity must be greater than zero")
+        return value
+    
+    @validates("price")
+    def validate_price(self, key, value):
+        if value <= 0:
+            raise ValueError("price must be greater than zero")
+        return value
+    
+    def __repr__(self):
+        return f"<OrderItem id={self.id} order_id={self.order_id} qty={self.quantity}>"
+
