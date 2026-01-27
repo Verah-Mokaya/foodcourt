@@ -105,3 +105,26 @@ class MenuItem(db.Model, SerializerMixin):
     outlet = db.relationship("Outlet", back_populates="menu_items")
     order_items = db.relationship("OrderItem", back_populates="menu_item", cascade="all, delete-orphan")
     
+    # validations
+    @validates("price")
+    def validate_price(self, key, value):
+        if value <= 0:
+            raise ValueError("Price must be greater than zero")
+        return value
+    
+    @validates("category")
+    def validate_category(self, key, value):
+        valid_categories = ["kids", "snack", "main", "appetizer", "dessert", "beverage", "other"]
+        if value.lower() not in valid_categories:
+            raise ValueError(f"category must be one of {valid_categories}")
+        return value.lower()
+    
+    @validates("item_name", "outlet_name")
+    def validate_name(self, key, value):
+        if not value or len(value.strip()) == 0:
+            raise ValueError(f"{key} cannot be empty")
+        return value.strip()
+    
+    def __repr__(self):
+        return f"<MenuItem id={self.id} name={self.item_name}>"
+
