@@ -1,0 +1,51 @@
+# =========================
+# General
+# =========================
+.DS_Store
+.env
+.env.*
+*.log
+
+# =========================
+# Python / Flask
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env/
+instance/
+.mypy_cache/
+.pytest_cache/
+
+# =========================
+# Flask specific
+# =========================
+migrations/
+*.sqlite3
+
+# =========================
+# Node / Next.js
+# =========================
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Build artifacts
+# =========================
+dist/
+build/
+
+# =========================
+# IDEs / Editors
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
