@@ -85,3 +85,23 @@ class Outlet(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<Outlet id={self.id} name={self.outlet_name}>"
 
+
+class MenuItem(db.Model, SerializerMixin):
+    __tablename__ = "menu_items"
+    serialize_rules = ("-outlet.menu_items", "-order_items.menu_item")
+    
+    id = db.Column(db.Integer, primary_key=True)
+    item_name = db.Column(db.String(100), nullable=False)
+    outlet_id = db.Column(db.Integer, db.ForeignKey("outlets.id"), nullable=False)
+    outlet_name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    image_url = db.Column(db.String(255))
+    is_available = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # relationships
+    outlet = db.relationship("Outlet", back_populates="menu_items")
+    order_items = db.relationship("OrderItem", back_populates="menu_item", cascade="all, delete-orphan")
+    
