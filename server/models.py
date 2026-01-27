@@ -218,4 +218,35 @@ class TableBooking(db.Model, SerializerMixin):
     # relationships
     customer = db.relationship("Customer", back_populates="table_bookings")
     order = db.relationship("Order", back_populates="table_booking", uselist=False)
- 
+    
+    #validations
+    @validates("table_number", "capacity")
+    def validate_positive_integer(self, key, value):
+        if value <= 0:
+            raise ValueError(f"{key} must be greater than zero")
+        return value
+    
+    @validates("status")
+    def validate_status(self, key, value):
+        valid_statuses = ["pending", "confirmed", "completed", "cancelled"]
+        if value.lower() not in valid_statuses:
+            raise ValueError(f"status must be one of {valid_statuses}")
+        return value.lower()
+    
+    @validates("booking_time")
+    def validate_booking_time(self, key, value):
+        time_difference = (value - datetime.utcnow()).total_seconds() / 60
+        if time_difference < 20:
+            raise ValueError("Booking must be at least 20 minutes in advance")
+        if time_difference > 1440: 
+            raise ValueError("Booking cannot be more than 24 hours in advance")
+        return value
+    
+    @validates("duration_minutes")
+    def validate_duration(self, key, value):
+        if value < 30 or value > 240: 
+            raise ValueError("duration_minutes must be between 30 and 240 minutes")
+        return value
+    
+    def __repr__(self):
+        return f"<TableBooking id={self.id} table={self.table_number} time={self.booking_time}>"
