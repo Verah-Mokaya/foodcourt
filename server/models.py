@@ -61,3 +61,26 @@ class Outlet(db.Model, SerializerMixin):
     # relationships
     menu_items = db.relationship("MenuItem", back_populates="outlet", cascade="all, delete-orphan")
     
+    # validations
+    @validates("email")
+    def validate_email(self, key, value):
+        if value and ("@" not in value or "." not in value):
+            raise ValueError("Invalid email address")
+        return value.lower() if value else None
+    
+    @validates("cuisine_type")
+    def validate_cuisine_type(self, key, value):
+        valid_cuisines = ["Ethiopian", "Nigerian", "Congolese", "Kenyan", "Indian", "Chinese", "Italian", "Mexican", "Other"]
+        if value not in valid_cuisines:
+            raise ValueError(f"cuisine_type must be one of {valid_cuisines}")
+        return value
+    
+    @validates("outlet_name", "owner_name")
+    def validate_name(self, key, value):
+        if not value or len(value.strip()) == 0:
+            raise ValueError(f"{key} cannot be empty")
+        return value.strip()
+    
+    def __repr__(self):
+        return f"<Outlet id={self.id} name={self.outlet_name}>"
+
