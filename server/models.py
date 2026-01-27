@@ -145,3 +145,25 @@ class Order(db.Model, SerializerMixin):
     order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
     table_booking = db.relationship("TableBooking", back_populates="order", uselist=False)
     
+    # validations
+    @validates("total_amount")
+    def validate_total_amount(self, key, value):
+        if value <= 0:
+            raise ValueError("total_amount must be greater than zero")
+        return value
+    
+    @validates("status")
+    def validate_status(self, key, value):
+        valid_statuses = ["pending", "confirmed", "preparing", "ready", "completed", "cancelled"]
+        if value.lower() not in valid_statuses:
+            raise ValueError(f"status must be one of {valid_statuses}")
+        return value.lower()
+    
+    @validates("estimated_time")
+    def validate_estimated_time(self, key, value):
+        if value is not None and value < 0:
+            raise ValueError("estimated_time cannot be negative")
+        return value
+    
+    def __repr__(self):
+        return f"<Order id={self.id} status={self.status} total={self.total_amount}>"
