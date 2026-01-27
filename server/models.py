@@ -128,3 +128,21 @@ class MenuItem(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<MenuItem id={self.id} name={self.item_name}>"
 
+
+class Order(db.Model, SerializerMixin):
+    __tablename__ = "orders"
+    serialize_rules = ("-customer.orders", "-order_items.order", "-table_booking.order")
+    
+    id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
+    table_id = db.Column(db.Integer, db.ForeignKey("table_bookings.id"))
+    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')  # 'pending', 'confirmed', 'preparing', 'ready', 'completed'
+    estimated_time = db.Column(db.Integer)  # in minutes
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # relationships
+    customer = db.relationship("Customer", back_populates="orders")
+    order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+    table_booking = db.relationship("TableBooking", back_populates="order", uselist=False)
+    
