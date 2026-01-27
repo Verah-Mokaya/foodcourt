@@ -42,3 +42,22 @@ class Customer(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f"<Customer id={self.id} email={self.email}>"
+
+
+class Outlet(db.Model, SerializerMixin):
+    __tablename__ = "outlets"
+    serialize_rules = ("-menu_items.outlet",)
+    
+    id = db.Column(db.Integer, primary_key=True)
+    owner_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(255))
+    outlet_name = db.Column(db.String(100), nullable=False)
+    cuisine_type = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # relationships
+    menu_items = db.relationship("MenuItem", back_populates="outlet", cascade="all, delete-orphan")
+    
