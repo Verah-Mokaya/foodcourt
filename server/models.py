@@ -38,4 +38,3 @@ class Customer(db.Model, SerializerMixin):
     # relationships
     orders = db.relationship("Order", back_populates="customer", cascade="all, delete-orphan")
     table_bookings = db.relationship("TableBooking", back_populates="customer", cascade="all, delete-orphan")
->>>>>>> 4deab9d (creates customer class, adds its relationships)
