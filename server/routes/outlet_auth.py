@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
-from app import db, bcrypt
 from models import Outlet
+from extensions import db, bcrypt
+from flask_jwt_extended import create_access_token
 
 outlet_auth = Blueprint('outlet_auth', __name__)
 
-@outlet_auth.route('/api/outlet/register', methods=['POST'])
+@outlet_auth.route('/api/outlets/register', methods=['POST'])
 def register_outlet():
     data = request.get_json()
 
@@ -30,14 +31,22 @@ def register_outlet():
                     }), 201
     
 
-@outlet_auth.route('/api/outlet/login', methods=['POST'])
+@outlet_auth.route('/api/outletslogin', methods=['POST'])
 def login_outlet():
     data = request.get_json()
     outlet = Outlet.query.filter_by(email=data['email']).first()
 
-    if outlet and bcrypt.check_password_hash(outlet.password, data['password']):
-        return jsonify({'message': 'Login successful',
-                        'outlet_id': outlet.id
-                        }), 200
-    else:
-        return jsonify({'message': 'Invalid email or password'}), 401
+    if not outlet.is_active:
+        return jsonify({'message': 'Invalid credentials'}), 401
+
+    token = create_access_token(identity=outlet.id)
+
+    return jsonify({
+        "token": token,
+        "new_outlet": {
+            "id": outlet.id,
+            "name": outlet.name,
+            "email": outlet.email,
+            "cuisine": outlet.cuisine,
+        }
+    }), 200
