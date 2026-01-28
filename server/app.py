@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 import os
 
 from routes.outlet_auth import outlet_auth
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://foodcourt_user:strongpassword@localhost:5432/foodcourt_db')
