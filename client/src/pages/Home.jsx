@@ -1,34 +1,24 @@
-'use client';
-import React, { useEffect, useState } from "react";
-import { MenuItem } from "../components/MenuItem";
-import { fetchMenu } from "../services/api.jsx";
+import React from "react";
+import MenuGrid from "../components/menu/MenuGrid";
 
 export default function Home() {
-  const [menu, setMenu] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadMenu() {
-      try {
-        const data = await fetchMenu();
-        setMenu(data);
-      } catch (error) {
-        console.error("Failed to load menu:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadMenu();
-  }, []);
-
-  if (loading) return <p className="text-center mt-10">Loading menu...</p>;
-  if (!menu.length) return <p className="text-center mt-10">No menu items available</p>;
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-      {menu.map(item => (
-        <MenuItem key={item.id} {...item} />
-      ))}
+    <div className="min-h-screen bg-gray-100">
+      {/* Hero section */}
+      <div className="bg-gradient-to-r from-yellow-200 via-red-200 to-pink-200 py-20 text-center">
+        <h1 className="text-4xl font-extrabold text-gray-800 mb-4">
+          Welcome to FoodCourt
+        </h1>
+        <p className="text-gray-700 text-lg">
+          Discover delicious meals and order online!
+        </p>
+      </div>
+
+      {/* Menu grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Our Menu</h2>
+        <MenuGrid />
+      </div>
     </div>
   );
 }
