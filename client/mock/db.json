@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "test@user.com",
+      "password": "password123",
+      "name": "Test User"
+    }
+  ],
+  "menu": [
+    {
+      "id": 1,
+      "name": "Cheese Burger",
+      "description": "Juicy grilled beef patty with cheese",
+      "price": 8.99,
+      "image": "/images/burger.jpg",
+      "outlet": "Main Kitchen"
+    }
+  ],
+  "cart": [],
+  "orders": [
+    {
+      "id": 101,
+      "userId": 1,
+      "items": [],
+      "status": "pending",
+      "total": 0,
+      "createdAt": "2026-01-20"
+    }
+  ],
+  "bookings": []
+}
