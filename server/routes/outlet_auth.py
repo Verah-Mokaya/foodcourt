@@ -11,7 +11,10 @@ def register_outlet():
     if Outlet.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'Outlet already exists'}), 400
     
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+    hashed_password = bcrypt.generate_password_hash(
+        data['password']
+        ).decode('utf-8')
+    
     new_outlet = Outlet(
         name=data['name'],
         email=data['email'],
@@ -19,3 +22,10 @@ def register_outlet():
         cuisine=data.get('cuisine'),
         is_active=True
     )   
+    db.session.add(new_outlet)
+    db.session.commit() 
+
+    return jsonify({'message': 'Outlet registered successfully',
+                    "outlet_id": new_outlet.id
+                    }), 201
+    
