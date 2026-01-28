@@ -1,33 +1,15 @@
-import React from "react";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Sidebar = () => {
-  return (
-    <div className="bg-gray-100 dark:bg-gray-800 h-screen w-64 p-4 flex flex-col">
-      <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Dashboard</h2>
-      <ul className="flex flex-col space-y-2">
-        <li>
-          <a href="#" className="block py-2 px-3 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-            Orders
-          </a>
-        </li>
-        <li>
-          <a href="#" className="block py-2 px-3 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-            Menu Items
-          </a>
-        </li>
-        <li>
-          <a href="#" className="block py-2 px-3 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-            Table Bookings
-          </a>
-        </li>
-        <li>
-          <a href="#" className="block py-2 px-3 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
-            Settings
-          </a>
-        </li>
-      </ul>
-    </div>
-  );
-};
 
-export default Sidebar;
+export default function Sidebar() {
+return (
+<aside style={{ width: '250px', padding: '20px', background: '#f5f5f5', borderRight: '1px solid #ccc' }}>
+<h3>Dashboard Menu</h3>
+<ul style={{ listStyle: 'none', padding: 0 }}>
+<li><Link to='/dashboard'>Dashboard Home</Link></li>
+<li><Link to='/dashboard/outlet-register'>Outlet Registration</Link></li>
+</ul>
+</aside>
+);
+}
