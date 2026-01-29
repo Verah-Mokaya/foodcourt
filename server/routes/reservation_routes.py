@@ -93,4 +93,33 @@ def get_my_reservations():
     except Exception as e:
         return {"error": str(e)}, 500
     
-    
+    # update reservation
+@reservation_bp.route("/<int:reservation_id>", methods=["PUT"])
+@jwt_required()
+def update_reservation(reservation_id):
+    try:
+        data=request.get_json()
+        reservation = Reservation.query.get(reservation_id)
+        
+        if not reservation:
+            return {"error": "Reservation not found"}, 404
+        
+        allowed_statuses = ["pending", "confirmed", "canceled", "completed"]
+
+        if "status" not in data or data["status"] not in allowed_statuses:
+            return {"error": "Invalid or missing status"}, 400
+        
+        reservation.status = data["status"]
+
+        # relsease table if reservation is canceled or completed
+        if data["status"] in ["canceled", "completed"]:
+            table = FoodCourtTable.query.get(reservation.table_id)
+            table.is_available = True
+
+        db.session.commit()
+
+        return {"message": "Reservation updated successfully"}, 200
+   
+    except Exception as e:
+        db.session.rollback()
+        return {"error": str(e)}, 500
