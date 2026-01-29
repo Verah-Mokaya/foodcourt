@@ -5,12 +5,12 @@ from flask_cors import CORS
 from models import db, bcrypt
 
 app = Flask(__name__)
-# Configuration
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foodcourt.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'super-secret-key'
 
-# Initialize extensions
+
 db.init_app(app)
 bcrypt.init_app(app)
 Migrate(app, db)
