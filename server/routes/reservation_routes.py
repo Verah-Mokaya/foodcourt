@@ -67,3 +67,30 @@ def get_reservation(reservation_id):
     
     except Exception as e:
         return {"error": str(e)}, 500
+    
+# get my reservations(customer)
+@reservation_bp.route("/my_reservations", methods=["GET"])
+@jwt_required()
+def get_my_reservations():
+    try:
+        customer_id = get_jwt_identity()["customer_id"]
+        reservations = Reservation.query.filter_by(customer_id=customer_id).all()
+        
+        reservations_list = [
+            {
+                "id": res.id,
+                "table_id": res.table_id,
+                "reservation_time": res.reservation_time.isoformat(),
+                "number_of_guests": res.number_of_guests,
+                "status": res.status,
+                "created_at": res.created_at.isoformat()
+            }
+            for res in reservations
+        ]
+        
+        return {"reservations": reservations_list}, 200
+    
+    except Exception as e:
+        return {"error": str(e)}, 500
+    
+    
