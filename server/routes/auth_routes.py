@@ -139,3 +139,9 @@ def reset_password():
     db.session.commit()
 
     return jsonify({"message": "Password reset successful"}), 200
+
+# logout
+@auth_bp.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    return jsonify({"message": "Logout successful"}), 200
