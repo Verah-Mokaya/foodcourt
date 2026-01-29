@@ -123,3 +123,27 @@ def update_reservation(reservation_id):
     except Exception as e:
         db.session.rollback()
         return {"error": str(e)}, 500
+
+# cancel reservation
+@reservation_bp.route("/<int:reservation_id>/cancel", methods=["POST"])
+@jwt_required()
+def cancel_reservation(reservation_id):
+    try:
+        reservation = Reservation.query.get(reservation_id)
+        
+        if not reservation:
+            return {"error": "Reservation not found"}, 404
+        
+        reservation.status = "canceled"
+        
+        # release table
+        table = FoodCourtTable.query.get(reservation.table_id)
+        table.is_available = True
+        
+        db.session.commit()
+        
+        return {"message": "Reservation canceled successfully"}, 200
+    
+    except Exception as e:
+        db.session.rollback()
+        return {"error": str(e)}, 500
