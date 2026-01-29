@@ -106,4 +106,9 @@ def outlet_login():
         "message": "Login successful",
         "access_token": access_token
     }), 200
-    
+
+       # get current user info
+@auth_bp.route("/me", methods=["GET"])
+@jwt_required()
+def get_me():
+    return get_jwt_identity(), 200
