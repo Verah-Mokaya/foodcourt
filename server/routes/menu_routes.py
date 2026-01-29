@@ -71,3 +71,41 @@ def get_menu_item(item_id):
 
     except Exception as e:
         return {'error': str(e)}, 500
+    
+# create menu item
+@menu_bp.route('/item', methods=['POST'])
+@jwt_required()
+def create_menu_item():
+    try:
+        data = request.get_json()
+        required_fields = ['outlet_id', 'item_name', 'price', 'category']
+
+        for field in required_fields:
+            if field not in data:
+                return {'error': f'Missing required field: {field}'}, 400
+
+        outlet = Outlet.query.get(data['outlet_id'])
+        if not outlet:
+            return {'error': 'Outlet not found'}, 404
+
+        new_item = MenuItem(
+            outlet_id=data['outlet_id'],
+            item_name=data['item_name'],
+            description=data.get('description'),
+            category=data['category'],
+            price=data['price'],
+            image_url=data.get('image_url'),
+            is_available=data.get('is_available', True)
+        )
+
+        db.session.add(new_item)
+        db.session.commit()
+
+        return {
+            'message': 'Menu item created successfully',
+            'item_id': new_item.id
+        }, 201
+
+    except Exception as e:
+        db.session.rollback()
+        return {'error': str(e)}, 500
