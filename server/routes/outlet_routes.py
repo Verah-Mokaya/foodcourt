@@ -1,7 +1,7 @@
 from flask import Blueprint, app, jsonify, request
 from routes.outlet_routes import outlet_bp
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from models.outlet import Outlet,
+from models import Outlet,
 from utils.auth import outlet_only
 from extensions import db
 
@@ -15,6 +15,7 @@ def outlet_only():
         return False
     return True
 
+# Outlet Routes
 @outlet_bp.route("/<int:outlet_id>", methods=["GET"])
 @jwt_required()
 def get_outlet(outlet_id):
@@ -73,3 +74,15 @@ def toggle_outlet_status(outlet_id):
         "message": "Outlet status updated",
         "is_active": outlet.is_active
     })
+
+@outlet_bp.route("", methods=["GET"])
+def list_outlets():
+    outlets = Outlet.query.filter_by(is_active=True).all()
+
+    return jsonify([
+        {
+            "id": o.id,
+            "name": o.name,
+            "cuisine_type": o.cuisine_type
+        } for o in outlets
+    ])
