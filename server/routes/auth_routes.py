@@ -52,3 +52,37 @@ def customer_login():
         "message": "Login successful",
         "access_token": access_token
     }), 200
+
+# outlet Registration
+@auth_bp.route('/outlet/register', methods=['POST'])
+def outlet_register ():
+    data = request.get_json()
+    outlet_name = data.get('outlet_name')
+    owner_name = data.get('owner_name')
+    email = data.get('email')
+    password = data.get('password')
+    cuisine_type = data.get('cuisine_type')
+
+    if not all([outlet_name, owner_name, email, password, cuisine_type]):
+        return jsonify({"error": "All fields are required"}), 400
+    
+    if Outlet.query.filter_by(email=email).first():
+        return jsonify({"error": "Outlet with this email already exists"}), 409
+    
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    new_outlet = Outlet(
+        outlet_name=outlet_name,
+        owner_name=owner_name,
+        email=email,
+        password=hashed_password,
+        cuisine_type=cuisine_type,
+        description=data.get('description'),
+        is_active=True,)
+    
+    db.session.add(new_outlet)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Outlet registered successfully",
+        "outlet_id": new_outlet.id
+    }), 201
