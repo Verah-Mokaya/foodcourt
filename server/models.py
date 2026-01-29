@@ -31,17 +31,15 @@ class Customer(db.Model, SerializerMixin):
     # relationships
     reservations = db.relationship("Reservation", back_populates="customer", cascade="all, delete-orphan")
     
-    @hybrid_property
-    def password_hash(self):
-        return self.password
-
-    @password_hash.setter
-    def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
-        self.password = password_hash.decode('utf-8')
-
+    # password hashing
     def authenticate(self, password):
         return bcrypt.check_password_hash(self.password, password.encode('utf-8'))
+    
+    @validates("password")
+    def validate_password(self, key, password):
+        if not password:
+             return None
+        return bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
 
     # validations
     @validates("email")
@@ -83,14 +81,12 @@ class Outlet(db.Model, SerializerMixin):
     # relationships
     menu_items = db.relationship("MenuItem", back_populates="outlet", cascade="all, delete-orphan")
 
-    @hybrid_property
-    def password_hash(self):
-        return self.password
-
-    @password_hash.setter
-    def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
-        self.password = password_hash.decode('utf-8')
+    # password hashing
+    @validates("password")
+    def validate_password(self, key, password):
+        if not password:
+             return None
+        return bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
 
     def authenticate(self, password):
         return bcrypt.check_password_hash(self.password, password.encode('utf-8'))
