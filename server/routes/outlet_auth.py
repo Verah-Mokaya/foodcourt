@@ -8,7 +8,7 @@ outlet_auth = Blueprint('outlet_auth', __name__)
 # Outlet Registration Route 
 @outlet_auth.route('/api/outlets/register', methods=['POST'])
 def register_outlet():
-    data = request.get_json(FORCE=True)
+    data = request.get_json()
 
     if Outlet.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'Outlet already exists'}), 400
@@ -37,7 +37,7 @@ def register_outlet():
 # Outlet Login Route
 @outlet_auth.route('/api/outlets/login', methods=['POST'])
 def login_outlet():
-    data = request.get_json(force=True)
+    data = request.get_json()
 
     outlet = Outlet.query.filter_by(email=data['email']).first()
 
