@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_cors import CORS
 from models import db, bcrypt
+from routes.auth import Register, Login
 
 app = Flask(__name__)
 
@@ -17,6 +18,8 @@ Migrate(app, db)
 CORS(app)
 
 api = Api(app)
+api.add_resource(Register, '/register')
+api.add_resource(Login, '/login')
 
 @app.route('/')
 def home():
