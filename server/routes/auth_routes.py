@@ -112,3 +112,30 @@ def outlet_login():
 @jwt_required()
 def get_me():
     return get_jwt_identity(), 200
+
+# Password Reset (for both Customer and Outlet)
+@auth_bp.route('/reset_password', methods=['POST'])
+def reset_password():
+    data = request.get_json()
+    email = data.get('email')
+    new_password = data.get('new_password')
+
+    if not email or not new_password:
+        return jsonify({"error": "Email and new password are required"}), 400
+
+    customer = Customer.query.filter_by(email=email).first()
+    outlet = Outlet.query.filter_by(email=email).first()
+
+    if not customer and not outlet:
+        return jsonify({"error": "No account found with this email"}), 404
+
+    hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+
+    if customer:
+        customer.password = hashed_password
+    else:
+        outlet.password = hashed_password
+
+    db.session.commit()
+
+    return jsonify({"message": "Password reset successful"}), 200
