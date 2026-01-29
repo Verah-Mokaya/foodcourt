@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
-from app.extensions import db, bcrypt
-from app.models.customer import Customer
+from server.extensions import db, bcrypt
+from server.models.customer import Customer
 from flask_jwt_extended import create_access_token
-from app.models.outlet import Outlet
+from server.models.outlet import Outlet
+from datetime import datetime
 
-auth_bp = Blueprint('auth', __name__)
+
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @auth_bp.route('/customer/register', methods=['POST'])
 def customer_register ():
