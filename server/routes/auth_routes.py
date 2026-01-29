@@ -86,3 +86,24 @@ def outlet_register ():
         "message": "Outlet registered successfully",
         "outlet_id": new_outlet.id
     }), 201
+
+# Outlet Login
+@auth_bp.route('/outlet/login', methods=['POST'])
+def outlet_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    outlet = Outlet.query.filter_by(email=email).first()
+    if not outlet or not bcrypt.check_password_hash(outlet.password, password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    access_token = create_access_token(identity=outlet.id)
+    return jsonify({
+        "message": "Login successful",
+        "access_token": access_token
+    }), 200
+    
