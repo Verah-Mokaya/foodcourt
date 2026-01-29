@@ -54,3 +54,22 @@ def update_outlet(outlet_id):
     db.session.commit()
 
     return jsonify({"message": "Outlet updated successfully"})
+
+@outlet_bp.route("/<int:outlet_id>/status", methods=["PUT"])
+@jwt_required()
+def toggle_outlet_status(outlet_id):
+    if not outlet_only():
+        return jsonify({"error": "Unauthorized"}), 403
+
+    if outlet_id != get_jwt_identity():
+        return jsonify({"error": "Forbidden"}), 403
+
+    outlet = Outlet.query.get_or_404(outlet_id)
+    outlet.is_active = not outlet.is_active
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Outlet status updated",
+        "is_active": outlet.is_active
+    })
