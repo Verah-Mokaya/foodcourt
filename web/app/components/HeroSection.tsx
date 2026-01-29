@@ -23,7 +23,7 @@ const slides = [
     }
 ];
 
-export default function Hero() {
+export default function HeroSection() {
     const [current, setCurrent] = useState(0);
 
     useEffect(() => {
