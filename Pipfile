@@ -17,7 +17,7 @@ sqlalchemy-serializer = "*"
 flask-mail = "*"
 flask-cors = "*"
 flask-bcrypt = "*"
-jwt = "*"
+pyjwt = "*"
 
 [dev-packages]
 

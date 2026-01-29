@@ -67,6 +67,22 @@ def seed_data():
             customers.append(customer)
         db.session.add_all(customers)
         db.session.commit()
+        
+        # Verify hashing
+        print("Verifying hashing...")
+        c = Customer.query.first()
+        print(f"Customer password in DB: {c.password}")
+        if c.password == "password123":
+             print("ERROR: Password is not hashed!")
+        else:
+             print("SUCCESS: Password is hashed.")
+             
+        o = Outlet.query.first()
+        print(f"Outlet password in DB: {o.password}")
+        if o.password == "password123":
+             print("ERROR: Outlet password is not hashed!")
+        else:
+             print("SUCCESS: Outlet password is hashed.")
 
         print("Seeding completed successfully!")
 
