@@ -6,9 +6,9 @@ from flask_jwt_extended import jwt_required
 
 menu_bp = Blueprint('menu', __name__, url_prefix='/menu')
 
+# Get Menu Items for an Outlet with optional filters
 @menu_bp.route('/<int:outlet_id>', methods=['GET'])
 def get_outlet_menu(outlet_id):
-    """Get menu items for an outlet"""
     try:
         outlet = Outlet.query.get(outlet_id)
         if not outlet:
@@ -40,6 +40,7 @@ def get_outlet_menu(outlet_id):
                     'price': float(item.price),
                     'image_url': item.image_url,
                     'is_available': item.is_available
+                    'created_at': item.created_at.isoformat(),
                 }
                 for item in items
             ]
