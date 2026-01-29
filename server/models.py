@@ -2,6 +2,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.ext.hybrid import hybrid_property
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 from datetime import datetime
 import re
 
@@ -18,7 +22,7 @@ class Customer(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20))
@@ -27,6 +31,18 @@ class Customer(db.Model, SerializerMixin):
     # relationships
     reservations = db.relationship("Reservation", back_populates="customer", cascade="all, delete-orphan")
     
+    @hybrid_property
+    def password_hash(self):
+        return self.password
+
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+        self.password = password_hash.decode('utf-8')
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self.password, password.encode('utf-8'))
+
     # validations
     @validates("email")
     def validate_email(self, key, value):
@@ -57,7 +73,7 @@ class Outlet(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     owner_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120))
-    password = db.Column(db.String(255))
+    password = db.Column(db.String)
     outlet_name = db.Column(db.String(100), nullable=False)
     cuisine_type = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text)
@@ -66,6 +82,18 @@ class Outlet(db.Model, SerializerMixin):
     
     # relationships
     menu_items = db.relationship("MenuItem", back_populates="outlet", cascade="all, delete-orphan")
+
+    @hybrid_property
+    def password_hash(self):
+        return self.password
+
+    @password_hash.setter
+    def password_hash(self, password):
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+        self.password = password_hash.decode('utf-8')
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self.password, password.encode('utf-8'))
     
     # validations
     @validates("email")
