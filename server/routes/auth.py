@@ -8,8 +8,7 @@ from flask import current_app
 class Register(Resource):
     def post(self):
         data = request.get_json()
-        
-        # Basic validation
+
         if not data or not data.get('email') or not data.get('password'):
             return make_response(jsonify({"error": "Missing required fields"}), 400)
             
@@ -28,7 +27,7 @@ class Register(Resource):
                 owner_name=data['owner_name'],
                 outlet_name=data['outlet_name'],
                 email=data['email'],
-                password=data['password'], # Hashed by model validator
+                password=data['password'], 
                 cuisine_type=data['cuisine_type'],
                 description=data.get('description'),
                 is_active=True
@@ -59,7 +58,7 @@ class Register(Resource):
                 first_name=data['first_name'],
                 last_name=data['last_name'],
                 email=data['email'],
-                password=data['password'], # Hashed by model validator
+                password=data['password'],
                 phone_number=data.get('phone_number')
             )
             
@@ -107,6 +106,4 @@ class Login(Resource):
 
 class Logout(Resource):
     def delete(self):
-        # Since we are using stateless JWT, we can't truly invalidate the token server-side 
-        # without a blocklist database. For MVP, we just return success and client deletes token.
         return make_response(jsonify({"message": "Logged out successfully"}), 200)
