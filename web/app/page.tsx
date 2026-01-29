@@ -1,9 +1,9 @@
 "use client";
 
-import Navbar from "@/components/layout/Navbar";
-import Hero from "@/features/Home/Hero";
+import Navbar from "@/app/components/layout/Navbar";
+import Hero from "@/app/components/HeroSection";
 import BestSellers from "@/features/Home/BestSellers";
-import Footer from "@/components/layout/Footer";
+import Footer from "@/app/components/layout/Footer";
 import { ArrowRight, Star, Clock, Truck } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
