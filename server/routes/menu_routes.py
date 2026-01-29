@@ -132,3 +132,20 @@ def update_menu_item(item_id):
     except Exception as e:
         db.session.rollback()
         return {'error': str(e)}, 500
+    
+# get category list for an outlet
+@menu_bp.route('/categories/<int:outlet_id>', methods=['GET'])
+def get_menu_categories(outlet_id):
+    try:
+        outlet = Outlet.query.get(outlet_id)
+        if not outlet:
+            return {'error': 'Outlet not found'}, 404
+        
+        categories = db.session.query(MenuItem.category).filter_by(outlet_id=outlet_id).distinct().all()
+        category_list = [category[0] for category in categories]
+
+        return {
+            'outlet_id': outlet_id,
+            'outlet_name': outlet.outlet_name,
+            'categories': category_list
+        }, 200
