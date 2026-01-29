@@ -8,6 +8,7 @@ from datetime import datetime
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+# Customer Registration
 @auth_bp.route('/customer/register', methods=['POST'])
 def customer_register ():
     data = request.get_json()
@@ -31,3 +32,23 @@ def customer_register ():
         "message": "Customer registered successfully",
         "access_token": access_token
     }), 201
+
+# Customer Login
+@auth_bp.route('/customer/login', methods=['POST'])
+def customer_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    customer = Customer.query.filter_by(email=email).first()
+    if not customer or not bcrypt.check_password_hash(customer.password, password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    access_token = create_access_token(identity=customer.id)
+    return jsonify({
+        "message": "Login successful",
+        "access_token": access_token
+    }), 200
