@@ -45,3 +45,25 @@ def create_reservation():
     except Exception as e:
         db.session.rollback()
         return {"error": str(e)}, 500
+    
+# get single reservation
+@reservation_bp.route("/<int:reservation_id>", methods=["GET"])
+@jwt_required()
+def get_reservation(reservation_id):
+    try:
+        reservation = Reservation.query.get(reservation_id)
+        if not reservation:
+            return {"error": "Reservation not found"}, 404
+        
+        return {
+            "id": reservation.id,
+            "customer_id": reservation.customer_id,
+            "table_id": reservation.table_id,
+            "reservation_time": reservation.reservation_time.isoformat(),
+            "number_of_guests": reservation.number_of_guests,
+            "status": reservation.status,
+            "created_at": reservation.created_at.isoformat()
+        }, 200
+    
+    except Exception as e:
+        return {"error": str(e)}, 500
