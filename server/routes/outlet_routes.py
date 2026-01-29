@@ -3,6 +3,7 @@ from routes.outlet_routes import outlet_bp
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from models.outlet import Outlet,
 from utils.auth import outlet_only
+from extensions import db
 
 outlet_bp=Blueprint('outlet', __name__)
 
@@ -32,3 +33,24 @@ def get_outlet(outlet_id):
         "cuisine_type": outlet.cuisine_type,
         "is_active": outlet.is_active
     })
+
+
+@outlet_bp.route("/<int:outlet_id>", methods=["PUT"])
+@jwt_required()
+def update_outlet(outlet_id):
+    if not outlet_only():
+        return jsonify({"error": "Unauthorized"}), 403
+
+    if outlet_id != get_jwt_identity():
+        return jsonify({"error": "Forbidden"}), 403
+
+    outlet = Outlet.query.get_or_404(outlet_id)
+    data = request.get_json()
+
+    outlet.name = data.get("name", outlet.name)
+    outlet.cuisine_type = data.get("cuisine_type", outlet.cuisine_type)
+    outlet.email = data.get("email", outlet.email)
+
+    db.session.commit()
+
+    return jsonify({"message": "Outlet updated successfully"})
