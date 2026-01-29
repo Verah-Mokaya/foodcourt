@@ -109,3 +109,26 @@ def create_menu_item():
     except Exception as e:
         db.session.rollback()
         return {'error': str(e)}, 500
+    
+# update menu item
+@menu_bp.route('/item/<int:item_id>', methods=['PUT'])
+@jwt_required()
+def update_menu_item(item_id):
+    try:
+        item = MenuItem.query.get(item_id)
+        if not item:
+            return {'error': 'Menu item not found'}, 404
+
+        data = request.get_json()
+
+        for key in ['item_name', 'description', 'category', 'price', 'image_url', 'is_available']:
+            if key in data:
+                setattr(item, key, data[key])
+
+        db.session.commit()
+
+        return {'message': 'Menu item updated successfully'}, 200
+
+    except Exception as e:
+        db.session.rollback()
+        return {'error': str(e)}, 500
