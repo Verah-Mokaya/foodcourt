@@ -1,3 +1,5 @@
+
+
 @menu_bp.route('/<int:outlet_id>', methods=['GET'])
 def get_outlet_menu(outlet_id):
     """Get menu items for an outlet"""
