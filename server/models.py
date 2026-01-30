@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.orm import validates
@@ -211,20 +209,3 @@ class OrderItem(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f"<OrderItem id={self.id} order_id={self.order_id} qty={self.quantity}>"
-=======
-=======
->>>>>>> feature/database-infrastructure
-from app import db
-
-class Outlet(db.Model):
-    __tablename__ = 'outlets'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    cuisine = db.Column(db.String(80))
-    is_active = db.Column(db.Boolean, default=True)
-
-<<<<<<< HEAD
->>>>>>> feature/database-infrastructure
-=======
->>>>>>> feature/database-infrastructure
