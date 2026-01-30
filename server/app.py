@@ -4,6 +4,7 @@ from flask_restful import Api
 from flask_cors import CORS
 from models import db, bcrypt
 from routes.auth import Register, Login
+from routes.analytics_routes import analytics_bp
 
 app = Flask(__name__)
 
@@ -20,6 +21,9 @@ CORS(app)
 api = Api(app)
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
+
+# Register blueprints
+app.register_blueprint(analytics_bp, url_prefix='/analytics')
 
 @app.route('/')
 def home():
