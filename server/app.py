@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask
-
+from models import *
 from extensions import db, migrate, jwt, bcrypt
 
 from routes.menu_routes import menu_bp
@@ -32,7 +32,6 @@ def create_app():
     bcrypt.init_app(app)
 
     #  register blueprints
-    import models
     app.register_blueprint(menu_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(reservation_bp)
