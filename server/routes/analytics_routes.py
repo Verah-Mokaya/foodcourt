@@ -102,3 +102,30 @@ def get_popular_items():
     
     return jsonify({'popular_items': items_list}), 200
 
+
+@analytics_bp.route('/revenue/daily', methods=['GET'])
+@jwt_required()
+def get_daily_revenue():
+    outlet_id = get_jwt_identity()
+    
+    # Get revenue for last 7 days
+    daily_revenue = []
+    for i in range(6, -1, -1):
+        day_start = (datetime.utcnow() - timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
+        day_end = day_start + timedelta(days=1)
+        
+        revenue = db.session.query(func.sum(OrderItem.price * OrderItem.quantity))\
+            .join(MenuItem, OrderItem.menu_item_id == MenuItem.id)\
+            .join(Order, OrderItem.order_id == Order.id)\
+            .filter(MenuItem.outlet_id == outlet_id)\
+            .filter(Order.created_at >= day_start)\
+            .filter(Order.created_at < day_end)\
+            .scalar() or 0
+        
+        daily_revenue.append({
+            'date': day_start.strftime('%Y-%m-%d'),
+            'revenue': float(revenue)
+        })
+    
+    return jsonify({'daily_revenue': daily_revenue}), 200
+
