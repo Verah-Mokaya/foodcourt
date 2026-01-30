@@ -129,3 +129,40 @@ def get_daily_revenue():
     
     return jsonify({'daily_revenue': daily_revenue}), 200
 
+
+@analytics_bp.route('/revenue/weekly', methods=['GET'])
+@jwt_required()
+def get_weekly_revenue():
+    outlet_id = get_jwt_identity()
+    
+    # Current week (last 7 days)
+    current_week_start = datetime.utcnow() - timedelta(days=7)
+    current_week_revenue = db.session.query(func.sum(OrderItem.price * OrderItem.quantity))\
+        .join(MenuItem, OrderItem.menu_item_id == MenuItem.id)\
+        .join(Order, OrderItem.order_id == Order.id)\
+        .filter(MenuItem.outlet_id == outlet_id)\
+        .filter(Order.created_at >= current_week_start)\
+        .scalar() or 0
+    
+    # Previous week (8-14 days ago)
+    previous_week_start = datetime.utcnow() - timedelta(days=14)
+    previous_week_end = datetime.utcnow() - timedelta(days=7)
+    previous_week_revenue = db.session.query(func.sum(OrderItem.price * OrderItem.quantity))\
+        .join(MenuItem, OrderItem.menu_item_id == MenuItem.id)\
+        .join(Order, OrderItem.order_id == Order.id)\
+        .filter(MenuItem.outlet_id == outlet_id)\
+        .filter(Order.created_at >= previous_week_start)\
+        .filter(Order.created_at < previous_week_end)\
+        .scalar() or 0
+    
+    # Calculate growth
+    if previous_week_revenue > 0:
+        growth_percentage = ((current_week_revenue - previous_week_revenue) / previous_week_revenue) * 100
+    else:
+        growth_percentage = 0 if current_week_revenue == 0 else 100
+    
+    return jsonify({
+        'current_week_revenue': float(current_week_revenue),
+        'previous_week_revenue': float(previous_week_revenue),
+        'growth_percentage': round(float(growth_percentage), 2)
+    }), 200
