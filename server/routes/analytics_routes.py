@@ -72,3 +72,33 @@ def get_order_status_breakdown():
         'cancelled': breakdown.get('cancelled', 0)
     }), 200
 
+
+@analytics_bp.route('/popular-items', methods=['GET'])
+@jwt_required()
+def get_popular_items():
+    outlet_id = get_jwt_identity()
+    
+    # Get top 10 menu items by quantity sold
+    popular_items = db.session.query(
+        MenuItem.item_name,
+        func.sum(OrderItem.quantity).label('total_quantity'),
+        func.sum(OrderItem.price * OrderItem.quantity).label('total_revenue')
+    )\
+        .join(OrderItem, MenuItem.id == OrderItem.menu_item_id)\
+        .filter(MenuItem.outlet_id == outlet_id)\
+        .group_by(MenuItem.id, MenuItem.item_name)\
+        .order_by(func.sum(OrderItem.quantity).desc())\
+        .limit(10)\
+        .all()
+    
+    items_list = [
+        {
+            'item_name': item.item_name,
+            'total_quantity': int(item.total_quantity),
+            'total_revenue': float(item.total_revenue)
+        }
+        for item in popular_items
+    ]
+    
+    return jsonify({'popular_items': items_list}), 200
+
