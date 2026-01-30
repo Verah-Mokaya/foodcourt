@@ -1,5 +1,6 @@
 import sys
 import os
+from flask_cors import CORS
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,6 +24,7 @@ class Config:
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(Config)
 
     #  init extensions
