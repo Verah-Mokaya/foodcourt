@@ -39,7 +39,7 @@ def get_outlet_menu(outlet_id):
                     'category': item.category,
                     'price': float(item.price),
                     'image_url': item.image_url,
-                    'is_available': item.is_available
+                    'is_available': item.is_available,
                     'created_at': item.created_at.isoformat(),
                 }
                 for item in items
