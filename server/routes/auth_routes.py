@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
-from server.extensions import db, bcrypt
-from server.models.customer import Customer
+from extensions import db, bcrypt
 from flask_jwt_extended import create_access_token
-from server.models.outlet import Outlet
+from models import Outlet, Customer
 from datetime import datetime
 
 
