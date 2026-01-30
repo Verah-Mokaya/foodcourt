@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
-from server.extensions import db
-from server.models.menu_item import MenuItem
-from server.models.outlet import Outlet
+from extensions import db
+from models import MenuItem, Outlet
 from flask_jwt_extended import jwt_required
 
 menu_bp = Blueprint('menu', __name__, url_prefix='/menu')
@@ -149,3 +148,6 @@ def get_menu_categories(outlet_id):
             'outlet_name': outlet.outlet_name,
             'categories': category_list
         }, 200
+    
+    except Exception as e:
+        return {'error': str(e)}, 500

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from extensions import db, bcrypt
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity
 from models import Outlet, Customer
 from datetime import datetime
 
@@ -110,7 +110,9 @@ def outlet_login():
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
 def get_me():
-    return get_jwt_identity(), 200
+    user_id = get_jwt_identity()
+    
+    return ({"user_id": user_id}), 200
 
 # Password Reset (for both Customer and Outlet)
 @auth_bp.route('/reset_password', methods=['POST'])

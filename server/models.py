@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
 from datetime import datetime
-from server.extensions import db
+from extensions import db
 
 
 metadata = MetaData(naming_convention={

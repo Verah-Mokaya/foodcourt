@@ -1,6 +1,8 @@
 import os
 from flask import Flask
+
 from extensions import db, migrate, jwt, bcrypt
+
 from routes.menu_routes import menu_bp
 from routes.auth_routes import auth_bp
 from routes.reservation_routes import reservation_bp
@@ -26,8 +28,11 @@ def create_app():
     bcrypt.init_app(app)
 
     #  register blueprints
-    from server.routes.menu_routes import menu_bp
+    import models
     app.register_blueprint(menu_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(reservation_bp)
+    app.register_blueprint(order_bp)
 
     @app.route("/health")
     def health():
