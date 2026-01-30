@@ -5,7 +5,6 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_bcrypt import Bcrypt
 
-bcrypt = Bcrypt()
 from datetime import datetime
 from extensions import db
 
