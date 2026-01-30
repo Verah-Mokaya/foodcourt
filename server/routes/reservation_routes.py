@@ -5,7 +5,7 @@ from datetime import datetime
 from extensions import db
 from models import Reservation, FoodCourtTable
 
-reservations_bp = Blueprint("reservations", __name__, url_prefix="/reservations")
+reservation_bp = Blueprint("reservations", __name__, url_prefix="/reservations")    
 
 @reservation_bp.route("/", methods=["POST"])
 @jwt_required()
