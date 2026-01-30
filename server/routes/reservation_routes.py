@@ -164,3 +164,26 @@ def update_reservation_status(reservation_id):
 
     # Ownership
     if reservation.customer_id != identity["id"]:
+         return jsonify({"error": "Forbidden"}), 403
+
+    status = data.get("status")
+
+    # Customers can only cancel
+    if status != "canceled":
+        return jsonify({
+            "error": "Only cancellation is allowed"
+        }), 403
+
+    reservation.status = "canceled"
+
+    # Release table
+    table = FoodCourtTable.query.get(reservation.table_id)
+
+    if table:
+        table.is_available = True
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Reservation canceled"
+    }), 200
