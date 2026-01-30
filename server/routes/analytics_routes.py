@@ -49,3 +49,26 @@ def get_overview():
         'revenue_today': float(revenue_today)
     }), 200
 
+
+@analytics_bp.route('/orders/status', methods=['GET'])
+@jwt_required()
+def get_order_status_breakdown():
+    outlet_id = get_jwt_identity()
+    
+    # Get order counts by status
+    status_counts = db.session.query(Order.status, func.count(func.distinct(Order.id)))\
+        .join(OrderItem, Order.id == OrderItem.order_id)\
+        .join(MenuItem, OrderItem.menu_item_id == MenuItem.id)\
+        .filter(MenuItem.outlet_id == outlet_id)\
+        .group_by(Order.status)\
+        .all()
+    
+    # Format the response
+    breakdown = {status: count for status, count in status_counts}
+    
+    return jsonify({
+        'pending': breakdown.get('pending', 0),
+        'completed': breakdown.get('completed', 0),
+        'cancelled': breakdown.get('cancelled', 0)
+    }), 200
+
