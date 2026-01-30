@@ -1,3 +1,11 @@
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
+
+from extensions import db
+from models import Order, OrderItem, MenuItem, Outlet
+
+order_bp = Blueprint("orders", __name__, url_prefix="/orders")
+
 @order_bp.route("", methods=["POST"])
 @jwt_required()
 def create_order():

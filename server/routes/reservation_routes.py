@@ -2,9 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 
-from server.extensions import db
-from server.models.reservation import Reservation
-from server.models.food_court_table import FoodCourtTable
+from extensions import db
+from models import Reservation, FoodCourtTable
 
 reservations_bp = Blueprint("reservations", __name__, url_prefix="/reservations")
 
