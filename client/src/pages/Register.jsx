@@ -21,3 +21,19 @@ export default function SignupPage() {
     outletName: "",
     cuisine: ""
   });
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // 1. Check if email exists
+      const checkRes = await fetch(`http://localhost:3001/users?email=${formData.email}`);
+      const existingUsers = await checkRes.json();
+
+      if (existingUsers.length > 0) {
+        alert("Email already exists");
+        setIsLoading(false);
+        return;
+      }
+
