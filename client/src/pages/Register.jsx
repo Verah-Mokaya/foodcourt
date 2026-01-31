@@ -37,3 +37,20 @@ export default function SignupPage() {
         return;
       }
 
+          // 2. Create User
+      const userPayload = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        role: role
+      };
+
+      const userRes = await fetch("http://localhost:3001/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userPayload)
+      });
+
+      const newUser = await userRes.json();
+
+
