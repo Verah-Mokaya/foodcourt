@@ -53,4 +53,33 @@ export default function SignupPage() {
 
       const newUser = await userRes.json();
 
+          // 3. If Owner, Create Outlet
+      if (role === "owner") {
+        const outletPayload = {
+          owner_id: newUser.id,
+          name: formData.outletName,
+          cuisine: formData.cuisine,
+          description: `Welcome to ${formData.outletName}`,
+          image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80"
+        };
+
+        const outletRes = await fetch("http://localhost:3001/outlets", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(outletPayload)
+        });
+
+        const newOutlet = await outletRes.json();
+
+        await fetch(`http://localhost:3001/users/${newUser.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ outletId: newOutlet.id })
+        });
+      }
+
+      // 4. Auto Login
+      await login(formData.email, formData.password);
+
+
 
