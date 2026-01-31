@@ -8,19 +8,16 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export default function SignupPage() {
-    const { login } = useAuth();
-    const router = useRouter();
-    const [role, setRole] = useState<"customer" | "owner">("customer");
-    const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
 
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        outletName: "",
-        cuisine: ""
-    });
+  const [role, setRole] = useState("customer");
+  const [isLoading, setIsLoading] = useState(false);
 
-    
-
-
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    outletName: "",
+    cuisine: ""
+  });
