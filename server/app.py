@@ -1,6 +1,33 @@
-import os
-class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://foodcourt_user:password@localhost:5432/foodcourt_db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'super-secret-key')
-    
+from flask import Flask
+from flask_migrate import Migrate
+from flask_restful import Api
+from flask_cors import CORS
+from models import db, bcrypt
+from routes.auth import Register, Login
+from routes.analytics_routes import analytics_bp
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foodcourt.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'super-secret-key'
+
+
+db.init_app(app)
+bcrypt.init_app(app)
+Migrate(app, db)
+CORS(app)
+
+api = Api(app)
+api.add_resource(Register, '/register')
+api.add_resource(Login, '/login')
+
+# Register blueprints
+app.register_blueprint(analytics_bp, url_prefix='/analytics')
+
+@app.route('/')
+def home():
+    return '<h1>Food Court API</h1>'
+
+if __name__ == '__main__':
+    app.run(port=5555, debug=True)
