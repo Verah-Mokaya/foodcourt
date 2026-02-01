@@ -17,3 +17,5 @@ export default function DashboardHome({ stats }: DashboardHomeProps) {
                 <h3 className="text-gray-500 text-sm font-medium">Pending Orders</h3>
                 <p className="text-3xl font-bold text-gray-900 mt-2">{stats.pending}</p>
             </div>
+            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                <h3 className="text-gray-500 text-sm font-medium">Preparing</h3>
