@@ -23,3 +23,24 @@ export default function OwnerDashboardPage() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        loadOrders();
+        const interval = setInterval(loadOrders, 10000);
+        return () => clearInterval(interval);
+    }, [user]);
+
+    const updateStatus = async (orderId: number, newStatus: string) => {
+        try {
+            await fetch(`${API_URL}/orders/${orderId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: newStatus })
+            });
+            // Optimistic update
+            setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } as Order : o));
+        } catch (e) {
+            console.error("Failed to update status", e);
+            alert("Failed to update status");
+        }
+    };
