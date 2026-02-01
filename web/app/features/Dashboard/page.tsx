@@ -44,3 +44,19 @@ export default function OwnerDashboardPage() {
             alert("Failed to update status");
         }
     };
+    if (isLoading) return <div className="p-8">Loading dashboard...</div>;
+
+    const stats = {
+        pending: orders.filter(o => o.status === "pending").length,
+        preparing: orders.filter(o => o.status === "preparing").length,
+        ready: orders.filter(o => o.status === "ready").length
+    };
+
+    return (
+        <div className="space-y-8 p-6">
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <DashboardHome stats={stats} />
+            <Orders orders={orders} updateStatus={updateStatus} />
+        </div>
+    );
+}
