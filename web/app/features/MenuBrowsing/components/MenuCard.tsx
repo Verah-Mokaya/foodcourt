@@ -30,7 +30,6 @@ export default function MenuCard({ item, outletName }: MenuCardProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
             <div className="relative h-40 w-full bg-gray-200">
-                {/* Use a placeholder if image fails or use simple img for now since we are mocking */}
                 <img
                     src={item.image_url || "/placeholder-food.jpg"}
                     alt={item.item_name}
