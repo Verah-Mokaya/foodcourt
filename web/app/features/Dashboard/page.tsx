@@ -37,7 +37,7 @@ export default function OwnerDashboardPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: newStatus })
             });
-            // Optimistic update
+            // here is the Optimistic update
             setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } as Order : o));
         } catch (e) {
             console.error("Failed to update status", e);
