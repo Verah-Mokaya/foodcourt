@@ -31,3 +31,29 @@ export default function TablesPage() {
         };
         loadTables();
     }, []);
+
+    const handleAdd = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            const payload = {
+                table_number: Number(newTable.table_number),
+                capacity: Number(newTable.capacity),
+                is_available: true
+            };
+
+            const res = await fetch(`${API_URL}/food_court_tables`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const savedTable = await res.json();
+            setTables([...tables, savedTable]);
+            setNewTable({ table_number: "", capacity: "" });
+        } catch (err) {
+            alert("Failed to add table");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
