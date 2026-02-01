@@ -67,3 +67,14 @@ export default function MenuPage() {
         }
     };
 
+    if (isLoading) return <div className="p-8">Loading menu...</div>;
+
+    return (
+        <div className="space-y-8 max-w-4xl p-6">
+            <h1 className="text-2xl font-bold text-gray-900">Menu Management</h1>
+            <MenuItemForm onAdd={handleAdd} isSubmitting={isSubmitting} />
+            <MenuTable items={items} onDelete={handleDelete} />
+        </div>
+    );
+}
+
