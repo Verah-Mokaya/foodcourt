@@ -12,6 +12,7 @@ interface PaymentModalProps {
     total: number;
     onConfirm: (method: string, details: any) => Promise<void>;
 }
+
 export default function PaymentModal({ isOpen, onClose, total, onConfirm }: PaymentModalProps) {
     const [method, setMethod] = useState<PaymentMethod>("mpesa");
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,8 @@ export default function PaymentModal({ isOpen, onClose, total, onConfirm }: Paym
 
         setIsLoading(false);
     };
-      return (
+
+    return (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <div className="p-4 border-b border-gray-100 flex justify-between items-center">
@@ -173,3 +175,4 @@ export default function PaymentModal({ isOpen, onClose, total, onConfirm }: Paym
             </div>
         </div>
     );
+}

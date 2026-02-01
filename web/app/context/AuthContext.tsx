@@ -36,9 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const users = await res.json();
 
             if (users.length === 0) {
-                // Try fetching from outlets if not found in customers (if outlets are separate users?)
-                // Based on db.json, owners are in 'customers'. Outlets are in 'outlets' but they have owner_name.
-                // It seems 'customers' array holds ALL users including owners.
+              
                 throw new Error("Invalid credentials");
             }
 
