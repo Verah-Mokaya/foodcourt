@@ -21,4 +21,10 @@ export default function DashboardHome({ stats }: DashboardHomeProps) {
                 <h3 className="text-gray-500 text-sm font-medium">Preparing</h3>
                 <p className="text-3xl font-bold text-blue-600 mt-2">{stats.preparing}</p>
             </div>
-            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm"></div>
+            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                <h3 className="text-gray-500 text-sm font-medium">Ready for Pickup</h3>
+                <p className="text-3xl font-bold text-green-600 mt-2">{stats.ready}</p>
+            </div>
+        </div>
+    );
+}
