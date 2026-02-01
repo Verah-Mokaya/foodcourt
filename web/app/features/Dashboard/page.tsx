@@ -6,3 +6,20 @@ import { Order } from "@/lib/types";
 import { useEffect, useState } from "react";
 import DashboardHome from "./components/DashboardHome";
 import Orders from "./components/Orders";
+export default function OwnerDashboardPage() {
+    const { user } = useAuth();
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const loadOrders = async () => {
+        if (!user || (user.role !== "owner" && user.role !== "outlet")) return;
+        try {
+            const outletId = user.role === 'outlet' ? user.id : (user.outletId || 1);
+            const res = await fetcher<Order[]>(`/orders?outlet_id=${outletId}&_sort=created_at&_order=desc`);
+            setOrders(res);
+        } catch (err) {
+            console.error("Failed to load orders", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
