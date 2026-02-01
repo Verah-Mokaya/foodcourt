@@ -1,8 +1,8 @@
 "use client";
 
 import Navbar from "@/app/components/layout/Navbar";
-import Hero from "@/app/components/HeroSection";
-import BestSellers from "@/features/Home/BestSellers";
+import HeroSection from "@/app/components/HeroSection";
+import BestSellers from "@/app/components/BestSellers";
 import Footer from "@/app/components/layout/Footer";
 import { ArrowRight, Star, Clock, Truck } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
-      <Hero />
+      <HeroSection />
       <BestSellers />
 
       {/* Features Section */}
