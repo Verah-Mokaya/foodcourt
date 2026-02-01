@@ -12,3 +12,26 @@ interface MenuItemModalProps {
     outletName: string;
 }
 
+export default function MenuItemModal({ item, isOpen, onClose, outletName }: MenuItemModalProps) {
+    const { addToCart } = useCart();
+    const [quantity, setQuantity] = useState(1);
+    const [isAdding, setIsAdding] = useState(false);
+
+    if (!isOpen || !item) return null;
+
+    const handleAddToCart = () => {
+        setIsAdding(true);
+        setTimeout(() => {
+            addToCart({
+                menuItemId: item.id,
+                name: item.item_name,
+                price: item.price,
+                outletId: item.outlet_id,
+                outletName,
+                quantity
+            });
+            setIsAdding(false);
+            setQuantity(1);
+            onClose();
+        }, 500);
+    };
