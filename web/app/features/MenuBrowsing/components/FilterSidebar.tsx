@@ -40,6 +40,65 @@ export default function FilterSidebar({
                     />
                 </div>
             </div>
+
+            {/* Categories */}
+            <div>
+                <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-bold text-gray-900">Categories</h3>
+                    {selectedCategory && (
+                        <button
+                            onClick={() => setSelectedCategory(null)}
+                            className="text-xs text-orange-600 font-medium hover:underline"
+                        >
+                            Clear
+                        </button>
+                    )}
+                </div>
+                <div className="space-y-2">
+                    <button
+                        onClick={() => setSelectedCategory(null)}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCategory
+                            ? "bg-orange-50 text-orange-700"
+                            : "text-gray-600 hover:bg-gray-50"
+                            }`}
+                    >
+                        All Categories
+                    </button>
+                    {categories.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(cat)}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCategory === cat
+                                ? "bg-orange-50 text-orange-700"
+                                : "text-gray-600 hover:bg-gray-50"
+                                }`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Price Range (Visual Only for now) */}
+            <div>
+                <h3 className="font-bold text-gray-900 mb-3">Price Range</h3>
+                <div className="flex gap-2">
+                    {["$", "$$", "$$$"].map((price) => (
+                        <button
+                            key={price}
+                            onClick={() => setSelectedPrice(selectedPrice === price ? null : price)}
+                            className={cn(
+                                "flex-1 py-1 border rounded-lg text-sm font-medium transition-colors",
+                                selectedPrice === price
+                                    ? "bg-orange-600 text-white border-orange-600"
+                                    : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                            )}
+                        >
+                            {price}
+                        </button>
+                    ))}
+                </div>
+            </div>           
         </aside>
     );
 }
