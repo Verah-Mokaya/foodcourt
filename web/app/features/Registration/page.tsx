@@ -21,6 +21,33 @@ export default function SignupPage() {
         cuisine: ""
     });
 
+        const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            const [firstName, ...lastNameParts] = formData.name.split(" ");
+            const lastName = lastNameParts.join(" ") || "";
+
+            
+            let payload: any = {
+                email: formData.email,
+                password: formData.password,
+                role: role === "outlet" ? "owner" : "customer", 
+                first_name: firstName,
+                last_name: lastName,
+                phone_number: "0725123456"
+            };
+
+            await register(payload);
+
+        } catch (error: any) {
+            // Error handled in context
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 relative">
             <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
