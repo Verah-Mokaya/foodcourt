@@ -41,3 +41,19 @@ export default function MenuPage() {
                 image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80", // Default
                 is_available: newItem.is_available
             };
+
+            const res = await fetch(`${API_URL}/menu_items`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const savedItem = await res.json();
+            setItems([...items, savedItem]);
+        } catch (err) {
+            alert("Failed to add item");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
