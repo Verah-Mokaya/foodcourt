@@ -38,3 +38,8 @@ export type CartItem = {
     outletId: number | string;
     outletName: string;
 };
+export type OrderItem = {
+    menu_item_id: number | string;
+    quantity: number;
+    price: number;
+};
