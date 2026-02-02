@@ -130,5 +130,27 @@ export default function CartPage() {
                     </div>
                 ))}
             </div>
+
+            <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 z-50">
+                <div className="flex justify-between items-center mb-4">
+                    <span className="text-gray-500">Total</span>
+                    <span className="text-2xl font-bold text-gray-900">${total.toFixed(2)}</span>
+                </div>
+                <button
+                    onClick={() => setIsPaymentOpen(true)}
+                    disabled={isSubmitting}
+                    className="w-full py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    Proceed to Checkout
+                </button>
+            </div>
+
+            <PaymentModal
+                isOpen={isPaymentOpen}
+                onClose={() => setIsPaymentOpen(false)}
+                total={total}
+                onConfirm={handleCheckout}
+            />
+        </div>
     );
 }
