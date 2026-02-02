@@ -29,3 +29,11 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                     <div className="h-8 w-8 bg-orange-100 rounded-lg flex items-center justify-center">
                         <Utensils className="h-5 w-5 text-orange-600" />
                     </div>
+                    <span className="font-bold text-lg hidden md:block">FC Partner</span>
+                </Link>
+
+                <nav className="flex md:flex-col gap-2">
+                    <Link href="/features/Dashboard" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/features/Dashboard" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
+                        <LayoutDashboard className="h-5 w-5" />
+                        <span className="hidden md:block">Orders</span>
+                    </Link>
