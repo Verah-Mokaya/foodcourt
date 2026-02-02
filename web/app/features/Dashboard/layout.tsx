@@ -46,3 +46,11 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                         <span className="hidden md:block">Tables</span>
                     </Link>
                 </nav>
+
+                <div className="md:mt-auto">
+                    <button onClick={logout} className="flex items-center gap-3 px-3 py-2 w-full text-left text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        <LogOut className="h-5 w-5" />
+                        <span className="hidden md:block">Logout</span>
+                    </button>
+                </div>
+            </aside>
