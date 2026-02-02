@@ -1,33 +1,56 @@
-from flask import Flask
-from flask_migrate import Migrate
-from flask_restful import Api
+import sys
+import os
 from flask_cors import CORS
-from models import db, bcrypt
-from routes.auth import Register, Login
-from routes.analytics_routes import analytics_bp
 
-app = Flask(__name__)
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foodcourt.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'super-secret-key'
+from flask import Flask
+from models import *
+from extensions import db, migrate, jwt, bcrypt
+
+from routes.menu_routes import menu_bp
+from routes.auth_routes import auth_bp
+from routes.reservation_routes import reservation_bp
+from routes.order_routes import order_bp
 
 
-db.init_app(app)
-bcrypt.init_app(app)
-Migrate(app, db)
-CORS(app)
+class Config:
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL",
+        "postgresql://foodcourt_user:strongpassword@localhost:5432/foodcourt_db"
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "super-secret-key")
 
-api = Api(app)
-api.add_resource(Register, '/register')
-api.add_resource(Login, '/login')
+def create_app():
+    app = Flask(__name__)
+    CORS(app)
+    app.config.from_object(Config)
 
-# Register blueprints
-app.register_blueprint(analytics_bp, url_prefix='/analytics')
+    #  init extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
+    bcrypt.init_app(app)
 
-@app.route('/')
-def home():
-    return '<h1>Food Court API</h1>'
+    #  register blueprints
+    app.register_blueprint(menu_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(reservation_bp)
+    app.register_blueprint(order_bp)
 
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    @app.route("/health")
+    def health():
+        return {"status": "OK"}, 200
+
+    @app.route("/db-test")
+    def db_test():
+        from sqlalchemy import text
+        db.session.execute(text("SELECT 1"))
+        return {"db": "connected"}, 200
+
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)

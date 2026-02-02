@@ -1,149 +1,189 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
+
 from datetime import datetime
 
-from server.extensions import db
-from server.models.reservation import Reservation
-from server.models.food_court_table import FoodCourtTable
+from extensions import db
+from models import Reservation, FoodCourtTable
 
-reservations_bp = Blueprint("reservations", __name__, url_prefix="/reservations")
+from utils import customer_required
 
-@reservation_bp.route("/", methods=["POST"])
+
+reservation_bp = Blueprint(
+    "reservations",
+    __name__,
+    url_prefix="/reservations"
+)
+
+
+# CREATE RESERVATION (CUSTOMER ONLY)
+
+@reservation_bp.route("", methods=["POST"])
 @jwt_required()
+@customer_required
 def create_reservation():
 
+    data = request.get_json() or {}
+
+    required = ["table_id", "reservation_time", "number_of_guests"]
+
+    for field in required:
+        if not data.get(field):
+            return jsonify({
+                "error": f"{field} is required"
+            }), 400
+
+    identity = get_jwt_identity()
+    customer_id = identity["id"]
+
+    # Validate table
+    table = FoodCourtTable.query.get(data["table_id"])
+
+    if not table:
+        return jsonify({"error": "Table not found"}), 404
+
+    if not table.is_available:
+        return jsonify({"error": "Table not available"}), 400
+
+    # Validate datetime
     try:
-        data=request.get_json()
-        customer_id = get_jwt_identity()["customer_id"]
-
-        required_fields = ["table_id", "reservation_time", "number_of_guests"]
-
-        if not all(field in data for field in required_fields):
-            return {"error": "Missing required fields"}, 400
-        
-        table = FoodCourtTable.query.get(data["table_id"])
-        if not table:
-            return {"error": "Table not found"}, 404
-        
-        if not table.is_available:
-            return {"error": "Table is not available"}, 400
-        
-        db.session.add(
-            Reservation(
-                customer_id=customer_id,
-                table_id=data["table_id"],
-                reservation_time=datetime.fromisoformat(data["reservation_time"]),
-                number_of_guests=data["number_of_guests"],
-                status="booked"
-            )
+        reservation_time = datetime.fromisoformat(
+            data["reservation_time"]
         )
-        table.is_available = False  # Mark table as unavailable
-        db.session.commit()
-        
-        return {"message": "Reservation created successfully"}, 201
-        
-    except Exception as e:
-        db.session.rollback()
-        return {"error": str(e)}, 500
-    
-# get single reservation
+    except ValueError:
+        return jsonify({
+            "error": "Invalid reservation_time format"
+        }), 400
+
+    # Validate guests
+    try:
+        guests = int(data["number_of_guests"])
+        if guests < 1:
+            raise ValueError
+    except ValueError:
+        return jsonify({
+            "error": "Invalid number_of_guests"
+        }), 400
+
+    reservation = Reservation(
+        customer_id=customer_id,
+        table_id=table.id,
+        reservation_time=reservation_time,
+        number_of_guests=guests,
+        status="pending"
+    )
+
+    db.session.add(reservation)
+
+    table.is_available = False
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Reservation created",
+        "reservation_id": reservation.id
+    }), 201
+
+
+# GET SINGLE RESERVATION (OWNER ONLY)
+
 @reservation_bp.route("/<int:reservation_id>", methods=["GET"])
 @jwt_required()
+@customer_required
 def get_reservation(reservation_id):
-    try:
-        reservation = Reservation.query.get(reservation_id)
-        if not reservation:
-            return {"error": "Reservation not found"}, 404
-        
-        return {
-            "id": reservation.id,
-            "customer_id": reservation.customer_id,
-            "table_id": reservation.table_id,
-            "reservation_time": reservation.reservation_time.isoformat(),
-            "number_of_guests": reservation.number_of_guests,
-            "status": reservation.status,
-            "created_at": reservation.created_at.isoformat()
-        }, 200
-    
-    except Exception as e:
-        return {"error": str(e)}, 500
-    
-# get my reservations(customer)
-@reservation_bp.route("/my_reservations", methods=["GET"])
+
+    reservation = Reservation.query.get(reservation_id)
+
+    if not reservation:
+        return jsonify({"error": "Reservation not found"}), 404
+
+    identity = get_jwt_identity()
+
+    # Ownership check
+    if reservation.customer_id != identity["id"]:
+        return jsonify({"error": "Forbidden"}), 403
+
+    return jsonify({
+        "id": reservation.id,
+        "table_id": reservation.table_id,
+        "reservation_time": reservation.reservation_time.isoformat(),
+        "number_of_guests": reservation.number_of_guests,
+        "status": reservation.status,
+        "created_at": reservation.created_at.isoformat()
+        if reservation.created_at else None
+    }), 200
+
+
+# GET MY RESERVATIONS
+
+@reservation_bp.route("/my", methods=["GET"])
 @jwt_required()
+@customer_required
 def get_my_reservations():
-    try:
-        customer_id = get_jwt_identity()["customer_id"]
-        reservations = Reservation.query.filter_by(customer_id=customer_id).all()
-        
-        reservations_list = [
+
+    identity = get_jwt_identity()
+
+    reservations = Reservation.query.filter_by(
+        customer_id=identity["id"]
+    ).all()
+
+    return jsonify({
+        "reservations": [
             {
-                "id": res.id,
-                "table_id": res.table_id,
-                "reservation_time": res.reservation_time.isoformat(),
-                "number_of_guests": res.number_of_guests,
-                "status": res.status,
-                "created_at": res.created_at.isoformat()
+                "id": r.id,
+                "table_id": r.table_id,
+                "reservation_time": r.reservation_time.isoformat(),
+                "number_of_guests": r.number_of_guests,
+                "status": r.status,
+                "created_at": r.created_at.isoformat()
+                if r.created_at else None
             }
-            for res in reservations
+            for r in reservations
         ]
-        
-        return {"reservations": reservations_list}, 200
-    
-    except Exception as e:
-        return {"error": str(e)}, 500
-    
-    # update reservation
-@reservation_bp.route("/<int:reservation_id>", methods=["PUT"])
+    }), 200
+
+
+# UPDATE STATUS (CUSTOMER: CANCEL ONLY)
+
+@reservation_bp.route("/<int:reservation_id>/status", methods=["PUT"])
 @jwt_required()
-def update_reservation(reservation_id):
-    try:
-        data=request.get_json()
-        reservation = Reservation.query.get(reservation_id)
-        
-        if not reservation:
-            return {"error": "Reservation not found"}, 404
-        
-        allowed_statuses = ["pending", "confirmed", "canceled", "completed"]
+@customer_required
+def update_reservation_status(reservation_id):
 
-        if "status" not in data or data["status"] not in allowed_statuses:
-            return {"error": "Invalid or missing status"}, 400
-        
-        reservation.status = data["status"]
+    data = request.get_json() or {}
 
-        # relsease table if reservation is canceled or completed
-        if data["status"] in ["canceled", "completed"]:
-            table = FoodCourtTable.query.get(reservation.table_id)
-            table.is_available = True
+    reservation = Reservation.query.get(reservation_id)
 
-        db.session.commit()
+    if not reservation:
+        return jsonify({"error": "Reservation not found"}), 404
 
-        return {"message": "Reservation updated successfully"}, 200
-   
-    except Exception as e:
-        db.session.rollback()
-        return {"error": str(e)}, 500
+    identity = get_jwt_identity()
 
-# cancel reservation
-@reservation_bp.route("/<int:reservation_id>/cancel", methods=["POST"])
-@jwt_required()
-def cancel_reservation(reservation_id):
-    try:
-        reservation = Reservation.query.get(reservation_id)
-        
-        if not reservation:
-            return {"error": "Reservation not found"}, 404
-        
-        reservation.status = "canceled"
-        
-        # release table
-        table = FoodCourtTable.query.get(reservation.table_id)
+    # Ownership
+    if reservation.customer_id != identity["id"]:
+         return jsonify({"error": "Forbidden"}), 403
+
+    status = data.get("status")
+
+    # Customers can only cancel
+    if status != "canceled":
+        return jsonify({
+            "error": "Only cancellation is allowed"
+        }), 403
+
+    reservation.status = "canceled"
+
+    # Release table
+    table = FoodCourtTable.query.get(reservation.table_id)
+
+    if table:
         table.is_available = True
-        
-        db.session.commit()
-        
-        return {"message": "Reservation canceled successfully"}, 200
-    
-    except Exception as e:
-        db.session.rollback()
-        return {"error": str(e)}, 500
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Reservation canceled"
+    }), 200

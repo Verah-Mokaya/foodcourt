@@ -1,3 +1,5 @@
+import re
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.orm import validates
@@ -5,16 +7,13 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_bcrypt import Bcrypt
 
-bcrypt = Bcrypt()
 from datetime import datetime
-from server.extensions import db
+from extensions import db, bcrypt
 
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s"
 })
-
-db = SQLAlchemy(metadata=metadata)
 
 
 class Customer(db.Model, SerializerMixin):
@@ -23,7 +22,7 @@ class Customer(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
+    _password = db.Column("password", db.String, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20))

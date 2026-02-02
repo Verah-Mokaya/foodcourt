@@ -1,63 +1,133 @@
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
+
+from decimal import Decimal
+
+from extensions import db
+
+from models import (
+    Order,
+    OrderItem,
+    MenuItem,
+    Outlet,
+    Reservation,
+    FoodCourtTable
+)
+
+from utils import customer_required
+
+
+order_bp = Blueprint("orders", __name__, url_prefix="/orders")
+
+
+# CREATE ORDER (CUSTOMER ONLY)
+
 @order_bp.route("", methods=["POST"])
 @jwt_required()
+@customer_required
 def create_order():
-    try:
-        data = request.get_json()
-        customer_id = get_jwt_identity()
 
-        if "outlet_id" not in data or "items" not in data:
-            return {"error": "Missing required fields"}, 400
+    data = request.get_json() or {}
 
-        outlet = Outlet.query.get(data["outlet_id"])
-        if not outlet:
-            return {"error": "Outlet not found"}, 404
+    # Validate request body
+    if not data.get("outlet_id") or not data.get("items"):
+        return jsonify({
+            "error": "outlet_id and items are required"
+        }), 400
 
-        total_amount = Decimal("0.00")
+    if not isinstance(data["items"], list):
+        return jsonify({
+            "error": "items must be a list"
+        }), 400
 
-        order = Order(
-            customer_id=customer_id,
-            outlet_id=data["outlet_id"],
-            table_booking_id=data.get("table_booking_id"),
-            status="pending",
-            total_amount=0,
-            estimated_time=data.get("estimated_time"),
+    # Get customer from JWT
+    identity = get_jwt_identity()
+    customer_id = identity["id"]
+
+    # Validate outlet
+    outlet = Outlet.query.get(data["outlet_id"])
+    if not outlet:
+        return jsonify({"error": "Outlet not found"}), 404
+
+    # Validate reservation (optional)
+    reservation_id = data.get("reservation_id")
+
+    if reservation_id:
+
+        reservation = Reservation.query.get(reservation_id)
+
+        if not reservation:
+            return jsonify({"error": "Invalid reservation"}), 400
+
+        if reservation.customer_id != customer_id:
+            return jsonify({"error": "Unauthorized reservation"}), 403
+
+        if reservation.status != "confirmed":
+            return jsonify({"error": "Reservation not confirmed"}), 400
+
+    # Create order
+    total_amount = Decimal("0.00")
+
+    order = Order(
+        customer_id=customer_id,
+        reservation_id=reservation_id,
+        status="pending",
+        total_amount=0
+    )
+
+    db.session.add(order)
+    db.session.flush()  # Get order.id
+
+    # Process items
+    for item in data["items"]:
+
+        if "menu_item_id" not in item:
+            db.session.rollback()
+            return jsonify({
+                "error": "menu_item_id is required"
+            }), 400
+
+        menu_item = MenuItem.query.get(item["menu_item_id"])
+
+        if not menu_item:
+            db.session.rollback()
+            return jsonify({"error": "Menu item not found"}), 404
+
+        if menu_item.outlet_id != outlet.id:
+            db.session.rollback()
+            return jsonify({"error": "Invalid menu item"}), 400
+
+        if not menu_item.is_available:
+            db.session.rollback()
+            return jsonify({"error": "Item unavailable"}), 400
+
+        quantity = int(item.get("quantity", 1))
+
+        if quantity < 1:
+            db.session.rollback()
+            return jsonify({"error": "Invalid quantity"}), 400
+
+        subtotal = Decimal(menu_item.price) * quantity
+        total_amount += subtotal
+
+        db.session.add(
+            OrderItem(
+                order_id=order.id,
+                menu_item_id=menu_item.id,
+                quantity=quantity,
+                price=menu_item.price
+            )
         )
 
-        db.session.add(order)
-        db.session.flush()  # get order.id
+    order.total_amount = total_amount
 
-        for item in data["items"]:
-            menu_item = MenuItem.query.get(item["menu_item_id"])
-            if not menu_item or menu_item.outlet_id != data["outlet_id"]:
-                db.session.rollback()
-                return {"error": "Invalid menu item"}, 400
+    db.session.commit()
 
-            if not menu_item.is_available:
-                db.session.rollback()
-                return {"error": "Menu item unavailable"}, 400
-
-            quantity = item.get("quantity", 1)
-            subtotal = menu_item.price * quantity
-            total_amount += subtotal
-
-            db.session.add(
-                OrderItem(
-                    order_id=order.id,
-                    menu_item_id=menu_item.id,
-                    quantity=quantity,
-                    price=menu_item.price,
-                )
-            )
-
-        order.total_amount = total_amount
-        db.session.commit()
-
-        return {
-            "order_id": order.id,
-            "status": order.status,
-            "total_amount": float(order.total_amount),
-        }, 201
-
-    except Exception as e:
-        db.session.rollback()
-        return {"error": str(e)}, 500
+    return jsonify({
+        "order_id": order.id,
+        "status": order.status,
+        "total_amount": float(order.total_amount)
+    }), 201
