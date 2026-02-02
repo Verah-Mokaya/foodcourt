@@ -18,3 +18,5 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
             router.push("/features/Login");
         }
     }, [user, isLoading, router]);
+
+    if (isLoading || !user) return null;
