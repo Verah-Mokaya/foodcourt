@@ -79,5 +79,14 @@ export default function BookingPage() {
                     ))}
                 </div>
             </div>
+
+            <button
+                onClick={handleBook}
+                disabled={!selectedTable || !date || !time || isSubmitting}
+                className="w-full py-3 bg-gray-900 text-white font-bold rounded-xl disabled:opacity-50"
+            >
+                {isSubmitting ? "Booking..." : "Confirm Booking"}
+            </button>
+        </div>            
   );
 }
