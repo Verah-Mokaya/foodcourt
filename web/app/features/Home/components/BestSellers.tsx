@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ROUTES } from "@/app/lib/routes";
 
 type BestSellerItem = {
     id: number;
@@ -50,7 +51,7 @@ export default function BestSellers() {
                 >
                     {marqueeItems.map((item, idx) => (
                         <Link
-                            href={`/marketplace`} // Redirect to marketplace generally as finding specific ID might require more logic
+                            href={ROUTES.MARKETPLACE} // Redirect to marketplace generally as finding specific ID might require more logic
                             key={`${item.id}-${idx}`}
                             className="group min-w-[300px] bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
                         >

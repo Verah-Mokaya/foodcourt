@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { User, Store, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/app/lib/utils";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function SignupPage() {
     const { register } = useAuth();
@@ -21,7 +22,7 @@ export default function SignupPage() {
         cuisine: ""
     });
 
-        const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
@@ -29,11 +30,11 @@ export default function SignupPage() {
             const [firstName, ...lastNameParts] = formData.name.split(" ");
             const lastName = lastNameParts.join(" ") || "";
 
-            
+
             let payload: any = {
                 email: formData.email,
                 password: formData.password,
-                role: role === "outlet" ? "owner" : "customer", 
+                role: role === "outlet" ? "owner" : "customer",
                 first_name: firstName,
                 last_name: lastName,
                 phone_number: "0725123456"
@@ -50,7 +51,7 @@ export default function SignupPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 relative">
-            <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href={ROUTES.HOME} className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
                 <div className="bg-orange-600 p-1.5 rounded-lg rotate-3">
                     <Store className="h-4 w-4 text-white" />
                 </div>
@@ -174,7 +175,7 @@ export default function SignupPage() {
 
                 <p className="text-center mt-6 text-sm text-gray-500">
                     Already have an account?{" "}
-                    <Link href="/features/Login" className="font-semibold text-orange-600 hover:text-orange-700 hover:underline">
+                    <Link href={ROUTES.LOGIN} className="font-semibold text-orange-600 hover:text-orange-700 hover:underline">
                         Log in
                     </Link>
                 </p>

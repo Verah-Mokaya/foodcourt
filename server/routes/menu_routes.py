@@ -7,11 +7,47 @@ from models import MenuItem, Outlet
 from utils import outlet_required
 
 
-menu_bp = Blueprint("menu", __name__, url_prefix="/menu")
+menu_bp = Blueprint("menu", __name__)
+
+
+# GET ALL OUTLETS (PUBLIC)
+@menu_bp.route("/outlets", methods=["GET"])
+def get_all_outlets():
+    outlets = Outlet.query.filter_by(is_active=True).all()
+    return jsonify([
+        {
+            "id": o.id,
+            "outlet_name": o.outlet_name,
+            "cuisine_type": o.cuisine_type,
+            "description": o.description,
+            "image_url": getattr(o, "image_url", None) or "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1000",
+            "is_active": o.is_active
+        }
+        for o in outlets
+    ]), 200
+
+
+# GET ALL MENU ITEMS (PUBLIC)
+@menu_bp.route("/menu_items", methods=["GET"])
+def get_all_menu_items():
+    items = MenuItem.query.all()
+    return jsonify([
+        {
+            "id": item.id,
+            "item_name": item.item_name,
+            "description": item.description,
+            "category": item.category,
+            "price": float(item.price),
+            "image_url": item.image_url,
+            "is_available": item.is_available,
+            "outlet_id": item.outlet_id
+        }
+        for item in items
+    ]), 200
 
 
 # GET OUTLET MENU (PUBLIC)
-@menu_bp.route("/<int:outlet_id>", methods=["GET"])
+@menu_bp.route("/outlets/<int:outlet_id>", methods=["GET"])
 def get_outlet_menu(outlet_id):
 
     outlet = Outlet.query.get(outlet_id)

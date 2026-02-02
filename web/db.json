@@ -1,0 +1,408 @@
+{
+  "customers": [
+    {
+      "id": "1",
+      "email": "customer@example.com",
+      "password": "password",
+      "first_name": "Alice",
+      "last_name": "Customer",
+      "phone_number": "123-456-7890",
+      "role": "customer"
+    },
+    {
+      "id": "2",
+      "email": "test@example.com",
+      "password": "password",
+      "first_name": "Test",
+      "last_name": "One",
+      "phone_number": "000-000-0000",
+      "role": "customer"
+    },
+    {
+      "id": "3",
+      "email": "suzzy@example.com",
+      "password": "password",
+      "first_name": "Suzzy",
+      "last_name": "User",
+      "phone_number": "999-888-7777",
+      "role": "customer"
+    },
+    {
+      "id": "f365",
+      "email": "sam@example.com",
+      "password": "password",
+      "first_name": "Sam",
+      "last_name": "User",
+      "phone_number": "0000000000",
+      "role": "customer"
+    },
+    {
+      "id": "6b01",
+      "email": "liban@example.com",
+      "password": "password",
+      "first_name": "Liban",
+      "last_name": "Golo",
+      "phone_number": "0000000000",
+      "role": "owner",
+      "outletId": "d1e8"
+    },
+    {
+      "id": "0c73",
+      "email": "sidika@example.com",
+      "password": "password",
+      "first_name": "sidika",
+      "last_name": "User",
+      "phone_number": "0000000000",
+      "role": "customer"
+    },
+    {
+      "id": "d8c6",
+      "email": "newton@example.com",
+      "password": "password",
+      "first_name": "Newton",
+      "last_name": "Oduor",
+      "phone_number": "0000000000",
+      "role": "owner",
+      "outletId": "f8d9"
+    },
+    {
+      "id": "e867",
+      "email": "kagame@example.com",
+      "password": "password",
+      "first_name": "Paul",
+      "last_name": "Kagame",
+      "phone_number": "0000000000",
+      "role": "owner",
+      "outletId": "7e3f"
+    },
+    {
+      "id": "0ecd",
+      "email": "paul@example.com",
+      "password": "password",
+      "first_name": "Paul",
+      "last_name": "Kagame",
+      "phone_number": "0000000000",
+      "role": "owner",
+      "outletId": "02e8"
+    },
+    {
+      "id": "6e8f",
+      "email": "museveni@example.com",
+      "password": "password",
+      "first_name": "yoweri",
+      "last_name": "museveni",
+      "phone_number": "0000000000",
+      "role": "customer"
+    },
+    {
+      "id": "d0db",
+      "email": "jane@example.com",
+      "password": "password",
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "phone_number": "0000000000",
+      "role": "owner",
+      "outletId": "2349"
+    }
+  ],
+  "outlets": [
+    {
+      "id": "1",
+      "owner_name": "Bob Owner",
+      "email": "owner@example.com",
+      "password": "password",
+      "outlet_name": "Spice Garden",
+      "cuisine_type": "Indian",
+      "description": "Authentic Indian spices and curries.",
+      "image_url": "https://images.unsplash.com/photo-1585937421612-70a008356f36?w=800&q=80",
+      "is_active": true
+    },
+    {
+      "id": "2",
+      "owner_name": "Mama Africa Owner",
+      "email": "mama@africa.com",
+      "password": "password",
+      "outlet_name": "Mama Africa",
+      "cuisine_type": "Congolese",
+      "description": "Traditional Congolese dishes.",
+      "image_url": "https://images.unsplash.com/photo-1547496502-ffa22d388946?w=800&q=80",
+      "is_active": true
+    },
+    {
+      "id": "3",
+      "owner_name": "Lagos Chef",
+      "email": "lagos@kitchen.com",
+      "password": "password",
+      "outlet_name": "Lagos Kitchen",
+      "cuisine_type": "Nigerian",
+      "description": "The true taste of Naija",
+      "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80",
+      "is_active": true
+    },
+    {
+      "id": "4",
+      "owner_name": "Nairobi Grill Master",
+      "email": "nairobi@grills.com",
+      "password": "password",
+      "outlet_name": "Nairobi Grills",
+      "cuisine_type": "Kenyan",
+      "description": "Best Nyama Choma in town",
+      "image_url": "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80",
+      "is_active": true
+    },
+    {
+      "id": "d1e8",
+      "owner_id": "6b01",
+      "owner_name": "Liban Golo",
+      "outlet_name": "Tasty Bites",
+      "cuisine_type": "fast foods",
+      "description": "Welcome to Tasty Bites",
+      "image_url": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+      "is_active": true
+    },
+    {
+      "id": "02e8",
+      "owner_id": "0ecd",
+      "owner_name": "Paul Kagame",
+      "outlet_name": "Rwanda Inn",
+      "cuisine_type": "swahili",
+      "description": "Welcome to Rwanda Inn",
+      "image_url": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+      "is_active": true
+    },
+    {
+      "id": "2349",
+      "owner_id": "d0db",
+      "owner_name": "Jane Doe",
+      "email": "jane@example.com",
+      "password": "password",
+      "outlet_name": "Uganda",
+      "cuisine_type": "swahili",
+      "description": "Welcome to Uganda",
+      "image_url": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+      "is_active": true
+    }
+  ],
+  "menu_items": [
+    {
+      "id": "1",
+      "outlet_id": 1,
+      "item_name": "Butter Chicken",
+      "price": 450,
+      "category": "Main",
+      "image_url": "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "2",
+      "outlet_id": 1,
+      "item_name": "Naan",
+      "price": 100,
+      "category": "Side",
+      "image_url": "https://images.unsplash.com/photo-1626074353765-5c76098c67a3?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "3",
+      "outlet_id": 2,
+      "item_name": "Pondu",
+      "price": 300,
+      "category": "Main",
+      "image_url": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "5",
+      "outlet_id": 3,
+      "item_name": "Jollof Rice",
+      "price": 400,
+      "category": "Main",
+      "image_url": "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "6",
+      "outlet_id": 3,
+      "item_name": "Suya Skewers",
+      "price": 250,
+      "category": "Appetizer",
+      "image_url": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "7",
+      "outlet_id": 4,
+      "item_name": "Nyama Choma",
+      "price": 600,
+      "category": "Main",
+      "image_url": "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "8",
+      "outlet_id": 4,
+      "item_name": "Kachumbari",
+      "price": 100,
+      "category": "Side",
+      "image_url": "https://images.unsplash.com/photo-1625938145744-e38051539994?w=800&q=80",
+      "is_available": true
+    },
+    {
+      "id": "69c6",
+      "outlet_id": "02e8",
+      "item_name": "pilau",
+      "price": 1.64,
+      "category": "Main",
+      "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+      "is_available": true
+    }
+  ],
+  "food_court_tables": [
+    {
+      "id": "1",
+      "table_number": 1,
+      "capacity": 4,
+      "is_available": true
+    },
+    {
+      "id": "2",
+      "table_number": 2,
+      "capacity": 2,
+      "is_available": true
+    },
+    {
+      "id": "3",
+      "table_number": 3,
+      "capacity": 6,
+      "is_available": false
+    }
+  ],
+  "reservations": [],
+  "orders": [
+    {
+      "id": "1",
+      "customer_id": 1,
+      "reservation_id": null,
+      "total_amount": 550,
+      "status": "completed",
+      "order_items": [
+        {
+          "menu_item_id": 1,
+          "quantity": 1,
+          "price": 450
+        },
+        {
+          "menu_item_id": 2,
+          "quantity": 1,
+          "price": 100
+        }
+      ],
+      "created_at": "2023-10-27T10:00:00Z"
+    },
+    {
+      "id": "e407",
+      "customer_id": "0c73",
+      "outlet_id": 1,
+      "total_amount": 1100,
+      "status": "pending",
+      "created_at": "2026-01-29T23:20:01.276Z",
+      "order_items": [
+        {
+          "menu_item_id": "1",
+          "quantity": 2,
+          "price": 450
+        },
+        {
+          "menu_item_id": "2",
+          "quantity": 2,
+          "price": 100
+        }
+      ],
+      "payment_info": {
+        "method": "cash"
+      }
+    },
+    {
+      "id": "a38f",
+      "customer_id": "0c73",
+      "outlet_id": 3,
+      "total_amount": 250,
+      "status": "pending",
+      "created_at": "2026-01-29T23:20:01.287Z",
+      "order_items": [
+        {
+          "menu_item_id": "6",
+          "quantity": 1,
+          "price": 250
+        }
+      ],
+      "payment_info": {
+        "method": "cash"
+      }
+    },
+    {
+      "id": "d1ae",
+      "customer_id": "2",
+      "outlet_id": 1,
+      "total_amount": 550,
+      "status": "pending",
+      "created_at": "2026-01-30T08:03:20.326Z",
+      "order_items": [
+        {
+          "menu_item_id": "1",
+          "quantity": 1,
+          "price": 450
+        },
+        {
+          "menu_item_id": "2",
+          "quantity": 1,
+          "price": 100
+        }
+      ],
+      "payment_info": {
+        "method": "cash"
+      }
+    },
+    {
+      "id": "079a",
+      "customer_id": "2",
+      "outlet_id": 1,
+      "total_amount": 900,
+      "status": "pending",
+      "created_at": "2026-02-02T20:53:36.186Z",
+      "order_items": [
+        {
+          "menu_item_id": "1",
+          "quantity": 2,
+          "price": 450
+        }
+      ],
+      "payment_info": {
+        "method": "cash"
+      }
+    },
+    {
+      "id": "1f6b",
+      "customer_id": "2",
+      "outlet_id": 1,
+      "total_amount": 1100,
+      "status": "pending",
+      "created_at": "2026-02-02T21:28:35.483Z",
+      "order_items": [
+        {
+          "menu_item_id": "1",
+          "quantity": 2,
+          "price": 450
+        },
+        {
+          "menu_item_id": "2",
+          "quantity": 2,
+          "price": 100
+        }
+      ],
+      "payment_info": {
+        "method": "cash"
+      }
+    }
+  ]
+}

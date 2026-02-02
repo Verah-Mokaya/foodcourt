@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { fetcher } from "@/app/lib/api";
 import { MenuItem, Outlet } from "@/app/lib/types";
 import MenuCard from "./components/MenuCard";
@@ -9,6 +10,7 @@ import MenuItemModal from "./components/MenuItemModal";
 import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 import { Filter } from "lucide-react";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function MarketplacePage() {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -17,6 +19,8 @@ export default function MarketplacePage() {
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const searchParams = useSearchParams();
+    const forcedOutletId = searchParams.get("outletId");
 
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
@@ -46,18 +50,26 @@ export default function MarketplacePage() {
 
     const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
 
-    const filteredItems = menuItems.filter(item => {
-        const matchesSearch = item.item_name.toLowerCase().includes(search.toLowerCase());
-        const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
+    const filteredItems = useMemo(() => {
+        return menuItems.filter(item => {
+            const matchesSearch = item.item_name.toLowerCase().includes(search.toLowerCase());
+            const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
+            const matchesOutlet = forcedOutletId ? String(item.outlet_id) === forcedOutletId : true;
 
-        // Price Logic
-        let matchesPrice = true;
-        if (selectedPrice === "$") matchesPrice = item.price < 300; // Affordable
-        else if (selectedPrice === "$$") matchesPrice = item.price >= 300 && item.price <= 600; // Mid
-        else if (selectedPrice === "$$$") matchesPrice = item.price > 600; // Premium
+            // Price Logic
+            let matchesPrice = true;
+            if (selectedPrice === "$") matchesPrice = item.price < 300; // Affordable
+            else if (selectedPrice === "$$") matchesPrice = item.price >= 300 && item.price <= 600; // Mid
+            else if (selectedPrice === "$$$") matchesPrice = item.price > 600; // Premium
 
-        return matchesSearch && matchesCategory && matchesPrice;
-    });
+            return matchesSearch && matchesCategory && matchesPrice && matchesOutlet;
+        });
+    }, [menuItems, search, selectedCategory, selectedPrice, forcedOutletId]);
+
+    const activeOutletName = useMemo(() => {
+        if (!forcedOutletId) return null;
+        return outlets.find(o => String(o.id) === forcedOutletId)?.outlet_name;
+    }, [outlets, forcedOutletId]);
 
     if (isLoading) return <div className="p-8 text-center">Loading menu...</div>;
 
@@ -123,8 +135,12 @@ export default function MarketplacePage() {
                 {/* Content */}
                 <div className="flex-1">
                     <div className="mb-6">
-                        <h1 className="text-2xl font-bold text-gray-900">What do you crave?</h1>
-                        <p className="text-gray-500 text-sm">Find your favorite food from our outlets.</p>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            {activeOutletName ? `Menu for ${activeOutletName}` : "What do you crave?"}
+                        </h1>
+                        <p className="text-gray-500 text-sm">
+                            {activeOutletName ? `Showing curated items from ${activeOutletName}` : "Find your favorite food from our outlets."}
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -154,7 +170,7 @@ export default function MarketplacePage() {
 
             {/* Floating Cart Button (Mobile) */}
             {itemCount > 0 && (
-                <Link href="/features/Cart" className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900 text-white p-4 rounded-xl shadow-xl flex justify-between items-center z-40 animate-in slide-in-from-bottom-5 hover:bg-gray-800 transition-colors">
+                <Link href={ROUTES.CART} className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900 text-white p-4 rounded-xl shadow-xl flex justify-between items-center z-40 animate-in slide-in-from-bottom-5 hover:bg-gray-800 transition-colors">
                     <div className="flex items-center gap-3">
                         <span className="bg-white/20 px-3 py-1 rounded-lg text-sm font-bold">{itemCount}</span>
                         <span className="font-bold">View Order</span>
@@ -170,6 +186,6 @@ export default function MarketplacePage() {
                 item={selectedItem}
                 outletName={selectedItem ? getOutletName(selectedItem.outlet_id) : ""}
             />
-        </div>        
+        </div>
     );
 }

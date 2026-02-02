@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Table } from "@/app/lib/types";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function BookingPage() {
-    
+
     const { user } = useAuth();
     const router = useRouter();
     const [tables, setTables] = useState<Table[]>([]);
@@ -22,7 +23,7 @@ export default function BookingPage() {
         fetcher<Table[]>("/food_court_tables").then(setTables).catch(console.error); // Updated endpoint to match TablesPage
     }, []);
 
-        const handleBook = async () => {
+    const handleBook = async () => {
         if (!selectedTable || !date || !time || !user) return;
         setIsSubmitting(true);
         try {
@@ -46,7 +47,7 @@ export default function BookingPage() {
                 throw new Error(err.error || "Booking failed");
             }
             alert("Table reserved!");
-            router.push("/features/Orders/History");
+            router.push(ROUTES.ORDERS_HISTORY);
         } catch (e) {
             console.error(e);
             alert("Booking failed");
@@ -55,7 +56,7 @@ export default function BookingPage() {
         }
     };
 
-  return (
+    return (
         <div className="p-4 space-y-6">
             <h1 className="text-2xl font-bold text-gray-900">Book a Table</h1>
 
@@ -120,6 +121,6 @@ export default function BookingPage() {
             >
                 {isSubmitting ? "Booking..." : "Confirm Booking"}
             </button>
-        </div>            
-  );
+        </div>
+    );
 }

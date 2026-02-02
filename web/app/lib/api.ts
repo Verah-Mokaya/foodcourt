@@ -1,5 +1,5 @@
 export const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export const fetcher = async <T>(url: string): Promise<T> => {
     const token =

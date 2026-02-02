@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ROUTES } from "@/app/lib/routes";
 
 const slides = [
     {
@@ -66,7 +67,7 @@ export default function HeroSection() {
                         {slides[current].subtitle}
                     </p>
                     <Link
-                        href="/marketplace"
+                        href={ROUTES.MARKETPLACE}
                         className="inline-flex items-center gap-2 bg-orange-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-700 transition-all hover:scale-105 active:scale-95"
                     >
                         Order Now

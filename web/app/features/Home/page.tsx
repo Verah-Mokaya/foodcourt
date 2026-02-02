@@ -7,6 +7,7 @@ import Footer from "@/app/components/Footer";
 import { ArrowRight, Star, Clock, Truck } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function Home() {
     return (
@@ -108,8 +109,8 @@ export default function Home() {
                         <p className="text-gray-500 text-lg leading-relaxed">
                             We partner with the finest outlets to ensure every bite is a memory. From traditional cuisines to modern fusion, explore a world of variety.
                         </p>
-                        <Link href="/features/MenuBrowsing" className="inline-flex items-center gap-2 text-orange-600 font-bold hover:gap-3 transition-all">
-                            Explore Menu <ArrowRight className="w-5 h-5" />
+                        <Link href={ROUTES.OUTLETS} className="inline-flex items-center gap-2 text-orange-600 font-bold hover:gap-3 transition-all">
+                            View All Outlets <ArrowRight className="w-5 h-5" />
                         </Link>
                     </div>
                 </div>
@@ -123,10 +124,10 @@ export default function Home() {
                         Join thousands of happy customers and start your food journey today.
                     </p>
                     <div className="flex justify-center gap-4">
-                        <Link href="/features/Registration" className="bg-white text-orange-600 px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors">
+                        <Link href={ROUTES.SIGNUP} className="bg-white text-orange-600 px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors">
                             Get Started
                         </Link>
-                        <Link href="/features/Login" className="border-2 border-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors">
+                        <Link href={ROUTES.LOGIN} className="border-2 border-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors">
                             Login
                         </Link>
                     </div>

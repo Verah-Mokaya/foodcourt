@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "mock-api": "json-server --watch db.json --port 8000"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import { Utensils, Menu, X, ShoppingBag } from "lucide-react";
 import { cn } from "@/app/lib/utils";
+import { ROUTES } from "@/app/lib/routes";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
@@ -19,9 +20,9 @@ export default function Navbar() {
     }, []);
 
     const navLinks = [
-        { name: "Home", href: "/" },
-        { name: "Menu", href: "/marketplace" },
-        { name: "Outlets", href: "/marketplace" }, // Could be a separate page later
+        { name: "Home", href: ROUTES.HOME },
+        { name: "Menu", href: ROUTES.MARKETPLACE },
+        { name: "Outlets", href: ROUTES.OUTLETS }, // Point to new outlets page
     ];
 
     return (
@@ -33,7 +34,7 @@ export default function Navbar() {
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
+                <Link href={ROUTES.HOME} className="flex items-center gap-2 group">
                     <div className="bg-orange-600 p-2 rounded-xl group-hover:rotate-12 transition-transform">
                         <Utensils className="h-6 w-6 text-white" />
                     </div>
@@ -63,12 +64,12 @@ export default function Navbar() {
                     {user ? (
                         <div className="flex items-center gap-4">
                             {user.role === "customer" && (
-                                <Link href="/cart" className={cn("p-2 rounded-full hover:bg-white/10 transition-colors", scrolled ? "text-gray-900" : "text-white")}>
+                                <Link href={ROUTES.CART} className={cn("p-2 rounded-full hover:bg-white/10 transition-colors", scrolled ? "text-gray-900" : "text-white")}>
                                     <ShoppingBag className="w-5 h-5" />
                                 </Link>
                             )}
                             <Link
-                                href={user.role === "owner" ? "/dashboard" : "/profile"}
+                                href={user.role === "owner" ? ROUTES.DASHBOARD : ROUTES.PROFILE}
                                 className="bg-orange-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-700 transition-colors"
                             >
                                 {user.role === "owner" ? "Dashboard" : "My Profile"}
@@ -77,7 +78,7 @@ export default function Navbar() {
                     ) : (
                         <>
                             <Link
-                                href="/login"
+                                href={ROUTES.LOGIN}
                                 className={cn(
                                     "text-sm font-medium hover:text-orange-500 transition-colors",
                                     scrolled ? "text-gray-900" : "text-white"
@@ -86,7 +87,7 @@ export default function Navbar() {
                                 Sign In
                             </Link>
                             <Link
-                                href="/signup"
+                                href={ROUTES.SIGNUP}
                                 className="bg-white text-gray-900 px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-50 transition-colors"
                             >
                                 Sign Up
@@ -131,7 +132,7 @@ export default function Navbar() {
                             <div className="h-px bg-gray-100 my-2" />
                             {user ? (
                                 <Link
-                                    href={user.role === "owner" ? "/dashboard" : "/profile"}
+                                    href={user.role === "owner" ? ROUTES.DASHBOARD : ROUTES.PROFILE}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="bg-orange-600 text-white py-3 rounded-xl text-center font-bold"
                                 >
@@ -140,14 +141,14 @@ export default function Navbar() {
                             ) : (
                                 <div className="flex flex-col gap-3">
                                     <Link
-                                        href="/login"
+                                        href={ROUTES.LOGIN}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="text-gray-900 font-medium text-center py-2"
                                     >
                                         Sign In
                                     </Link>
                                     <Link
-                                        href="/signup"
+                                        href={ROUTES.SIGNUP}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="bg-orange-600 text-white py-3 rounded-xl text-center font-bold"
                                     >

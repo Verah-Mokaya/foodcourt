@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function OrderTrackingPage() {
     const searchParams = useSearchParams();
@@ -21,13 +22,13 @@ export default function OrderTrackingPage() {
 
                 <div className="space-y-3">
                     <Link
-                        href="/features/Orders/History"
+                        href={ROUTES.ORDERS_HISTORY}
                         className="block w-full py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors"
                     >
                         Track Order
                     </Link>
                     <Link
-                        href="/features/MenuBrowsing"
+                        href={ROUTES.MARKETPLACE}
                         className="block w-full py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-colors"
                     >
                         Back to Menu
