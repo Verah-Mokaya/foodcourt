@@ -21,3 +21,10 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                     <Clock className="w-5 h-5 text-orange-500" />
                     Incoming
                 </h2>
+                {pendingOrders.length === 0 && <p className="text-gray-400 text-sm">No pending orders.</p>}
+                {pendingOrders.map(order => (
+                    <div key={order.id} className="bg-white p-4 rounded-xl border-l-4 border-orange-500 shadow-sm">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                            <span className="font-bold">${order.total_amount.toFixed(2)}</span>
+                        </div>
