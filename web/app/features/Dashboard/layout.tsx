@@ -60,3 +60,9 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                     <h1 className="text-xl font-bold text-gray-900">
                         {pathname === "/features/Dashboard" ? "Live Orders" : pathname.includes("Menu") ? "Menu Management" : "Table Management"}
                     </h1>
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">Welcome, {user.name || user.first_name}</span>
+                        <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium text-gray-600">
+                            {(user.name || user.first_name || "U").charAt(0)}
+                        </div>
+                    </div>
