@@ -19,5 +19,8 @@ export const fetcher = async <T>(url: string): Promise<T> => {
 
       if (!res.ok) {
          const error = await res.json().catch(() => ({}));
+         throw new Error(
+    error.message || error.error || "An error occurred"
+);
 
 
