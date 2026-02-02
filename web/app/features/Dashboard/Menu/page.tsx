@@ -53,3 +53,9 @@ export type Order = {
     order_items: OrderItem[];
     payment_info?: any;
 };
+export type Table = {
+    id: number | string;
+    table_number: number;
+    capacity: number;
+    is_available: boolean;
+};
