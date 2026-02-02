@@ -43,3 +43,13 @@ export type OrderItem = {
     quantity: number;
     price: number;
 };
+export type Order = {
+    id: number | string;
+    customer_id: number | string;
+    outlet_id: number | string;
+    total_amount: number;
+    status: "pending" | "preparing" | "ready" | "completed" | "cancelled";
+    created_at: string;
+    order_items: OrderItem[];
+    payment_info?: any;
+};
