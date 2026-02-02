@@ -37,3 +37,7 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                         <LayoutDashboard className="h-5 w-5" />
                         <span className="hidden md:block">Orders</span>
                     </Link>
+                    <Link href="/features/Dashboard/Menu" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/features/Dashboard/Menu" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
+                        <Utensils className="h-5 w-5" />
+                        <span className="hidden md:block">Menu</span>
+                    </Link>
