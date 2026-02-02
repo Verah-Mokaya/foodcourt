@@ -41,3 +41,8 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                         <Utensils className="h-5 w-5" />
                         <span className="hidden md:block">Menu</span>
                     </Link>
+                    <Link href="/features/Dashboard/Tables" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/features/Dashboard/Tables" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
+                        <Grid3X3 className="h-5 w-5" />
+                        <span className="hidden md:block">Tables</span>
+                    </Link>
+                </nav>
