@@ -22,6 +22,39 @@ export default function BookingPage() {
         fetcher<Table[]>("/food_court_tables").then(setTables).catch(console.error); // Updated endpoint to match TablesPage
     }, []);
 
+        const handleBook = async () => {
+        if (!selectedTable || !date || !time || !user) return;
+        setIsSubmitting(true);
+        try {
+            const token = localStorage.getItem("fc_token");
+            const res = await fetch(`${API_URL}/reservations/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    table_id: selectedTable,
+                    reservation_time: `${date}T${time}:00`,
+                    number_of_guests: guests,
+                    customer_id: user.id
+                })
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || "Booking failed");
+            }
+            alert("Table reserved!");
+            router.push("/features/Orders/History");
+        } catch (e) {
+            console.error(e);
+            alert("Booking failed");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
   return (
         <div className="p-4 space-y-6">
             <h1 className="text-2xl font-bold text-gray-900">Book a Table</h1>
