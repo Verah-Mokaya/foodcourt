@@ -14,3 +14,7 @@ export const fetcher = async <T>(url: string): Promise<T> => {
  if (token) {
         headers["Authorization"] = `Bearer ${token}`;
     }
+
+     const res = await fetch(`${API_URL}${url}`, { headers });
+     
+
