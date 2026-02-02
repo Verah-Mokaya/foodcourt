@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { X, CreditCard, Banknote, Smartphone, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 type PaymentMethod = "mpesa" | "card" | "cash";
 

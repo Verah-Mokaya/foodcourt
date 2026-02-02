@@ -1,10 +1,10 @@
 "use client";
 
-import { fetcher, API_URL } from "@/lib/api";
+import { fetcher, API_URL } from "@/app/lib/api";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { Table } from "@/lib/types";
+import { Table } from "@/app/lib/types";
 
 export default function BookingPage() {
     

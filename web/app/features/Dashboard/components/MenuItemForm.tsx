@@ -1,6 +1,6 @@
 "use client";
 
-import { Order } from "@/lib/types";
+import { Order } from "@/app/lib/types";
 import { Check, ChefHat, Clock } from "lucide-react";
 
 interface OrdersProps {

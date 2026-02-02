@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import { AuthProvider } from "@/context/AuthContext";
-import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/app/context/AuthContext";
+import { CartProvider } from "@/app/context/CartContext";
 
 export const metadata: Metadata = {
   title: "Food Court System",
