@@ -4,8 +4,8 @@ export type User = {
     first_name?: string;
     last_name?: string;
     role: "customer" | "admin" | "owner" | "outlet";
-    outletId?: number | string; // specific for owner/outlet role
-    name?: string; // helper
+    outletId?: number | string;
+    name?: string;
     phone_number?: string;
     password?: string;
 };
