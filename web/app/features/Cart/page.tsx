@@ -1,8 +1,8 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext";
-import { fetcher, API_URL } from "@/lib/api";
+import { useCart } from "@/app/context/CartContext";
+import { useAuth } from "@/app/context/AuthContext";
+import { fetcher, API_URL } from "@/app/lib/api";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

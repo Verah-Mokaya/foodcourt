@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetcher } from "@/lib/api";
-import { MenuItem, Outlet } from "@/lib/types";
+import { fetcher } from "@/app/lib/api";
+import { MenuItem, Outlet } from "@/app/lib/types";
 import MenuCard from "./components/MenuCard";
 import FilterSidebar from "./components/FilterSidebar";
 import MenuItemModal from "./components/MenuItemModal";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 import { Filter } from "lucide-react";
 

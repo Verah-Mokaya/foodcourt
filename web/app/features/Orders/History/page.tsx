@@ -1,8 +1,8 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
-import { fetcher } from "@/lib/api";
-import { Order } from "@/lib/types";
+import { useAuth } from "@/app/context/AuthContext";
+import { fetcher } from "@/app/lib/api";
+import { Order } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import { Clock, CheckCircle2, ChefHat, XCircle } from "lucide-react";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, Filter, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/lib/utils";
 
 interface FilterSidebarProps {
     categories: string[];
