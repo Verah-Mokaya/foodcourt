@@ -46,3 +46,17 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                     </div>
                 ))}
             </section>
+
+             {/* Cooking & Ready */}
+            <section className="space-y-4">
+                <h2 className="font-bold text-lg flex items-center gap-2">
+                    <ChefHat className="w-5 h-5 text-blue-500" />
+                    In Progress & Ready
+                </h2>
+                {[...preparingOrders, ...readyOrders].map(order => (
+                    <div key={order.id} className={`bg-white p-4 rounded-xl border-l-4 shadow-sm ${order.status === 'ready' ? 'border-green-500' : 'border-blue-500'}`}>
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                            <span className={`text-xs font-bold px-2 py-1 rounded ${order.status === 'ready' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                {order.status.toUpperCase()}
+                            </span>
