@@ -66,3 +66,9 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                             {(user.name || user.first_name || "U").charAt(0)}
                         </div>
                     </div>
+                    </header>
+                {children}
+            </main>
+        </div>
+    );
+}
