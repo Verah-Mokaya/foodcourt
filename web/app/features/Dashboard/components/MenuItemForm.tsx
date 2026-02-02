@@ -60,3 +60,19 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                             <span className={`text-xs font-bold px-2 py-1 rounded ${order.status === 'ready' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                                 {order.status.toUpperCase()}
                             </span>
+                        </div>
+                        <div className="space-y-1 mb-4">
+                            {(order.order_items || []).map((item, i) => (
+                                <div key={i} className="text-sm">
+                                    <span>{item.quantity}x Item #{item.menu_item_id}</span>
+                                </div>
+                            ))}
+                        </div>
+                        {order.status === "preparing" && (
+                            <button
+                                onClick={() => updateStatus(order.id, "ready")}
+                                className="w-full bg-green-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-700"
+                            >
+                                Mark Ready
+                            </button>
+                        )}
