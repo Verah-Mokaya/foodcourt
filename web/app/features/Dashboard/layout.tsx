@@ -12,3 +12,9 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
     const { user, isLoading, logout } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
+
+    useEffect(() => {
+        if (!isLoading && (!user || (user.role !== "owner" && user.role !== "outlet"))) {
+            router.push("/features/Login");
+        }
+    }, [user, isLoading, router]);
