@@ -57,5 +57,27 @@ export default function BookingPage() {
                     />
                 </div>
             </div>
+
+            <div>
+                <h2 className="text-lg font-semibold mb-3">Select a Table</h2>
+                <div className="grid grid-cols-3 gap-3">
+                    {tables.map(table => (
+                        <button
+                            key={table.id}
+                            disabled={!table.is_available}
+                            onClick={() => setSelectedTable(table.id)}
+                            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${selectedTable === table.id
+                                ? "bg-orange-600 text-white border-orange-600 ring-2 ring-orange-200"
+                                : !table.is_available
+                                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                                    : "bg-white text-gray-900 border-gray-200 hover:border-orange-500"
+                                }`}
+                        >
+                            <span className="font-bold text-lg">{table.table_number}</span>
+                            <span className="text-xs opacity-80">{table.capacity} Seats</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
   );
 }
