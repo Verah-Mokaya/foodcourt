@@ -6,3 +6,7 @@ export const fetcher = async <T>(url: string): Promise<T> => {
         typeof window !== "undefined"
             ? localStorage.getItem("fc_token")
             : null;
+
+            const headers: HeadersInit = {
+    "Content-Type": "application/json",
+};
