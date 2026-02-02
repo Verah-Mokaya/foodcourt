@@ -28,3 +28,10 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                             <span className="font-mono text-sm text-gray-500">#{order.id}</span>
                             <span className="font-bold">${order.total_amount.toFixed(2)}</span>
                         </div>
+                        <div className="space-y-1 mb-4">
+                            {(order.order_items || []).map((item, i) => (
+                                <div key={i} className="text-sm flex justify-between">
+                                    <span>{item.quantity}x Item #{item.menu_item_id}</span>
+                                </div>
+                            ))}
+                        </div>
