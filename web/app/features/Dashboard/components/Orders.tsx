@@ -45,3 +45,48 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         </div>
                     </div>
                 ))}
+                </section>
+
+            {/* Cooking & Ready */}
+            <section className="space-y-4">
+                <h2 className="font-bold text-lg flex items-center gap-2">
+                    <ChefHat className="w-5 h-5 text-blue-500" />
+                    In Progress & Ready
+                </h2>
+                {[...preparingOrders, ...readyOrders].map(order => (
+                    <div key={order.id} className={`bg-white p-4 rounded-xl border-l-4 shadow-sm ${order.status === 'ready' ? 'border-green-500' : 'border-blue-500'}`}>
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                            <span className={`text-xs font-bold px-2 py-1 rounded ${order.status === 'ready' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                                {order.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <div className="space-y-1 mb-4">
+                            {(order.order_items || []).map((item, i) => (
+                                <div key={i} className="text-sm">
+                                    <span>{item.quantity}x Item #{item.menu_item_id}</span>
+                                </div>
+                            ))}
+                        </div>
+                        {order.status === "preparing" && (
+                            <button
+                                onClick={() => updateStatus(order.id, "ready")}
+                                className="w-full bg-green-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-700"
+                            >
+                                Mark Ready
+                            </button>
+                        )}
+                        {order.status === "ready" && (
+                            <button
+                                onClick={() => updateStatus(order.id, "completed")}
+                                className="w-full bg-gray-100 text-gray-600 py-2 rounded-lg text-sm font-medium hover:bg-gray-200"
+                            >
+                                Complete
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </section>
+        </div>
+    );
+}
