@@ -22,5 +22,6 @@ export const fetcher = async <T>(url: string): Promise<T> => {
          throw new Error(
     error.message || error.error || "An error occurred"
 );
+return res.json();
 
 
