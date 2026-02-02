@@ -54,3 +54,9 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                     </button>
                 </div>
             </aside>
+
+            <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                <header className="flex justify-between items-center mb-6">
+                    <h1 className="text-xl font-bold text-gray-900">
+                        {pathname === "/features/Dashboard" ? "Live Orders" : pathname.includes("Menu") ? "Menu Management" : "Table Management"}
+                    </h1>
