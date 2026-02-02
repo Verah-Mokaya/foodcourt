@@ -30,3 +30,11 @@ export type Outlet = {
     image_url?: string;
     is_active?: boolean;
 };
+export type CartItem = {
+    menuItemId: number | string;
+    name: string;
+    price: number;
+    quantity: number;
+    outletId: number | string;
+    outletName: string;
+};
