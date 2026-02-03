@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
-import { Utensils, Menu, X, ShoppingBag } from "lucide-react";
+import { Utensils, Menu, X, ShoppingBag, LogOut } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 import { ROUTES } from "@/app/lib/routes";
 import { motion, AnimatePresence } from "framer-motion";
@@ -68,12 +68,24 @@ export default function Navbar() {
                                     <ShoppingBag className="w-5 h-5" />
                                 </Link>
                             )}
-                            <Link
-                                href={user.role === "owner" ? ROUTES.DASHBOARD : ROUTES.PROFILE}
-                                className="bg-orange-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-700 transition-colors"
-                            >
-                                {user.role === "owner" ? "Dashboard" : "My Profile"}
-                            </Link>
+                            <div className="flex items-center gap-2">
+                                <Link
+                                    href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.PROFILE}
+                                    className="bg-orange-600 !text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-700 transition-colors"
+                                >
+                                    {["owner", "outlet"].includes(user.role) ? "Dashboard" : "My Profile"}
+                                </Link>
+                                <button
+                                    onClick={logout}
+                                    className={cn(
+                                        "p-2 rounded-full transition-colors flex items-center justify-center",
+                                        scrolled ? "text-gray-600 hover:bg-gray-100" : "text-white hover:bg-white/10"
+                                    )}
+                                    title="Logout"
+                                >
+                                    <LogOut className="w-5 h-5 text-red-500" />
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <>
@@ -131,13 +143,25 @@ export default function Navbar() {
                             ))}
                             <div className="h-px bg-gray-100 my-2" />
                             {user ? (
-                                <Link
-                                    href={user.role === "owner" ? ROUTES.DASHBOARD : ROUTES.PROFILE}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="bg-orange-600 text-white py-3 rounded-xl text-center font-bold"
-                                >
-                                    {user.role === "owner" ? "Dashboard" : "My Profile"}
-                                </Link>
+                                <div className="flex flex-col gap-3">
+                                    <Link
+                                        href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.PROFILE}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="bg-orange-600 !text-white py-3 rounded-xl text-center font-bold"
+                                    >
+                                        {["owner", "outlet"].includes(user.role) ? "Dashboard" : "My Profile"}
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            setMobileMenuOpen(false);
+                                        }}
+                                        className="flex items-center justify-center gap-2 py-3 text-red-600 font-bold border border-red-100 rounded-xl"
+                                    >
+                                        <LogOut className="w-5 h-5" />
+                                        Log Out
+                                    </button>
+                                </div>
                             ) : (
                                 <div className="flex flex-col gap-3">
                                     <Link

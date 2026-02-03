@@ -153,8 +153,14 @@ def create_menu_item():
     db.session.commit()
 
     return jsonify({
-        "message": "Menu item created successfully",
-        "item_id": new_item.id
+        "id": new_item.id,
+        "item_name": new_item.item_name,
+        "description": new_item.description,
+        "category": new_item.category,
+        "price": float(new_item.price),
+        "image_url": new_item.image_url,
+        "is_available": new_item.is_available,
+        "outlet_id": new_item.outlet_id
     }), 201
 
 
@@ -230,3 +236,19 @@ def get_menu_categories(outlet_id):
         "outlet_name": outlet.outlet_name,
         "categories": category_list
     }), 200
+# DELETE MENU ITEM (OWNER ONLY)
+@menu_bp.route("/item/<int:item_id>", methods=["DELETE"])
+@jwt_required()
+@outlet_required
+def delete_menu_item(item_id):
+    item = MenuItem.query.get(item_id)
+    if not item:
+        return jsonify({"error": "Menu item not found"}), 404
+    
+    identity = get_jwt_identity()
+    if item.outlet_id != identity["id"]:
+        return jsonify({"error": "Forbidden"}), 403
+    
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify({"message": "Menu item deleted successfully"}), 200

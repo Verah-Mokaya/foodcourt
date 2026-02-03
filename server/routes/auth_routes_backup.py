@@ -193,7 +193,6 @@ def get_me():
                 "email": customer.email,
                 "first_name": customer.first_name,
                 "last_name": customer.last_name,
-                "phone_number": customer.phone_number,
                 "name": f"{customer.first_name} {customer.last_name}"
             })
     elif role == "outlet":
@@ -203,9 +202,6 @@ def get_me():
                 "email": outlet.email,
                 "outlet_name": outlet.outlet_name,
                 "owner_name": outlet.owner_name,
-                "cuisine_type": outlet.cuisine_type,
-                "description": outlet.description,
-                "is_active": outlet.is_active,
                 "name": outlet.outlet_name
             })
 

@@ -42,9 +42,13 @@ export default function MenuPage() {
                 is_available: newItem.is_available
             };
 
-            const res = await fetch(`${API_URL}/menu_items`, {
+            const token = localStorage.getItem("fc_token");
+            const res = await fetch(`${API_URL}/item`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(payload)
             });
 
@@ -59,8 +63,12 @@ export default function MenuPage() {
 
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure?")) return;
+        const token = localStorage.getItem("fc_token");
         try {
-            await fetch(`${API_URL}/menu_items/${id}`, { method: "DELETE" });
+            await fetch(`${API_URL}/item/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             setItems(items.filter(i => i.id !== id));
         } catch (err) {
             alert("Failed to delete item");

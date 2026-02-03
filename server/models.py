@@ -178,6 +178,7 @@ class Order(db.Model, SerializerMixin):
     serialize_rules = ("-reservation.orders", "-order_items.order")
     
     id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
     reservation_id = db.Column(db.Integer, db.ForeignKey("reservations.id"))
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")

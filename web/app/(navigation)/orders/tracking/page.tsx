@@ -9,8 +9,8 @@ export default function OrderTrackingPage() {
     const searchParams = useSearchParams();
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-md w-full text-center">
+        <div className="min-h-screen !bg-white flex flex-col items-center justify-center p-4">
+            <div className="!bg-white p-8 rounded-2xl shadow-lg border border-gray-100 max-w-md w-full text-center">
                 <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle2 className="w-10 h-10 text-green-600" />
                 </div>

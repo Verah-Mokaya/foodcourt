@@ -5,6 +5,8 @@ export type User = {
     last_name?: string;
     role: "customer" | "admin" | "owner" | "outlet";
     outletId?: number | string;
+    outlet_name?: string;
+    owner_name?: string;
     name?: string;
     phone_number?: string;
     password?: string;

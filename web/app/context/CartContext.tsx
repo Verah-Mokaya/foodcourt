@@ -28,6 +28,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }, [items]);
 
     const addToCart = (newItem: any) => {
+        const token = localStorage.getItem("fc_token");
+        if (!token) {
+            alert("Please login to start your ordering process");
+            window.location.href = "/login";
+            return;
+        }
         setItems(prev => {
             const existing = prev.find(i => i.menuItemId === newItem.menuItemId);
             if (existing) {

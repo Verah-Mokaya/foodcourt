@@ -1,10 +1,8 @@
 "use client";
 
-import Navbar from "@/app/components/Navbar";
 import Hero from "@/app/features/Home/components/Hero";
 import BestSellers from "@/app/features/Home/components/BestSellers";
-import Footer from "@/app/components/Footer";
-import { ArrowRight, Star, Clock, Truck } from "lucide-react";
+import { ArrowRight, Star, Clock, Store } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ROUTES } from "@/app/lib/routes";
@@ -12,7 +10,6 @@ import { ROUTES } from "@/app/lib/routes";
 export default function Home() {
     return (
         <main className="min-h-screen bg-white">
-            <Navbar />
             <Hero />
             <BestSellers />
 
@@ -25,7 +22,6 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                        {/* Connecting Line (Desktop) */}
                         <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-orange-100 -z-10" />
 
                         {[
@@ -57,7 +53,7 @@ export default function Home() {
                         {[
                             { icon: Star, title: "Top Rated Outlets", desc: "Curated selection of the best local restaurants." },
                             { icon: Clock, title: "Live Tracking", desc: "Watch your food journey from kitchen to table." },
-                            { icon: Truck, title: "Fast Delivery", desc: "Hot and fresh food delivered in record time." }
+                            { icon: Store, title: "Fast Delivery", desc: "Hot and fresh food delivered in record time." }
                         ].map((feature, idx) => (
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
@@ -88,7 +84,7 @@ export default function Home() {
                                 alt="Restaurant Interior"
                                 className="rounded-2xl shadow-2xl"
                             />
-                            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl hidden md:block border border-gray-100">
+                            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl hidden md:block border border-gray-100" >
                                 <div className="flex items-center gap-2 mb-2">
                                     <div className="text-orange-500 font-bold text-2xl">4.9</div>
                                     <div className="flex text-orange-400">
@@ -133,8 +129,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            <Footer />
         </main>
     );
 }

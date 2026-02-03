@@ -40,6 +40,16 @@ export default function SignupPage() {
                 phone_number: "0725123456"
             };
 
+            if (role === "outlet") {
+                payload = {
+                    ...payload,
+                    outlet_name: formData.outletName,
+                    owner_name: formData.name,
+                    cuisine_type: formData.cuisine,
+                    description: `Welcome to ${formData.outletName}`
+                };
+            }
+
             await register(payload);
 
         } catch (error: any) {

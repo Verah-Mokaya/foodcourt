@@ -14,11 +14,13 @@ const geistMono = Geist_Mono({
 
 import { AuthProvider } from "@/app/context/AuthContext";
 import { CartProvider } from "@/app/context/CartContext";
+import { AuthContextWrapper } from "@/app/components/SessionProvider";
 
 export const metadata: Metadata = {
   title: "Food Court System",
   description: "Order food from your favorite outlets",
 };
+
 
 export default function RootLayout({
   children,
@@ -28,13 +30,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <CartProvider>
-            {children}
-          </CartProvider>
-        </AuthProvider>
+        <AuthContextWrapper>
+          <AuthProvider>
+            <CartProvider>
+              {children}
+            </CartProvider>
+          </AuthProvider>
+        </AuthContextWrapper>
       </body>
     </html>
   );

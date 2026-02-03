@@ -1,7 +1,9 @@
 import { Utensils, Facebook, Twitter, Instagram } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Footer() {
+    const { user } = useAuth();
     return (
         <footer className="bg-gray-900 text-white pt-16 pb-8">
             <div className="container mx-auto px-6">
@@ -52,8 +54,14 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
-                    &copy; {new Date().getFullYear()} Food Court App. All rights reserved.
+                <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
+                    <span>&copy; {new Date().getFullYear()} Food Court App. All rights reserved.</span>
+                    {user && (
+                        <div className="flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full border border-gray-700">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                            <span className="text-xs text-gray-300">Logged in as: <span className="font-bold text-white">{user.name || user.owner_name || user.first_name || "User"}</span></span>
+                        </div>
+                    )}
                 </div>
             </div>
         </footer>

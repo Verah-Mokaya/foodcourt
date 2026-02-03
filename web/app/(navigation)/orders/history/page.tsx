@@ -58,15 +58,9 @@ export default function OrderHistoryPage() {
         <div className="space-y-6 pb-20">
             <header className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hi, {user.first_name}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hi, {user.first_name || user.name}</h1>
                     <p className="text-gray-500 text-sm dark:text-gray-400">Track your yummy orders here.</p>
                 </div>
-                <button
-                    onClick={logout}
-                    className="text-sm font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg transition-colors"
-                >
-                    Log Out
-                </button>
             </header>
 
             <div className="space-y-4">

@@ -58,13 +58,27 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
 
             <main className="flex-1 p-4 md:p-8 overflow-y-auto">
                 <header className="flex justify-between items-center mb-6">
-                    <h1 className="text-xl font-bold text-gray-900">
-                        {pathname === ROUTES.DASHBOARD ? "Live Orders" : pathname.includes("menu") ? "Menu Management" : "Table Management"}
-                    </h1>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500">Welcome, {user.name || user.first_name}</span>
-                        <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium text-gray-600">
-                            {(user.name || user.first_name || "U").charAt(0)}
+                    <div>
+                        <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            {pathname === ROUTES.DASHBOARD ? "Live Orders" : pathname.includes("menu") ? "Menu Management" : "Table Management"}
+                        </h1>
+                        {user.outlet_name && (
+                            <p className="text-sm text-gray-500 mt-1">
+                                Managing <span className="font-semibold text-orange-600">{user.outlet_name}</span>
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="text-right hidden sm:block">
+                            <p className="text-sm font-bold text-gray-900 leading-none">
+                                {user.owner_name || user.name || "Owner"}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+                                {user.role}
+                            </p>
+                        </div>
+                        <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center text-sm font-bold text-orange-700 border border-orange-200 shadow-sm">
+                            {(user.owner_name || user.name || "O").charAt(0)}
                         </div>
                     </div>
                 </header>

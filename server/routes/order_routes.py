@@ -32,13 +32,15 @@ def create_order():
 
     data = request.get_json() or {}
 
-    # Validate request body
-    if not data.get("outlet_id") or not data.get("items"):
+    items = data.get("items") or data.get("order_items")
+    outlet_id = data.get("outlet_id")
+
+    if not outlet_id or not items:
         return jsonify({
             "error": "outlet_id and items are required"
         }), 400
 
-    if not isinstance(data["items"], list):
+    if not isinstance(items, list):
         return jsonify({
             "error": "items must be a list"
         }), 400
@@ -48,7 +50,7 @@ def create_order():
     customer_id = identity["id"]
 
     # Validate outlet
-    outlet = Outlet.query.get(data["outlet_id"])
+    outlet = Outlet.query.get(outlet_id)
     if not outlet:
         return jsonify({"error": "Outlet not found"}), 404
 
@@ -82,7 +84,7 @@ def create_order():
     db.session.flush()  # Get order.id
 
     # Process items
-    for item in data["items"]:
+    for item in items:
 
         if "menu_item_id" not in item:
             db.session.rollback()

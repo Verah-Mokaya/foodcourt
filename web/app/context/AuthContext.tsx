@@ -22,11 +22,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("fc_user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        setIsLoading(false);
+        const checkAuth = async () => {
+            const token = localStorage.getItem("fc_token");
+            if (token) {
+                try {
+                    const res = await fetch(`${API_URL}/auth/me`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const { user: identity } = await res.json();
+                        setUser({
+                            id: identity.id,
+                            email: identity.email || "",
+                            role: identity.role,
+                            name: identity.role === "customer" ? "Customer" : "Outlet Owner"
+                        });
+                    } else {
+                        logout();
+                    }
+                } catch (e) {
+                    logout();
+                }
+            }
+            setIsLoading(false);
+        };
+        checkAuth();
     }, []);
 
     const login = async (email: string, pass: string) => {
