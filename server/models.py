@@ -160,6 +160,7 @@ class Reservation(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
     time_reserved_for = db.Column(db.DateTime, nullable=False)
+    number_of_guests = db.Column(db.Integer, nullable=False)
     table_id = db.Column(db.Integer, db.ForeignKey("food_court_tables.id"), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

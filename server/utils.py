@@ -27,8 +27,15 @@ def role_required(required_role):
             if not identity:
                 return jsonify({"error": "Unauthorized"}), 401
 
-            if identity.get("role") != required_role:
+            user_role = str(identity.get("role", "")).lower()
+            
+            # Alias handling
+            if required_role == "outlet" and user_role not in ["outlet", "owner"]:
                 return jsonify({"error": "Forbidden"}), 403
+            elif required_role == "customer" and user_role != "customer":
+                return jsonify({"error": "Forbidden"}), 403
+            elif required_role not in ["outlet", "customer"] and user_role != required_role:
+                 return jsonify({"error": "Forbidden"}), 403
 
             return fn(*args, **kwargs)
 

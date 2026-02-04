@@ -58,13 +58,13 @@ export default function OrderHistoryPage() {
         <div className="space-y-6 pb-20">
             <header className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hi, {user.first_name || user.name}</h1>
+                    <h1 className="text-2xl font-bold text-white">Hi, {user.first_name || user.name}</h1>
                     <p className="text-gray-500 text-sm dark:text-gray-400">Track your yummy orders here.</p>
                 </div>
             </header>
 
             <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-900">Active Orders</h2>
+                <h2 className="text-lg font-semibold text-white">Active Orders</h2>
 
                 {orders.length === 0 && (
                     <p className="text-gray-500 text-sm">No recent orders.</p>

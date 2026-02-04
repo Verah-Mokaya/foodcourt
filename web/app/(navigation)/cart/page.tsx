@@ -112,7 +112,7 @@ export default function CartPage() {
                                     >
                                         <Minus className="h-3 w-3 text-gray-600" />
                                     </button>
-                                    <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
+                                    <span className="text-sm font-medium w-4 text-center text-gray-700">{item.quantity}</span>
                                     <button
                                         onClick={() => updateQuantity(Number(item.menuItemId), 1)}
                                         className="p-1 hover:bg-white rounded shadow-sm transition-colors"

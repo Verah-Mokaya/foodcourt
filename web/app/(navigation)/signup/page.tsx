@@ -104,7 +104,7 @@ export default function SignupPage() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input
                             required
-                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-500 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                             placeholder="John Doe"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -116,7 +116,7 @@ export default function SignupPage() {
                         <input
                             required
                             type="email"
-                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-500 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                             placeholder="name@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -128,7 +128,7 @@ export default function SignupPage() {
                         <input
                             required
                             type="password"
-                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-500 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                             placeholder="••••••••"
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -145,7 +145,7 @@ export default function SignupPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant Name</label>
                                 <input
                                     required
-                                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-500 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                                     placeholder="Tasty Bites"
                                     value={formData.outletName}
                                     onChange={(e) => setFormData({ ...formData, outletName: e.target.value })}
@@ -155,7 +155,7 @@ export default function SignupPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Cuisine Type</label>
                                 <input
                                     required
-                                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-500 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                                     placeholder="e.g. Italian, Indian, Fast Food"
                                     value={formData.cuisine}
                                     onChange={(e) => setFormData({ ...formData, cuisine: e.target.value })}

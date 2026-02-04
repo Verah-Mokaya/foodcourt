@@ -13,13 +13,15 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("Main");
     const [image, setImage] = useState("");
+    const [description, setDescription] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await onAdd({ name, price, category, image });
+        await onAdd({ name, price, category, image, description });
         setName("");
         setPrice("");
         setImage("");
+        setDescription("");
     };
 
     return (
@@ -76,6 +78,16 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                         onChange={e => setImage(e.target.value)}
                     />
                 </div>
+            </div>
+
+            <div className="space-y-1">
+                <label className="text-xs font-bold text-gray-500 uppercase">Description</label>
+                <textarea
+                    placeholder="Describe this delicious item..."
+                    className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20 min-h-[100px]"
+                    value={description}
+                    onChange={e => setDescription(e.target.value)}
+                />
             </div>
 
             <button

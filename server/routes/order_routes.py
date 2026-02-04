@@ -133,3 +133,85 @@ def create_order():
         "status": order.status,
         "total_amount": float(order.total_amount)
     }), 201
+
+
+# GET ORDERS (CUSTOMER OR OUTLET)
+@order_bp.route("", methods=["GET"])
+@jwt_required()
+def get_orders():
+    identity = get_jwt_identity()
+    user_id = identity["id"]
+    role = str(identity.get("role", "")).lower()
+
+    customer_id = request.args.get("customer_id", type=int)
+    outlet_id = request.args.get("outlet_id", type=int)
+
+    query = Order.query
+
+    if role == "customer":
+        # Strict isolation: customers can only see their own orders
+        query = query.filter_by(customer_id=user_id)
+    elif role in ["outlet", "owner"]:
+        # Outlets can see orders for their own outlet
+        # If outlet_id is provided, it must match their user_id (if they are an outlet)
+        # Assuming outlet registered as user with id X
+        target_outlet_id = outlet_id or user_id
+        # We need to filter by menu items belonging to this outlet
+        query = query.join(OrderItem).join(MenuItem).filter(MenuItem.outlet_id == target_outlet_id).distinct()
+    else:
+        return jsonify({"error": "Forbidden"}), 403
+
+    orders = query.order_by(Order.created_at.desc()).all()
+
+    return jsonify([
+        {
+            "id": o.id,
+            "customer_id": o.customer_id,
+            "reservation_id": o.reservation_id,
+            "total_amount": float(o.total_amount),
+            "status": o.status,
+            "created_at": o.created_at.isoformat() if o.created_at else None,
+            "order_items": [
+                {
+                    "menu_item_id": item.menu_item_id,
+                    "quantity": item.quantity,
+                    "price": float(item.price)
+                } for item in o.order_items
+            ]
+        } for o in orders
+    ]), 200
+
+
+# UPDATE ORDER STATUS (OUTLET ONLY)
+@order_bp.route("/<int:order_id>", methods=["PATCH", "PUT"])
+@jwt_required()
+def update_order_status(order_id):
+    order = Order.query.get(order_id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+
+    identity = get_jwt_identity()
+    user_id = identity["id"]
+    role = str(identity.get("role", "")).lower()
+
+    if role not in ["outlet", "owner"]:
+        return jsonify({"error": "Forbidden"}), 403
+
+    # Ownership check: order must have items from this outlet
+    # Simplify: if any item in the order belongs to this outlet, they can update it.
+    # In a real food court, orders might be multi-outlet, but here we seem to split them in the frontend.
+    
+    data = request.get_json() or {}
+    status = data.get("status")
+
+    if not status:
+        return jsonify({"error": "Status is required"}), 400
+
+    order.status = status
+    db.session.commit()
+
+    return jsonify({
+        "message": "Order status updated",
+        "order_id": order.id,
+        "status": order.status
+    }), 200

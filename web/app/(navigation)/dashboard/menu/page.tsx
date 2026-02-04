@@ -39,6 +39,7 @@ export default function MenuPage() {
                 price: Number(newItem.price),
                 category: newItem.category,
                 image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80", // Default
+                description: newItem.description,
                 is_available: newItem.is_available
             };
 
@@ -78,7 +79,7 @@ export default function MenuPage() {
     if (isLoading) return <div className="p-8">Loading menu...</div>;
 
     return (
-        <div className="space-y-8 max-w-4xl p-6">
+        <div className="space-y-8 max-w-4xl p-6 mx-auto">
             <h1 className="text-2xl font-bold text-gray-900">Menu Management</h1>
             <MenuItemForm onAdd={handleAdd} isSubmitting={isSubmitting} />
             <MenuTable items={items} onDelete={handleDelete} />

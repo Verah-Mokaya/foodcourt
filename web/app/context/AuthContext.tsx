@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                             id: identity.id,
                             email: identity.email || "",
                             role: identity.role,
-                            name: identity.role === "customer" ? "Customer" : "Outlet Owner"
+                            name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet Owner")
                         });
                     } else {
                         logout();
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 id: identity.id,
                 email: email,
                 role: identity.role,
-                name: identity.role === "customer" ? "Customer" : "Outlet Owner"
+                name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet Owner")
             };
 
             setUser(loggedInUser);

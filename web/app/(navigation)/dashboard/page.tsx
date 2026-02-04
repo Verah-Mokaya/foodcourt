@@ -6,27 +6,43 @@ import { Order } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import DashboardHome from "./components/DashboardHome";
 import Orders from "./components/Orders";
+import ReservationsTable from "./components/ReservationsTable";
+
+interface Reservation {
+    id: number;
+    customer_id: number;
+    table_id: number;
+    time_reserved_for: string;
+    number_of_guests: number;
+    status: string;
+    created_at: string;
+}
 export default function OwnerDashboardPage() {
     const { user } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
+    const [reservations, setReservations] = useState<Reservation[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const loadOrders = async () => {
+    const loadData = async () => {
         if (!user || (user.role !== "owner" && user.role !== "outlet")) return;
         try {
             const outletId = user.role === 'outlet' ? user.id : (user.outletId || 1);
-            const res = await fetcher<Order[]>(`/orders?outlet_id=${outletId}&_sort=created_at&_order=desc`);
-            setOrders(res);
+            const [ordersRes, reservationsRes] = await Promise.all([
+                fetcher<Order[]>(`/orders?outlet_id=${outletId}&_sort=created_at&_order=desc`),
+                fetcher<Reservation[]>("/reservations")
+            ]);
+            setOrders(ordersRes);
+            setReservations(reservationsRes);
         } catch (err) {
-            console.error("Failed to load orders", err);
+            console.error("Failed to load dashboard data", err);
         } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        loadOrders();
-        const interval = setInterval(loadOrders, 10000);
+        loadData();
+        const interval = setInterval(loadData, 10000);
         return () => clearInterval(interval);
     }, [user]);
 
@@ -56,7 +72,10 @@ export default function OwnerDashboardPage() {
         <div className="space-y-8 p-6">
             <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
             <DashboardHome stats={stats} />
-            <Orders orders={orders} updateStatus={updateStatus} />
+            <div className="grid grid-cols-1 gap-8">
+                <Orders orders={orders} updateStatus={updateStatus} />
+                <ReservationsTable reservations={reservations} />
+            </div>
         </div>
     );
 }

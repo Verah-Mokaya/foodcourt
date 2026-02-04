@@ -28,7 +28,7 @@ def create_reservation():
 
     data = request.get_json() or {}
 
-    required = ["table_id", "reservation_time", "number_of_guests"]
+    required = ["table_id", "time_reserved_for", "number_of_guests"]
 
     for field in required:
         if not data.get(field):
@@ -50,12 +50,12 @@ def create_reservation():
 
     # Validate datetime
     try:
-        reservation_time = datetime.fromisoformat(
-            data["reservation_time"]
+        time_reserved_for = datetime.fromisoformat(
+            data["time_reserved_for"]
         )
     except ValueError:
         return jsonify({
-            "error": "Invalid reservation_time format"
+            "error": "Invalid time_reserved_for format"
         }), 400
 
     # Validate guests
@@ -71,7 +71,7 @@ def create_reservation():
     reservation = Reservation(
         customer_id=customer_id,
         table_id=table.id,
-        reservation_time=reservation_time,
+        time_reserved_for=time_reserved_for,
         number_of_guests=guests,
         status="pending"
     )
@@ -135,7 +135,7 @@ def get_my_reservations():
             {
                 "id": r.id,
                 "table_id": r.table_id,
-                "reservation_time": r.reservation_time.isoformat(),
+                "time_reserved_for": r.time_reserved_for.isoformat(),
                 "number_of_guests": r.number_of_guests,
                 "status": r.status,
                 "created_at": r.created_at.isoformat()
@@ -187,3 +187,28 @@ def update_reservation_status(reservation_id):
     return jsonify({
         "message": "Reservation canceled"
     }), 200
+
+
+# GET ALL RESERVATIONS (OUTLET OWNER ONLY)
+@reservation_bp.route("", methods=["GET"])
+@jwt_required()
+def get_all_reservations():
+    identity = get_jwt_identity()
+    role = str(identity.get("role", "")).lower()
+
+    if role not in ["outlet", "owner"]:
+        return jsonify({"error": "Forbidden"}), 403
+
+    reservations = Reservation.query.order_by(Reservation.time_reserved_for.desc()).all()
+
+    return jsonify([
+        {
+            "id": r.id,
+            "customer_id": r.customer_id,
+            "table_id": r.table_id,
+            "time_reserved_for": r.time_reserved_for.isoformat(),
+            "number_of_guests": r.number_of_guests,
+            "status": r.status,
+            "created_at": r.created_at.isoformat() if r.created_at else None
+        } for r in reservations
+    ]), 200

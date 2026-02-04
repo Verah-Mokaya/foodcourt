@@ -36,7 +36,7 @@ export default function BookingPage() {
                 },
                 body: JSON.stringify({
                     table_id: selectedTable,
-                    reservation_time: `${date}T${time}:00`,
+                    time_reserved_for: `${date}T${time}:00`,
                     number_of_guests: guests,
                     customer_id: user.id
                 })
@@ -99,7 +99,7 @@ export default function BookingPage() {
                         <button
                             key={table.id}
                             disabled={!table.is_available}
-                            onClick={() => setSelectedTable(table.id)}
+                            onClick={() => setSelectedTable(Number(table.id))}
                             className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-1 transition-all ${selectedTable === table.id
                                 ? "bg-orange-600 text-white border-orange-600 ring-2 ring-orange-200"
                                 : !table.is_available

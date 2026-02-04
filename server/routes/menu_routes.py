@@ -46,6 +46,25 @@ def get_all_menu_items():
     ]), 200
 
 
+# @menu_bp.route("/menu_items/<int:outlet_id>", methods=["GET"])
+# def get_all_menu_items(outlet_id):
+#     items = MenuItem.query.all()
+#     query = MenuItem.query.filter_by(outlet_id=outlet_id)
+#     return jsonify([
+#         {
+#             "id": item.id,
+#             "item_name": item.item_name,
+#             "description": item.description,
+#             "category": item.category,
+#             "price": float(item.price),
+#             "image_url": item.image_url,
+#             "is_available": item.is_available,
+#             "outlet_id": item.outlet_id
+#         }
+#         for item in items
+#     ]), 200
+
+
 # GET OUTLET MENU (PUBLIC)
 @menu_bp.route("/outlets/<int:outlet_id>", methods=["GET"])
 def get_outlet_menu(outlet_id):
