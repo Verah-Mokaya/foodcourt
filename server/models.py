@@ -22,7 +22,7 @@ class Customer(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    _password = db.Column("password", db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20))
@@ -119,6 +119,7 @@ class MenuItem(db.Model, SerializerMixin):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.String(255))
+    time_to_prepare = db.Column(db.Integer, nullable=False, default=15)
     is_available = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -160,6 +161,7 @@ class Reservation(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
     time_reserved_for = db.Column(db.DateTime, nullable=False)
+    number_of_guests = db.Column(db.Integer, nullable=False)
     table_id = db.Column(db.Integer, db.ForeignKey("food_court_tables.id"), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -178,15 +180,33 @@ class Order(db.Model, SerializerMixin):
     serialize_rules = ("-reservation.orders", "-order_items.order")
     
     id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
     reservation_id = db.Column(db.Integer, db.ForeignKey("reservations.id"))
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")
-    time_till_ready = db.Column(db.Integer)
+    estimated_time = db.Column(db.String(20)) 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # relationships
+    customer = db.relationship("Customer", back_populates="orders")
     reservation = db.relationship("Reservation", back_populates="orders")
     order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+    
+    def calculate_estimated_time(self):
+        if not self.order_items:
+            self.estimated_time = "15-25 minutes"  # default
+            return
+        
+        max_prep_time = max(
+            (item.time_to_prepare for item in self.order_items if item.time_to_prepare),
+            default=15
+        )
+        
+        # the range
+        min_time = max_prep_time
+        max_time = max_prep_time + 10
+        
+        self.estimated_time = f"{min_time}-{max_time} minutes"
     
     def __repr__(self):
         return f"<Order id={self.id} total={self.total_amount} status={self.status}>"
@@ -201,6 +221,7 @@ class OrderItem(db.Model, SerializerMixin):
     menu_item_id = db.Column(db.Integer, db.ForeignKey("menu_items.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
+    time_to_prepare = db.Column(db.Integer)
     
     # relationships
     order = db.relationship("Order", back_populates="order_items")
