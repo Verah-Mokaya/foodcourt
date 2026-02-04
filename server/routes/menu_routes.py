@@ -10,7 +10,7 @@ from utils import outlet_required
 menu_bp = Blueprint("menu", __name__, url_prefix="/menu")
 
 
-# GET OUTLET MENU (PUBLIC)
+# GET OUTLET MENU (PUBLIC/CUSTOMERS)
 @menu_bp.route("/<int:outlet_id>", methods=["GET"])
 def get_outlet_menu(outlet_id):
 
@@ -51,11 +51,58 @@ def get_outlet_menu(outlet_id):
         ]
     }), 200
 
+# GET SINGLE ITEM (PUBLIC)
+@menu_bp.route("/item/<int:item_id>", methods=["GET"])
+def get_menu_item(item_id):
+
+    item = MenuItem.query.get(item_id)
+
+    if not item:
+        return jsonify({"error": "Menu item not found"}), 404
+
+    return jsonify({
+        "id": item.id,
+        "item_name": item.item_name,
+        "description": item.description,
+        "category": item.category,
+        "price": float(item.price),
+        "image_url": item.image_url,
+        "is_available": item.is_available,
+        "created_at": item.created_at.isoformat() if item.created_at else None,
+        "outlet_id": item.outlet_id
+    }), 200
+
+# GET CATEGORIES (PUBLIC)
+@menu_bp.route("/categories/<int:outlet_id>", methods=["GET"])
+def get_menu_categories(outlet_id):
+
+    outlet = Outlet.query.get(outlet_id)
+
+    if not outlet:
+        return jsonify({"error": "Outlet not found"}), 404
+
+    categories = (
+        db.session
+        .query(MenuItem.category)
+        .filter_by(outlet_id=outlet_id)
+        .distinct()
+        .all()
+    )
+
+    category_list = [c[0] for c in categories]
+
+    return jsonify({
+        "outlet_id": outlet.id,
+        "outlet_name": outlet.outlet_name,
+        "categories": category_list
+    }), 200
+
 # GET OUTLET MENU (OUTLET ONLY)
 @menu_bp.route("/my-menu", methods=["GET"])
 @jwt_required()
 @outlet_required
 def get_my_menu():
+
     # Get outlet id from JWT
     identity = get_jwt_identity()
     outlet_id = identity["id"]
@@ -91,26 +138,6 @@ def get_my_menu():
         ]
     }), 200
 
-# GET SINGLE ITEM (PUBLIC)
-@menu_bp.route("/item/<int:item_id>", methods=["GET"])
-def get_menu_item(item_id):
-
-    item = MenuItem.query.get(item_id)
-
-    if not item:
-        return jsonify({"error": "Menu item not found"}), 404
-
-    return jsonify({
-        "id": item.id,
-        "item_name": item.item_name,
-        "description": item.description,
-        "category": item.category,
-        "price": float(item.price),
-        "image_url": item.image_url,
-        "is_available": item.is_available,
-        "created_at": item.created_at.isoformat() if item.created_at else None,
-        "outlet_id": item.outlet_id
-    }), 200
 
 
 # CREATE MENU ITEM (OUTLET ONLY)
@@ -161,7 +188,7 @@ def create_menu_item():
     }), 201
 
 
-# UPDATE MENU ITEM (OWNER ONLY)
+# UPDATE MENU ITEM (OUTLET ONLY)
 @menu_bp.route("/item/<int:item_id>", methods=["PUT"])
 @jwt_required()
 @outlet_required
@@ -209,27 +236,19 @@ def update_menu_item(item_id):
     }), 200
 
 
-# GET CATEGORIES (PUBLIC)
-@menu_bp.route("/categories/<int:outlet_id>", methods=["GET"])
-def get_menu_categories(outlet_id):
 
-    outlet = Outlet.query.get(outlet_id)
-
-    if not outlet:
-        return jsonify({"error": "Outlet not found"}), 404
-
-    categories = (
-        db.session
-        .query(MenuItem.category)
-        .filter_by(outlet_id=outlet_id)
-        .distinct()
-        .all()
-    )
-
-    category_list = [c[0] for c in categories]
-
-    return jsonify({
-        "outlet_id": outlet.id,
-        "outlet_name": outlet.outlet_name,
-        "categories": category_list
-    }), 200
+# GET ALL MENUS (ADMIN ONLY)
+@menu_bp.route('/all', methods=["GET"])
+@jwt_required
+@admin_required
+def get_all_menus():
+    outlets = Outlet.query.all()
+    result = []
+    for outlet in outlets:
+        items = MenuItem.query.filter_by(outlet_id=outlet.id).all()
+        result.append({
+            "outlet_id": outlet.id,
+            "outlet_name": outlet.outlet_name,
+            "items": [item.serialize() for item in items]
+        })
+    return jsonify(result), 200
