@@ -4,13 +4,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from extensions import db
 from models import MenuItem, Outlet
 
-from utils import outlet_required
+from utils import outlet_required, admin_required
 
 
 menu_bp = Blueprint("menu", __name__, url_prefix="/menu")
 
 
-# GET OUTLET MENU (PUBLIC/CUSTOMERS)
+# GET OUTLET MENU (PUBLIC)
 @menu_bp.route("/<int:outlet_id>", methods=["GET"])
 def get_outlet_menu(outlet_id):
 
