@@ -22,6 +22,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "super-secret-key")
 
+    # jwt cookie config
+    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_COOKIE_HTTPONLY = True
+    JWT_COOKIE_SECURE = False   # True in production (HTTPS)
+    JWT_COOKIE_SAMESITE = "Lax"
+    JWT_ACCESS_COOKIE_PATH = "/"
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
