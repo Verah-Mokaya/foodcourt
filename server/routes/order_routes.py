@@ -174,6 +174,7 @@ def get_orders():
             "order_items": [
                 {
                     "menu_item_id": item.menu_item_id,
+                    "item_name": item.menu_item.item_name if hasattr(item, 'menu_item') and item.menu_item else f"Item #{item.menu_item_id}",
                     "quantity": item.quantity,
                     "price": float(item.price)
                 } for item in o.order_items

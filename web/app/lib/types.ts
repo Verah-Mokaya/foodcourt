@@ -42,6 +42,7 @@ export type CartItem = {
 };
 export type OrderItem = {
     menu_item_id: number | string;
+    item_name?: string;
     quantity: number;
     price: number;
 };

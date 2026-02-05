@@ -40,17 +40,13 @@ export default function ReservationsPage() {
     const handleCancel = async (id: number) => {
         if (!confirm("Are you sure you want to cancel this reservation?")) return;
         try {
-            const token = localStorage.getItem("fc_token");
-            await fetch(`${API_URL}/reservations/${id}/status`, {
+            await fetcher(`/reservations/${id}/status`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
                 body: JSON.stringify({ status: "canceled" })
             });
             setReservations(prev => prev.map(r => r.id === id ? { ...r, status: "canceled" } : r));
         } catch (err) {
+            console.error("Failed to cancel reservation", err);
             alert("Failed to cancel reservation");
         }
     };
@@ -77,8 +73,8 @@ export default function ReservationsPage() {
                 {reservations.map(res => (
                     <div key={res.id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
                         <div className={`absolute top-0 right-0 px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-bl-xl ${res.status === 'pending' ? 'bg-orange-100 text-orange-600' :
-                                res.status === 'confirmed' ? 'bg-green-100 text-green-600' :
-                                    'bg-gray-100 text-gray-400'
+                            res.status === 'confirmed' ? 'bg-green-100 text-green-600' :
+                                'bg-gray-100 text-gray-400'
                             }`}>
                             {res.status}
                         </div>

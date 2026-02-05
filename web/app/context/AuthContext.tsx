@@ -10,7 +10,7 @@ interface AuthContextType {
     user: User | null;
     isLoading: boolean;
     login: (email: string, pass: string) => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
     register: (data: any) => Promise<void>;
 }
 
@@ -21,34 +21,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
+    // --- Check auth on initial load ---
     useEffect(() => {
         const checkAuth = async () => {
-            const token = localStorage.getItem("fc_token");
-            if (token) {
-                try {
-                    const res = await fetch(`${API_URL}/auth/me`, {
-                        headers: { "Authorization": `Bearer ${token}` }
+            try {
+                const res = await fetch(`${API_URL}/auth/me`, {
+                    credentials: "include", // <- send cookies automatically
+                });
+                if (res.ok) {
+                    const { user: identity } = await res.json();
+                    setUser({
+                        id: identity.id,
+                        email: identity.email || "",
+                        role: identity.role,
+                        name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet"),
+                        outletId: (identity.role === "outlet" || identity.role === "owner") ? identity.id : undefined
                     });
-                    if (res.ok) {
-                        const { user: identity } = await res.json();
-                        setUser({
-                            id: identity.id,
-                            email: identity.email || "",
-                            role: identity.role,
-                            name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet Owner")
-                        });
-                    } else {
-                        logout();
-                    }
-                } catch (e) {
-                    logout();
+                } else {
+                    setUser(null);
                 }
+            } catch (e) {
+                console.error("Auth check failed", e);
+                setUser(null);
+            } finally {
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
         checkAuth();
     }, []);
 
+    // --- Login ---
     const login = async (email: string, pass: string) => {
         setIsLoading(true);
         try {
@@ -56,7 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             let res = await fetch(`${API_URL}/auth/customer/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password: pass })
+                body: JSON.stringify({ email, password: pass }),
+                credentials: "include", // <- cookie-based login
             });
 
             if (!res.ok) {
@@ -64,37 +67,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 res = await fetch(`${API_URL}/auth/outlet/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, password: pass })
+                    body: JSON.stringify({ email, password: pass }),
+                    credentials: "include",
                 });
             }
 
-            if (!res.ok) {
-                throw new Error("Invalid credentials");
-            }
+            if (!res.ok) throw new Error("Invalid credentials");
 
-            const data = await res.json();
-            const token = data.access_token;
-
-            // Fetch me to get user details
+            // Fetch /me for user details
             const meRes = await fetch(`${API_URL}/auth/me`, {
-                headers: { "Authorization": `Bearer ${token}` }
+                credentials: "include", // <- get user from cookie
             });
 
             if (!meRes.ok) throw new Error("Failed to fetch user details");
 
             const { user: identity } = await meRes.json();
 
-            // Construct user object
             const loggedInUser: User = {
                 id: identity.id,
-                email: email,
+                email: identity.email || email,
                 role: identity.role,
-                name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet Owner")
+                name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet Owner"),
+                outletId: (identity.role === "outlet" || identity.role === "owner") ? identity.id : undefined
             };
 
             setUser(loggedInUser);
-            localStorage.setItem("fc_user", JSON.stringify(loggedInUser));
-            localStorage.setItem("fc_token", token);
 
             // Redirect
             if (loggedInUser.role === "owner" || loggedInUser.role === "outlet") {
@@ -111,6 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    // --- Register ---
     const register = async (data: any) => {
         setIsLoading(true);
         try {
@@ -121,7 +119,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const res = await fetch(`${API_URL}${endpoint}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: "include", // <- cookie login on register
             });
 
             if (!res.ok) {
@@ -129,27 +128,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 throw new Error(errData.error || "Registration failed");
             }
 
-            const respData = await res.json();
-            const token = respData.access_token;
-
-            // Fetch me to get user details
+            // Fetch /me for user details
             const meRes = await fetch(`${API_URL}/auth/me`, {
-                headers: { "Authorization": `Bearer ${token}` }
+                credentials: "include",
             });
+
+            if (!meRes.ok) throw new Error("Failed to fetch user info");
 
             const { user: identity } = await meRes.json();
 
             const newUser: User = {
                 id: identity.id,
-                email: data.email,
+                email: identity.email || data.email,
                 role: identity.role,
-                name: data.first_name ? `${data.first_name} ${data.last_name || ""}`.trim() : "User"
+                name: data.first_name ? `${data.first_name} ${data.last_name || ""}`.trim() : "User",
+                outletId: (identity.role === "outlet" || identity.role === "owner") ? identity.id : undefined
             };
 
             setUser(newUser);
-            localStorage.setItem("fc_user", JSON.stringify(newUser));
-            localStorage.setItem("fc_token", token);
 
+            // Redirect
             if (newUser.role === "owner" || newUser.role === "outlet") {
                 router.push(ROUTES.DASHBOARD);
             } else {
@@ -164,11 +162,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem("fc_token");
-        localStorage.removeItem("fc_user");
-        router.push(ROUTES.LOGIN);
+    // --- Logout ---
+    const logout = async () => {
+        try {
+            await fetch(`${API_URL}/auth/logout`, {
+                method: "POST",
+                credentials: "include", // <- clear cookie on backend
+            });
+        } catch (err) {
+            console.error("Logout Error", err);
+        } finally {
+            setUser(null);
+            router.push(ROUTES.LOGIN);
+        }
     };
 
     return (

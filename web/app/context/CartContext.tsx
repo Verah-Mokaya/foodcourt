@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "@/app/context/AuthContext";
 import { CartItem } from "@/app/lib/types";
 
 interface CartContextType {
@@ -16,6 +17,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+    const { user } = useAuth(); // <- use cookie-based auth state
     const [items, setItems] = useState<CartItem[]>([]);
 
     useEffect(() => {
@@ -28,8 +30,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }, [items]);
 
     const addToCart = (newItem: any) => {
-        const token = localStorage.getItem("fc_token");
-        if (!token) {
+        // Check user instead of localStorage token
+        if (!user) {
             alert("Please login to start your ordering process");
             window.location.href = "/login";
             return;

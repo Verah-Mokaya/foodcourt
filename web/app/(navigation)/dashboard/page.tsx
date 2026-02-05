@@ -48,9 +48,8 @@ export default function OwnerDashboardPage() {
 
     const updateStatus = async (orderId: number, newStatus: string) => {
         try {
-            await fetch(`${API_URL}/orders/${orderId}`, {
+            await fetcher(`/orders/${orderId}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: newStatus })
             });
             // here is the Optimistic update

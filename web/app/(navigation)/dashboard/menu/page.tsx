@@ -14,12 +14,12 @@ export default function MenuPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        if (!user) return;
+        if (!user || !user.outletId) return;
         const loadItems = async () => {
             try {
-                const outletId = user.outletId || 1;
-                const res = await fetcher<MenuItem[]>(`/menu_items?outlet_id=${outletId}`);
-                setItems(res);
+                // Use the correct outlet-specific endpoint
+                const res = await fetcher<{ items: MenuItem[] }>(`/outlets/${user.outletId}`);
+                setItems(res.items);
             } catch (err) {
                 console.error("Failed to load items", err);
             } finally {
@@ -30,32 +30,26 @@ export default function MenuPage() {
     }, [user]);
 
     const handleAdd = async (newItem: any) => {
-        if (!user) return;
+        if (!user || !user.outletId) return;
         setIsSubmitting(true);
         try {
             const payload = {
-                outlet_id: user.outletId || 1,
+                outlet_id: user.outletId,
                 item_name: newItem.name,
                 price: Number(newItem.price),
                 category: newItem.category,
-                image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80", // Default
+                image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
                 description: newItem.description,
                 is_available: newItem.is_available
             };
 
-            const token = localStorage.getItem("fc_token");
-            const res = await fetch(`${API_URL}/item`, {
+            const savedItem = await fetcher<MenuItem>("/item", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
                 body: JSON.stringify(payload)
             });
-
-            const savedItem = await res.json();
-            setItems([...items, savedItem]);
+            setItems(prev => [...prev, savedItem]);
         } catch (err) {
+            console.error("Failed to add item", err);
             alert("Failed to add item");
         } finally {
             setIsSubmitting(false);
@@ -64,14 +58,13 @@ export default function MenuPage() {
 
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure?")) return;
-        const token = localStorage.getItem("fc_token");
         try {
-            await fetch(`${API_URL}/item/${id}`, {
-                method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
+            await fetcher(`/item/${id}`, {
+                method: "DELETE"
             });
             setItems(items.filter(i => i.id !== id));
         } catch (err) {
+            console.error("Failed to delete item", err);
             alert("Failed to delete item");
         }
     };
@@ -79,7 +72,7 @@ export default function MenuPage() {
     if (isLoading) return <div className="p-8">Loading menu...</div>;
 
     return (
-        <div className="space-y-8 max-w-4xl p-6 mx-auto">
+        <div className="space-y-8 max-w-7xl p-6 mx-auto">
             <h1 className="text-2xl font-bold text-gray-900">Menu Management</h1>
             <MenuItemForm onAdd={handleAdd} isSubmitting={isSubmitting} />
             <MenuTable items={items} onDelete={handleDelete} />

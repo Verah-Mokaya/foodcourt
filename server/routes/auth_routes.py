@@ -2,7 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
-    get_jwt_identity
+    get_jwt_identity,
+    set_access_cookies,
+    unset_jwt_cookies
 )
 
 from extensions import db, bcrypt
@@ -55,10 +57,9 @@ def customer_register():
         }
     )
 
-    return jsonify({
-        "message": "Customer registered successfully",
-        "access_token": access_token
-    }), 201
+    response = jsonify({"message": "Customer registered successfully"})
+    set_access_cookies(response, access_token)
+    return response, 201
 
 
 # CUSTOMER LOGIN
@@ -92,10 +93,9 @@ def customer_login():
         }
     )
 
-    return jsonify({
-        "message": "Login successful",
-        "access_token": access_token
-    }), 200
+    response = jsonify({"message": "Login successful"})
+    set_access_cookies(response, access_token)
+    return response, 200
 
 # OUTLET REGISTER
 @auth_bp.route("/outlet/register", methods=["POST"])
@@ -132,10 +132,9 @@ def outlet_register():
         }
     )
 
-    return jsonify({
-        "message": "Outlet registered successfully",
-        "access_token": access_token
-    }), 201
+    response = jsonify({"message": "Outlet registered successfully"})
+    set_access_cookies(response, access_token)
+    return response, 201
 
 
 # OUTLET LOGIN
@@ -169,10 +168,9 @@ def outlet_login():
         }
     )
 
-    return jsonify({
-        "message": "Login successful",
-        "access_token": access_token
-    }), 200
+    response = jsonify({"message": "Login successful",})
+    set_access_cookies(response, access_token)
+    return response, 200
 
 
 # CURRENT USER
@@ -257,6 +255,6 @@ def reset_password():
 @jwt_required()
 def logout():
 
-    return jsonify({
-        "message": "Logout successful. Delete token on client."
-    }), 200
+    response = jsonify({"message": "Logout successful"})
+    unset_jwt_cookies(response)
+    return response, 200

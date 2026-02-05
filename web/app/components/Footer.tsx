@@ -13,7 +13,7 @@ export default function Footer() {
                             <div className="bg-orange-600 p-2 rounded-lg">
                                 <Utensils className="h-5 w-5 text-white" />
                             </div>
-                            <span className="text-xl font-bold">FoodCourt</span>
+                            <span className="text-xl font-bold text-gray-500">FoodCourt</span>
                         </div>
                         <p className="text-gray-400 leading-relaxed">
                             Bringing the best local flavors directly to your table. Fresh, fast, and always delicious.
@@ -21,7 +21,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h3 className="font-bold text-lg mb-6">Quick Links</h3>
+                        <h3 className="font-bold text-lg text-gray-500 mb-6">Quick Links</h3>
                         <ul className="space-y-4 text-gray-400">
                             <li><Link href="/" className="hover:text-orange-500 transition-colors">Home</Link></li>
                             <li><Link href="/marketplace" className="hover:text-orange-500 transition-colors">Menu</Link></li>
@@ -30,7 +30,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h3 className="font-bold text-lg mb-6">Contact</h3>
+                        <h3 className="font-bold text-lg text-gray-500 mb-6">Contact</h3>
                         <ul className="space-y-4 text-gray-400">
                             <li>support@foodcourt.com</li>
                             <li>+254 (722) 222-222</li>
@@ -39,7 +39,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h3 className="font-bold text-lg mb-6">Follow Us</h3>
+                        <h3 className="font-bold text-lg text-gray-500 mb-6">Follow Us</h3>
                         <div className="flex gap-4">
                             <a href="#" className="bg-gray-800 p-3 rounded-full hover:bg-orange-600 transition-colors">
                                 <Facebook className="w-5 h-5" />

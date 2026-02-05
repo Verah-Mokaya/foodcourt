@@ -42,9 +42,9 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                         <Utensils className="h-5 w-5" />
                         <span className="hidden md:block">Menu</span>
                     </Link>
-                    <Link href="/dashboard/tables" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/dashboard/tables" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
+                    <Link href="/dashboard/reservations" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/dashboard/reservations" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
                         <Grid3X3 className="h-5 w-5" />
-                        <span className="hidden md:block">Tables</span>
+                        <span className="hidden md:block">Reservations</span>
                     </Link>
                 </nav>
 
@@ -60,7 +60,7 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                 <header className="flex justify-between items-center mb-6">
                     <div>
                         <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            {pathname === ROUTES.DASHBOARD ? "Live Orders" : pathname.includes("menu") ? "Menu Management" : "Table Management"}
+                            {pathname === ROUTES.DASHBOARD ? "Live Orders" : pathname.includes("menu") ? "Menu Management" : "Reservations"}
                         </h1>
                         {user.outlet_name && (
                             <p className="text-sm text-gray-500 mt-1">

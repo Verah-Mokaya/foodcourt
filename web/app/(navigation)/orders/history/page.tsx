@@ -56,7 +56,7 @@ export default function OrderHistoryPage() {
 
     return (
         <div className="space-y-6 pb-20">
-            <header className="flex justify-between items-center">
+            <header className="flex justify-between items-center bg-gray-900 p-4 rounded-xl">
                 <div>
                     <h1 className="text-2xl font-bold text-white">Hi, {user.first_name || user.name}</h1>
                     <p className="text-gray-500 text-sm dark:text-gray-400">Track your yummy orders here.</p>
@@ -88,7 +88,7 @@ export default function OrderHistoryPage() {
                         <div className="border-t border-gray-100 pt-3 text-sm text-gray-600 space-y-1">
                             {(order.order_items || []).map((item, idx) => (
                                 <div key={idx} className="flex justify-between">
-                                    <span>{item.quantity}x Item #{item.menu_item_id}</span>
+                                    <span>{item.quantity}x {item.item_name || `Item #${item.menu_item_id}`}</span>
                                     <span>${(item.price * item.quantity).toFixed(2)}</span>
                                 </div>
                             ))}

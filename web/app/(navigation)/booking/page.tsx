@@ -27,13 +27,8 @@ export default function BookingPage() {
         if (!selectedTable || !date || !time || !user) return;
         setIsSubmitting(true);
         try {
-            const token = localStorage.getItem("fc_token");
-            const res = await fetch(`${API_URL}/reservations/`, {
+            await fetcher("/reservations/", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
                 body: JSON.stringify({
                     table_id: selectedTable,
                     time_reserved_for: `${date}T${time}:00`,
@@ -42,10 +37,6 @@ export default function BookingPage() {
                 })
             });
 
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || "Booking failed");
-            }
             alert("Table reserved!");
             router.push(ROUTES.ORDERS_HISTORY);
         } catch (e) {

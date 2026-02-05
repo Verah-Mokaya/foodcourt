@@ -1,6 +1,6 @@
 "use client";
 
-import { Order } from "@/lib/types";
+import { Order, OrderItem } from "@/app/lib/types";
 import { Check, ChefHat, Clock } from "lucide-react";
 
 interface OrdersProps {
@@ -31,13 +31,13 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         <div className="space-y-1 mb-4">
                             {(order.order_items || []).map((item, i) => (
                                 <div key={i} className="text-sm flex justify-between">
-                                    <span>{item.quantity}x Item #{item.menu_item_id}</span>
+                                    <span>{item.quantity}x {item.item_name || `Item #${item.menu_item_id}`}</span>
                                 </div>
                             ))}
                         </div>
                         <div className="flex gap-2">
                             <button
-                                onClick={() => updateStatus(order.id, "preparing")}
+                                onClick={() => updateStatus(Number(order.id), "preparing")}
                                 className="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
                             >
                                 Start Preparing
@@ -45,7 +45,7 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         </div>
                     </div>
                 ))}
-                </section>
+            </section>
 
             {/* Cooking & Ready */}
             <section className="space-y-4">
@@ -64,13 +64,13 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         <div className="space-y-1 mb-4">
                             {(order.order_items || []).map((item, i) => (
                                 <div key={i} className="text-sm">
-                                    <span>{item.quantity}x Item #{item.menu_item_id}</span>
+                                    <span>{item.quantity}x {item.item_name || `Item #${item.menu_item_id}`}</span>
                                 </div>
                             ))}
                         </div>
                         {order.status === "preparing" && (
                             <button
-                                onClick={() => updateStatus(order.id, "ready")}
+                                onClick={() => updateStatus(Number(order.id), "ready")}
                                 className="w-full bg-green-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-700"
                             >
                                 Mark Ready
@@ -78,7 +78,7 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         )}
                         {order.status === "ready" && (
                             <button
-                                onClick={() => updateStatus(order.id, "completed")}
+                                onClick={() => updateStatus(Number(order.id), "completed")}
                                 className="w-full bg-gray-100 text-gray-600 py-2 rounded-lg text-sm font-medium hover:bg-gray-200"
                             >
                                 Complete
