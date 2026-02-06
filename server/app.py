@@ -12,12 +12,13 @@ from routes.menu_routes import menu_bp
 from routes.auth_routes import auth_bp
 from routes.reservation_routes import reservation_bp
 from routes.order_routes import order_bp
+from routes.analytics_routes import analytics_bp
 
 class Config:
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "sqlite:///" + os.path.join(BASE_DIR, "foodcourt.db")
+        "sqlite:///" + os.path.join(BASE_DIR, "instance", "foodcourt.db")
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False  
@@ -46,10 +47,11 @@ def create_app():
     bcrypt.init_app(app)
 
     # Register blueprints with /api prefix
-    app.register_blueprint(menu_bp, url_prefix="/api")
-    app.register_blueprint(auth_bp, url_prefix="/api")
-    app.register_blueprint(reservation_bp, url_prefix="/api")
-    app.register_blueprint(order_bp, url_prefix="/api")
+    app.register_blueprint(menu_bp, url_prefix="/api/menu")
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(reservation_bp, url_prefix="/api/reservations")
+    app.register_blueprint(order_bp, url_prefix="/api/orders")
+    app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
 
     # Health check route
     @app.route("/health")

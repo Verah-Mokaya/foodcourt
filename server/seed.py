@@ -1,4 +1,5 @@
-from app import app
+from app import create_app
+app = create_app()
 from models import db, Customer, Outlet, MenuItem, Order, OrderItem, Reservation, FoodCourtTable
 from faker import Faker
 from random import randint, choice, uniform
@@ -49,7 +50,8 @@ def seed_data():
                     price=round(uniform(5.0, 50.0), 2),
                     category=choice(categories),
                     image_url=fake.image_url(),
-                    is_available=True
+                    is_available=True,
+                    time_to_prepare=randint(5, 45)
                 )
                 db.session.add(item)
         db.session.commit()
