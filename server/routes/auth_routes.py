@@ -3,6 +3,7 @@ from flask_jwt_extended import (
     create_access_token,
     jwt_required,
     get_jwt_identity,
+    set_access_cookies,
     unset_jwt_cookies
 )
 
@@ -60,10 +61,10 @@ def customer_register():
         }
     )
 
-    return jsonify({
-        "message": "Customer registered successfully",
-        "access_token": access_token
-    }), 201
+    response = jsonify({"message": "Customer registered successfully"})
+    set_access_cookies(response, access_token)
+
+    return response, 200
 
 
 # CUSTOMER LOGIN
