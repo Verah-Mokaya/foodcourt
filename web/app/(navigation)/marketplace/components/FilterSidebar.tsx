@@ -5,8 +5,11 @@ import { cn } from "@/app/lib/utils";
 
 interface FilterSidebarProps {
     categories: string[];
+    cuisines: string[];
     selectedCategory: string | null;
     setSelectedCategory: (cat: string | null) => void;
+    selectedCuisine: string | null;
+    setSelectedCuisine: (cuisine: string | null) => void;
     search: string;
     setSearch: (val: string) => void;
     selectedPrice: string | null;
@@ -16,8 +19,11 @@ interface FilterSidebarProps {
 
 export default function FilterSidebar({
     categories,
+    cuisines,
     selectedCategory,
     setSelectedCategory,
+    selectedCuisine,
+    setSelectedCuisine,
     search,
     setSearch,
     selectedPrice,
@@ -79,6 +85,44 @@ export default function FilterSidebar({
                 </div>
             </div>
 
+            {/* Cuisines */}
+            <div>
+                <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-bold text-gray-900">Cuisine</h3>
+                    {selectedCuisine && (
+                        <button
+                            onClick={() => setSelectedCuisine(null)}
+                            className="text-xs text-orange-600 font-medium hover:underline"
+                        >
+                            Clear
+                        </button>
+                    )}
+                </div>
+                <div className="space-y-2">
+                    <button
+                        onClick={() => setSelectedCuisine(null)}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCuisine
+                            ? "bg-orange-50 text-orange-700"
+                            : "text-gray-600 hover:bg-gray-50"
+                            }`}
+                    >
+                        All Cuisines
+                    </button>
+                    {cuisines.map(cuisine => (
+                        <button
+                            key={cuisine}
+                            onClick={() => setSelectedCuisine(cuisine)}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCuisine === cuisine
+                                ? "bg-orange-50 text-orange-700"
+                                : "text-gray-600 hover:bg-gray-50"
+                                }`}
+                        >
+                            {cuisine}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* Price Range (Visual Only for now) */}
             <div>
                 <h3 className="font-bold text-gray-900 mb-3">Price Range</h3>
@@ -98,7 +142,7 @@ export default function FilterSidebar({
                         </button>
                     ))}
                 </div>
-            </div>           
+            </div>
         </aside>
     );
 }

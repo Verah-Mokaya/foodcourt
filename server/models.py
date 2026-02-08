@@ -11,11 +11,6 @@ from datetime import datetime
 from extensions import db, bcrypt
 
 
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s"
-})
-
-
 class Customer(db.Model, SerializerMixin):
     __tablename__ = "customers"
     serialize_rules = ("-reservations.customer",)
@@ -120,6 +115,7 @@ class MenuItem(db.Model, SerializerMixin):
     category = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.String(255))
     is_available = db.Column(db.Boolean, default=True)
+    preparation_time = db.Column(db.Integer, default=15)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # relationships
@@ -141,12 +137,14 @@ class FoodCourtTable(db.Model, SerializerMixin):
     serialize_rules = ("-reservations.table",)
     
     id = db.Column(db.Integer, primary_key=True)
+    outlet_id = db.Column(db.Integer, db.ForeignKey("outlets.id"), nullable=True)
     table_number = db.Column(db.Integer, nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     is_available = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # relationships
+    outlet = db.relationship("Outlet", backref="tables")
     reservations = db.relationship("Reservation", back_populates="table", cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -159,14 +157,21 @@ class Reservation(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
+    outlet_id = db.Column(db.Integer, db.ForeignKey("outlets.id"), nullable=False)
     time_reserved_for = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime)
     number_of_guests = db.Column(db.Integer, nullable=False)
     table_id = db.Column(db.Integer, db.ForeignKey("food_court_tables.id"), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")
+    is_reassigned = db.Column(db.Boolean, default=False)
+    previous_table_number = db.Column(db.Integer)
+    reservation_fee = db.Column(db.Numeric(10, 2), default=5.00)
+    is_fee_deducted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # relationships
     customer = db.relationship("Customer", back_populates="reservations")
+    outlet = db.relationship("Outlet", backref="reservations")
     table = db.relationship("FoodCourtTable", back_populates="reservations")
     orders = db.relationship("Order", back_populates="reservation", cascade="all, delete-orphan")
     
@@ -182,6 +187,7 @@ class Order(db.Model, SerializerMixin):
     customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
     reservation_id = db.Column(db.Integer, db.ForeignKey("reservations.id"))
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    discount_amount = db.Column(db.Numeric(10, 2), default=0.00)
     status = db.Column(db.String(20), nullable=False, default="pending")
     time_till_ready = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

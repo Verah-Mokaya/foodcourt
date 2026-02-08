@@ -40,6 +40,7 @@ export default function MenuPage() {
                 category: newItem.category,
                 image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
                 description: newItem.description,
+                preparation_time: newItem.preparation_time,
                 is_available: newItem.is_available
             };
 

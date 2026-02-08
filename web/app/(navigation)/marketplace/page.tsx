@@ -18,6 +18,7 @@ export default function MarketplacePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const searchParams = useSearchParams();
     const forcedOutletId = searchParams.get("outletId");
@@ -47,6 +48,7 @@ export default function MarketplacePage() {
     const getOutletName = (id: number) => outlets.find(o => o.id === id)?.outlet_name || "Unknown";
 
     const categories = Array.from(new Set(menuItems.map(i => i.category)));
+    const cuisines = Array.from(new Set(outlets.map(o => o.cuisine_type)));
 
     const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
 
@@ -56,15 +58,21 @@ export default function MarketplacePage() {
             const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
             const matchesOutlet = forcedOutletId ? String(item.outlet_id) === forcedOutletId : true;
 
+            const itemOutlet = outlets.find(o => o.id === item.outlet_id);
+            const matchesCuisine = selectedCuisine ? itemOutlet?.cuisine_type === selectedCuisine : true;
+
             // Price Logic
             let matchesPrice = true;
-            if (selectedPrice === "$") matchesPrice = item.price < 300; // Affordable
-            else if (selectedPrice === "$$") matchesPrice = item.price >= 300 && item.price <= 600; // Mid
-            else if (selectedPrice === "$$$") matchesPrice = item.price > 600; // Premium
+            if (selectedPrice === "$") matchesPrice = typeof item.price === 'number' ? item.price < 300 : Number(item.price) < 300;
+            else if (selectedPrice === "$$") {
+                const p = typeof item.price === 'number' ? item.price : Number(item.price);
+                matchesPrice = p >= 300 && p <= 600;
+            }
+            else if (selectedPrice === "$$$") matchesPrice = typeof item.price === 'number' ? item.price > 600 : Number(item.price) > 600;
 
-            return matchesSearch && matchesCategory && matchesPrice && matchesOutlet;
+            return matchesSearch && matchesCategory && matchesPrice && matchesOutlet && matchesCuisine;
         });
-    }, [menuItems, search, selectedCategory, selectedPrice, forcedOutletId]);
+    }, [menuItems, search, selectedCategory, selectedPrice, forcedOutletId, selectedCuisine, outlets]);
 
     const activeOutletName = useMemo(() => {
         if (!forcedOutletId) return null;
@@ -103,8 +111,11 @@ export default function MarketplacePage() {
                     <div className="sticky top-24">
                         <FilterSidebar
                             categories={categories}
+                            cuisines={cuisines}
                             selectedCategory={selectedCategory}
                             setSelectedCategory={setSelectedCategory}
+                            selectedCuisine={selectedCuisine}
+                            setSelectedCuisine={setSelectedCuisine}
                             search={search}
                             setSearch={setSearch}
                             selectedPrice={selectedPrice}
@@ -122,8 +133,11 @@ export default function MarketplacePage() {
                         </div>
                         <FilterSidebar
                             categories={categories}
+                            cuisines={cuisines}
                             selectedCategory={selectedCategory}
                             setSelectedCategory={(cat) => { setSelectedCategory(cat); setIsSidebarOpen(false); }}
+                            selectedCuisine={selectedCuisine}
+                            setSelectedCuisine={setSelectedCuisine}
                             search={search}
                             setSearch={setSearch}
                             selectedPrice={selectedPrice}
@@ -148,7 +162,7 @@ export default function MarketplacePage() {
                             <div key={item.id} onClick={() => setSelectedItem(item)} className="cursor-pointer transition-transform hover:scale-[1.02]">
                                 <MenuCard
                                     item={item}
-                                    outletName={getOutletName(item.outlet_id)}
+                                    outletName={getOutletName(Number(item.outlet_id))}
                                 />
                             </div>
                         ))}
@@ -184,7 +198,7 @@ export default function MarketplacePage() {
                 isOpen={!!selectedItem}
                 onClose={() => setSelectedItem(null)}
                 item={selectedItem}
-                outletName={selectedItem ? getOutletName(selectedItem.outlet_id) : ""}
+                outletName={selectedItem ? getOutletName(Number(selectedItem.outlet_id)) : ""}
             />
         </div>
     );

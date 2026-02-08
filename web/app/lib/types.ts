@@ -20,6 +20,7 @@ export type MenuItem = {
     category: string;
     image_url: string;
     is_available: boolean;
+    preparation_time?: number;
     description?: string;
 };
 
@@ -52,13 +53,16 @@ export type Order = {
     outlet_id: number | string;
     total_amount: number;
     status: "pending" | "preparing" | "ready" | "completed" | "cancelled";
+    time_till_ready?: number;
     created_at: string;
     order_items: OrderItem[];
     payment_info?: any;
+    discount_amount?: number;
 };
 export type Table = {
     id: number | string;
     table_number: number;
     capacity: number;
     is_available: boolean;
+    outlet_id?: number | string;
 };

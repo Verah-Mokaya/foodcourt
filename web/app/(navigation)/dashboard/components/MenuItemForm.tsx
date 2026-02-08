@@ -14,14 +14,16 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
     const [category, setCategory] = useState("Main");
     const [image, setImage] = useState("");
     const [description, setDescription] = useState("");
+    const [preparationTime, setPreparationTime] = useState("15");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await onAdd({ name, price, category, image, description });
+        await onAdd({ name, price, category, image, description, preparation_time: Number(preparationTime) });
         setName("");
         setPrice("");
         setImage("");
         setDescription("");
+        setPreparationTime("15");
     };
 
     return (
@@ -69,6 +71,21 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                     </select>
                 </div>
                 <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Preparation Time (Mins)</label>
+                    <input
+                        required
+                        type="number"
+                        placeholder="15"
+                        min="1"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20"
+                        value={preparationTime}
+                        onChange={e => setPreparationTime(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-500 uppercase">Image URL (Optional)</label>
                     <input
                         type="url"
@@ -78,16 +95,15 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                         onChange={e => setImage(e.target.value)}
                     />
                 </div>
-            </div>
-
-            <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase">Description</label>
-                <textarea
-                    placeholder="Describe this delicious item..."
-                    className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20 min-h-[100px]"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
-                />
+                <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Description</label>
+                    <textarea
+                        placeholder="Describe this delicious item..."
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20 min-h-[44px]"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                </div>
             </div>
 
             <button

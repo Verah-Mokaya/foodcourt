@@ -20,7 +20,7 @@ export default function NavigationLayout({
         <div className="flex flex-col min-h-screen">
             {/* Show Navbar on all pages, but Home handles its own transparency */}
             {!isAuth && <Navbar />}
-            <main className={`${!isHome && !isAuth ? "pt-20 flex-1" : "flex-1"}`}>
+            <main className={`${!isHome && !isAuth ? "pt-20 flex-1 px-4 md:px-6 lg:px-8" : "flex-1"}`}>
                 {children}
             </main>
             {!isAuth && <Footer />}

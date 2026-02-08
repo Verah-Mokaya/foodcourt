@@ -70,10 +70,10 @@ export default function Navbar() {
                             )}
                             <div className="flex items-center gap-2">
                                 <Link
-                                    href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.PROFILE}
+                                    href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.CUSTOMER_DASHBOARD}
                                     className="bg-orange-600 !text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-700 transition-colors"
                                 >
-                                    {["owner", "outlet"].includes(user.role) ? "Dashboard" : "My Profile"}
+                                    Dashboard
                                 </Link>
                                 <button
                                     onClick={logout}
@@ -145,11 +145,11 @@ export default function Navbar() {
                             {user ? (
                                 <div className="flex flex-col gap-3">
                                     <Link
-                                        href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.PROFILE}
+                                        href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.CUSTOMER_DASHBOARD}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="bg-orange-600 !text-white py-3 rounded-xl text-center font-bold"
                                     >
-                                        {["owner", "outlet"].includes(user.role) ? "Dashboard" : "My Profile"}
+                                        Dashboard
                                     </Link>
                                     <button
                                         onClick={() => {

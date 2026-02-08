@@ -40,6 +40,7 @@ def get_all_menu_items():
             "price": float(item.price),
             "image_url": item.image_url,
             "is_available": item.is_available,
+            "preparation_time": item.preparation_time,
             "outlet_id": item.outlet_id
         }
         for item in items
@@ -100,6 +101,7 @@ def get_outlet_menu(outlet_id):
                 "price": float(item.price),
                 "image_url": item.image_url,
                 "is_available": item.is_available,
+                "preparation_time": item.preparation_time,
                 "created_at": item.created_at.isoformat() if item.created_at else None
             }
             for item in items
@@ -124,6 +126,7 @@ def get_menu_item(item_id):
         "price": float(item.price),
         "image_url": item.image_url,
         "is_available": item.is_available,
+        "preparation_time": item.preparation_time,
         "created_at": item.created_at.isoformat() if item.created_at else None,
         "outlet_id": item.outlet_id
     }), 200
@@ -165,7 +168,8 @@ def create_menu_item():
         category=data["category"],
         price=price,
         image_url=data.get("image_url"),
-        is_available=data.get("is_available", True)
+        is_available=data.get("is_available", True),
+        preparation_time=data.get("preparation_time", 15)
     )
 
     db.session.add(new_item)
@@ -179,6 +183,7 @@ def create_menu_item():
         "price": float(new_item.price),
         "image_url": new_item.image_url,
         "is_available": new_item.is_available,
+        "preparation_time": new_item.preparation_time,
         "outlet_id": new_item.outlet_id
     }), 201
 
@@ -209,7 +214,8 @@ def update_menu_item(item_id):
         "category",
         "price",
         "image_url",
-        "is_available"
+        "is_available",
+        "preparation_time"
     ]
 
     for field in allowed_fields:
