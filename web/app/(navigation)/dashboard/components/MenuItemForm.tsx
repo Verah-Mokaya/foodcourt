@@ -104,3 +104,22 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                         onChange={e => setDescription(e.target.value)}
                     />
                 </div>
+                </div>
+
+            <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+                {isSubmitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                    <>
+                        <Plus className="w-5 h-5" />
+                        Add to Menu
+                    </>
+                )}
+            </button>
+        </form>
+    );
+}
