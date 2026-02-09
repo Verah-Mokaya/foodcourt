@@ -56,3 +56,27 @@ export default function MenuPage() {
             setIsSubmitting(false);
         }
     };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Are you sure?")) return;
+        try {
+            await fetcher(`/item/${id}`, {
+                method: "DELETE"
+            });
+            setItems(items.filter(i => i.id !== id));
+        } catch (err) {
+            console.error("Failed to delete item", err);
+            alert("Failed to delete item");
+        }
+    };
+
+    if (isLoading) return <div className="p-8">Loading menu...</div>;
+
+    return (
+        <div className="space-y-8 max-w-7xl p-6 mx-auto">
+            <h1 className="text-2xl font-bold text-gray-900">Menu Management</h1>
+            <MenuItemForm onAdd={handleAdd} isSubmitting={isSubmitting} />
+            <MenuTable items={items} onDelete={handleDelete} />
+        </div>
+    );
+}
