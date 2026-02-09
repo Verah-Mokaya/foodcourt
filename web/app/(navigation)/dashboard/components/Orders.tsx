@@ -35,3 +35,14 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                                 </div>
                             ))}
                         </div>
+                         <div className="flex gap-2">
+                            <button
+                                onClick={() => updateStatus(Number(order.id), "preparing")}
+                                className="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
+                            >
+                                Start Preparing
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </section>
