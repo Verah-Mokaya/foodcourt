@@ -22,7 +22,7 @@ export default function Navbar() {
     const navLinks = [
         { name: "Home", href: "/" },
         { name: "Menu", href: "/marketplace" },
-        { name: "Outlets", href: "/marketplace" }, // Could be a separate page later
+        { name: "Outlets", href: "/marketplace" },
     ];
 
     return (
@@ -34,7 +34,7 @@ export default function Navbar() {
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
+                <Link href={ROUTES.HOME} className="flex items-center gap-2 group">
                     <div className="bg-orange-600 p-2 rounded-xl group-hover:rotate-12 transition-transform">
                         <Utensils className="h-6 w-6 text-white" />
                     </div>
@@ -64,21 +64,33 @@ export default function Navbar() {
                     {user ? (
                         <div className="flex items-center gap-4">
                             {user.role === "customer" && (
-                                <Link href="/cart" className={cn("p-2 rounded-full hover:bg-white/10 transition-colors", scrolled ? "text-gray-900" : "text-white")}>
+                                <Link href={ROUTES.CART} className={cn("p-2 rounded-full hover:bg-white/10 transition-colors", scrolled ? "text-gray-900" : "text-white")}>
                                     <ShoppingBag className="w-5 h-5" />
                                 </Link>
                             )}
-                            <Link
-                                href={user.role === "owner" ? "/dashboard" : "/profile"}
-                                className="bg-orange-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-700 transition-colors"
-                            >
-                                {user.role === "owner" ? "Dashboard" : "My Profile"}
-                            </Link>
+                            <div className="flex items-center gap-2">
+                                <Link
+                                    href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.CUSTOMER_DASHBOARD}
+                                    className="bg-orange-600 !text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-700 transition-colors"
+                                >
+                                    Dashboard
+                                </Link>
+                                <button
+                                    onClick={logout}
+                                    className={cn(
+                                        "p-2 rounded-full transition-colors flex items-center justify-center",
+                                        scrolled ? "text-gray-600 hover:bg-gray-100" : "text-white hover:bg-white/10"
+                                    )}
+                                    title="Logout"
+                                >
+                                    <LogOut className="w-5 h-5 text-red-500" />
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <>
                             <Link
-                                href="/login"
+                                href={ROUTES.LOGIN}
                                 className={cn(
                                     "text-sm font-medium hover:text-orange-500 transition-colors",
                                     scrolled ? "text-gray-900" : "text-white"
@@ -87,7 +99,7 @@ export default function Navbar() {
                                 Sign In
                             </Link>
                             <Link
-                                href="/signup"
+                                href={ROUTES.SIGNUP}
                                 className="bg-white text-gray-900 px-5 py-2 rounded-full text-sm font-medium hover:bg-orange-50 transition-colors"
                             >
                                 Sign Up
@@ -131,24 +143,36 @@ export default function Navbar() {
                             ))}
                             <div className="h-px bg-gray-100 my-2" />
                             {user ? (
-                                <Link
-                                    href={user.role === "owner" ? "/dashboard" : "/profile"}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="bg-orange-600 text-white py-3 rounded-xl text-center font-bold"
-                                >
-                                    {user.role === "owner" ? "Dashboard" : "My Profile"}
-                                </Link>
+                                <div className="flex flex-col gap-3">
+                                    <Link
+                                        href={["owner", "outlet"].includes(user.role) ? ROUTES.DASHBOARD : ROUTES.CUSTOMER_DASHBOARD}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="bg-orange-600 !text-white py-3 rounded-xl text-center font-bold"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            setMobileMenuOpen(false);
+                                        }}
+                                        className="flex items-center justify-center gap-2 py-3 text-red-600 font-bold border border-red-100 rounded-xl"
+                                    >
+                                        <LogOut className="w-5 h-5" />
+                                        Log Out
+                                    </button>
+                                </div>
                             ) : (
                                 <div className="flex flex-col gap-3">
                                     <Link
-                                        href="/login"
+                                        href={ROUTES.LOGIN}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="text-gray-900 font-medium text-center py-2"
                                     >
                                         Sign In
                                     </Link>
                                     <Link
-                                        href="/signup"
+                                        href={ROUTES.SIGNUP}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="bg-orange-600 text-white py-3 rounded-xl text-center font-bold"
                                     >
