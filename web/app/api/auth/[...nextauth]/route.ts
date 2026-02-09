@@ -36,4 +36,11 @@ if (!res.ok) {
 }
 
 if (!res.ok) return null;
+const meRes = await fetch(`${API_URL}/auth/me`, {
+  credentials: "include",
+});
+
+if (!meRes.ok) return null;
+
+const { user } = await meRes.json();
 
