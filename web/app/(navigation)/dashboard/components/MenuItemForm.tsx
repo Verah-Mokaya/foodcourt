@@ -42,3 +42,14 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                         onChange={e => setName(e.target.value)}
                     />
                 </div>
+                <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Price (Ksh)</label>
+                    <input
+                        required
+                        type="number"
+                        placeholder="450"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20"
+                        value={price}
+                        onChange={e => setPrice(e.target.value)}
+                    />
+                </div>
