@@ -27,3 +27,13 @@ CredentialsProvider({
     return null;
   },
 }),
+// --- Try customer login first ---
+let res = await fetch(`${API_URL}/auth/customer/login`, { ... });
+
+if (!res.ok) {
+  // --- Try outlet login ---
+  res = await fetch(`${API_URL}/auth/outlet/login`, { ... });
+}
+
+if (!res.ok) return null;
+
