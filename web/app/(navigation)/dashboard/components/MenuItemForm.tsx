@@ -95,3 +95,12 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                         onChange={e => setImage(e.target.value)}
                     />
                 </div>
+                <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Description</label>
+                    <textarea
+                        placeholder="Describe this delicious item..."
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20 min-h-[44px]"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                </div>
