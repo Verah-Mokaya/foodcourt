@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
-import { Utensils, Menu, X, ShoppingBag } from "lucide-react";
+import { Utensils, Menu, X, ShoppingBag, LogOut } from "lucide-react";
 import { cn } from "@/app/lib/utils";
+import { ROUTES } from "@/app/lib/routes";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
