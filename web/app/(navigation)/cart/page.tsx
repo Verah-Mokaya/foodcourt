@@ -5,10 +5,10 @@ import { useAuth } from "@/app/context/AuthContext";
 import { fetcher, API_URL } from "@/app/lib/api";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { ROUTES } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import PaymentModal from "./components/PaymentModal";
-import { ROUTES } from "@/app/lib/routes";
 
 export default function CartPage() {
     const { items, updateQuantity, removeFromCart, total, clearCart } = useCart();
@@ -38,29 +38,28 @@ export default function CartPage() {
                     total_amount: outletTotal,
                     status: "pending",
                     created_at: new Date().toISOString(),
-                    order_items: outletItems.map(i => ({ // Updated to matched schema
+                    order_items: outletItems.map(i => ({
                         menu_item_id: i.menuItemId,
                         quantity: i.quantity,
                         price: i.price
                     })),
-                    payment_info: { // Mocking saving payment info if backend supported it
+                    payment_info: {
                         method: paymentMethod,
                         ...paymentDetails
                     }
                 };
 
-                 return fetcher("/orders", {
+                return fetcher("/orders", {
                     method: "POST",
                     body: JSON.stringify(orderData)
                 });
             });
 
-
             await Promise.all(promises);
 
             clearCart();
             setIsPaymentOpen(false);
-            router.push("/ROUTES.ORDERS_TRACKING"); // Updated redirect path
+            router.push(ROUTES.ORDERS_TRACKING);
         } catch (error) {
             console.error("Checkout failed", error);
             alert("Failed to place order.");
@@ -72,8 +71,8 @@ export default function CartPage() {
     if (items.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-                <h2 className="text-xl font-semibold text-gray-900">Your cart is empty</h2>
-                <Link href={ROUTES.MARKETPLACE} className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                <h2 className="text-xl font-semibold text-white">Your cart is empty</h2>
+                <Link href={ROUTES.MARKETPLACE} className="px-6 py-2 bg-orange-600 !text-white rounded-lg hover:bg-orange-700 transition-colors">
                     Browse Menu
                 </Link>
             </div>
@@ -81,10 +80,10 @@ export default function CartPage() {
     }
 
     return (
-                <div className="pb-24">
+        <div className="pb-24">
             <header className="flex items-center gap-4 mb-6">
-                <Link href="/features/MenuBrowsing" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
-                    <ArrowLeft className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+                <Link href={ROUTES.MARKETPLACE} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                    <ArrowLeft className="h-5 w-5 !text-gray-700 dark:text-gray-200" />
                 </Link>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Your Cart</h1>
             </header>
@@ -113,7 +112,7 @@ export default function CartPage() {
                                     >
                                         <Minus className="h-3 w-3 text-gray-600" />
                                     </button>
-                                    <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
+                                    <span className="text-sm font-medium w-4 text-center text-gray-700">{item.quantity}</span>
                                     <button
                                         onClick={() => updateQuantity(Number(item.menuItemId), 1)}
                                         className="p-1 hover:bg-white rounded shadow-sm transition-colors"
