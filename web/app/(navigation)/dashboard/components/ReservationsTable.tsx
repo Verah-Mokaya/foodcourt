@@ -19,3 +19,26 @@ interface Reservation {
 interface ReservationsTableProps {
     reservations: Reservation[];
 }
+
+export default function ReservationsTable({ reservations }: ReservationsTableProps) {
+    const [tables, setTables] = useState<Table[]>([]);
+    const [reassigningId, setReassigningId] = useState<number | null>(null);
+
+    useEffect(() => {
+        fetcher<Table[]>("/food_court_tables").then(setTables).catch(console.error);
+    }, []);
+
+    const handleReassign = async (resId: number, newTableId: number) => {
+        try {
+            await fetcher(`/reservations/${resId}/reassign`, {
+                method: "PUT",
+                body: JSON.stringify({ new_table_id: newTableId })
+            });
+            alert("Table reassigned successfully");
+            setReassigningId(null);
+            window.location.reload(); // Quick refresh to update state
+        } catch (err: any) {
+            console.error(err);
+            alert(err.message || "Failed to reassign table");
+        }
+    };
