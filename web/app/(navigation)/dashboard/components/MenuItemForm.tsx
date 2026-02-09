@@ -7,3 +7,8 @@ interface MenuItemFormProps {
     onAdd: (item: any) => Promise<void>;
     isSubmitting: boolean;
 }
+
+export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps) {
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [category, setCategory] = useState("Main");
