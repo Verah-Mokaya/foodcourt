@@ -22,9 +22,36 @@ export default function BookingPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        // Fetch tables from backend endpoint
-        fetcher<Table[]>("/food_court_tables").then(setTables).catch(console.error); // Updated endpoint to match TablesPage
+        const loadOutlets = async () => {
+            try {
+                const data = await fetcher<Outlet[]>("/outlets");
+                setOutlets(data);
+            } catch (err) {
+                console.error("Failed to load outlets", err);
+            }
+        };
+        loadOutlets();
     }, []);
+
+    useEffect(() => {
+        const loadTables = async () => {
+            if (!selectedOutlet) return;
+            try {
+                // Fetch tables with availability context if possible
+                const query = new URLSearchParams();
+                query.append("outlet_id", selectedOutlet.toString());
+                if (date) query.append("date", date);
+                if (time) query.append("time", time);
+
+                const data = await fetcher<Table[]>(`/reservations/food_court_tables?${query.toString()}`);
+                setTables(data);
+                setSelectedTable(null);
+            } catch (err) {
+                console.error("Failed to load tables", err);
+            }
+        };
+        loadTables();
+    }, [selectedOutlet, date, time]);
 
         const handleBook = async () => {
         if (!selectedTable || !date || !time || !user) return;
