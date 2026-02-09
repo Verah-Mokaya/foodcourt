@@ -28,3 +28,31 @@ export default function MenuPage() {
         };
         loadItems();
     }, [user]);
+
+    const handleAdd = async (newItem: any) => {
+        if (!user || !user.outletId) return;
+        setIsSubmitting(true);
+        try {
+            const payload = {
+                outlet_id: user.outletId,
+                item_name: newItem.name,
+                price: Number(newItem.price),
+                category: newItem.category,
+                image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+                description: newItem.description,
+                preparation_time: newItem.preparation_time,
+                is_available: newItem.is_available
+            };
+
+            const savedItem = await fetcher<MenuItem>("/item", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+            setItems(prev => [...prev, savedItem]);
+        } catch (err) {
+            console.error("Failed to add item", err);
+            alert("Failed to add item");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
