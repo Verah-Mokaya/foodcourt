@@ -32,3 +32,7 @@ export default function ReservationsPage() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        loadReservations();
+    }, [user]);
