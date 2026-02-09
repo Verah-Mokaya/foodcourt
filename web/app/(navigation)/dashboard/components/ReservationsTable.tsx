@@ -15,3 +15,7 @@ interface Reservation {
     status: string;
     created_at: string;
 }
+
+interface ReservationsTableProps {
+    reservations: Reservation[];
+}
