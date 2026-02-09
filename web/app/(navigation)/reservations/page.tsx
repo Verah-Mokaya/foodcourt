@@ -15,3 +15,8 @@ interface Reservation {
     status: string;
     created_at: string;
 }
+
+export default function ReservationsPage() {
+    const { user } = useAuth();
+    const [reservations, setReservations] = useState<Reservation[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
