@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import PaymentModal from "./components/PaymentModal";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function CartPage() {
     const { items, updateQuantity, removeFromCart, total, clearCart } = useCart();
