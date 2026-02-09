@@ -14,15 +14,13 @@ type BestSellerItem = {
     outletName: string;
 };
 
-// Hardcoded for now to ensure we have the specific "African" look requested, 
-// though typically we'd fetch this. 
-// Matching the IDs from db.json we just added/modified.
+
 const featuredItems: BestSellerItem[] = [
     { id: 5, name: "Jollof Rice", price: 400, image: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&q=80", outletName: "Lagos Kitchen" },
     { id: 7, name: "Nyama Choma", price: 600, image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80", outletName: "Nairobi Grills" },
     { id: 3, name: "Pondu", price: 300, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80", outletName: "Mama Africa" },
     { id: 6, name: "Suya Skewers", price: 250, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&q=80", outletName: "Lagos Kitchen" },
-    // Repeat for the marquee effect if needed, or we just utilize unique ones and duplicate list
+    
 ];
 
 // Duplicate list for infinite scroll smoothness
@@ -51,7 +49,7 @@ export default function BestSellers() {
                 >
                     {marqueeItems.map((item, idx) => (
                         <Link
-                            href={`/marketplace`} // Redirect to marketplace generally as finding specific ID might require more logic
+                            href={ROUTES.MARKETPLACE}
                             key={`${item.id}-${idx}`}
                             className="group min-w-[300px] bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
                         >
