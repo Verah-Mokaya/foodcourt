@@ -1,5 +1,6 @@
 import { Utensils, Facebook, Twitter, Instagram } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Footer() {
     return (
