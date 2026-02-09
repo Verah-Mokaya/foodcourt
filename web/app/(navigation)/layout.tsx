@@ -11,3 +11,6 @@ export default function NavigationLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+
+    const isHome = pathname === "/" || pathname === ROUTES.HOME;
+    const isAuth = pathname === ROUTES.LOGIN || pathname === ROUTES.SIGNUP;
