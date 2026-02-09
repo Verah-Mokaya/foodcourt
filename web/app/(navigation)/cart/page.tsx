@@ -60,7 +60,7 @@ export default function CartPage() {
 
             clearCart();
             setIsPaymentOpen(false);
-            router.push("/features/Orders/Tracking"); // Updated redirect path
+            router.push("/ROUTES.ORDERS_TRACKING"); // Updated redirect path
         } catch (error) {
             console.error("Checkout failed", error);
             alert("Failed to place order.");
@@ -73,7 +73,7 @@ export default function CartPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
                 <h2 className="text-xl font-semibold text-gray-900">Your cart is empty</h2>
-                <Link href="/features/MenuBrowsing" className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                <Link href={ROUTES.MARKETPLACE} className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
                     Browse Menu
                 </Link>
             </div>
@@ -108,21 +108,21 @@ export default function CartPage() {
                             <div className="flex justify-between items-center mt-2">
                                 <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
                                     <button
-                                        onClick={() => updateQuantity(item.menuItemId, -1)}
+                                        onClick={() => updateQuantity(Number(item.menuItemId), -1)}
                                         className="p-1 hover:bg-white rounded shadow-sm transition-colors"
                                     >
                                         <Minus className="h-3 w-3 text-gray-600" />
                                     </button>
                                     <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                                     <button
-                                        onClick={() => updateQuantity(item.menuItemId, 1)}
+                                        onClick={() => updateQuantity(Number(item.menuItemId), 1)}
                                         className="p-1 hover:bg-white rounded shadow-sm transition-colors"
                                     >
                                         <Plus className="h-3 w-3 text-gray-600" />
                                     </button>
                                 </div>
                                 <button
-                                    onClick={() => removeFromCart(item.menuItemId)}
+                                    onClick={() => removeFromCart(Number(item.menuItemId))}
                                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                 >
                                     <Trash2 className="h-4 w-4" />
