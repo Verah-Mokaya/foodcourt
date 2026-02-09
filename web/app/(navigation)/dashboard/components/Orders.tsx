@@ -76,3 +76,17 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                                 Mark Ready
                             </button>
                         )}
+                        {order.status === "ready" && (
+                            <button
+                                onClick={() => updateStatus(Number(order.id), "completed")}
+                                className="w-full bg-gray-100 text-gray-600 py-2 rounded-lg text-sm font-medium hover:bg-gray-200"
+                            >
+                                Complete
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </section>
+        </div>
+    );
+}
