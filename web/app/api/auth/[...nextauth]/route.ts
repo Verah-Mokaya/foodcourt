@@ -14,3 +14,16 @@ const handler = NextAuth({
 });
 
 export { handler as GET, handler as POST };
+
+
+CredentialsProvider({
+  name: "Credentials",
+  credentials: {
+    email: { label: "Email", type: "email" },
+    password: { label: "Password", type: "password" },
+  },
+  async authorize(credentials) {
+    if (!credentials?.email || !credentials?.password) return null;
+    return null;
+  },
+}),
