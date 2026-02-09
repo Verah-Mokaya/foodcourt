@@ -43,4 +43,8 @@ export default function CustomerDashboardPage() {
         }
     };
 
-    
+    useEffect(() => {
+        loadData();
+        const interval = setInterval(loadData, 10000);
+        return () => clearInterval(interval);
+    }, [user]);
