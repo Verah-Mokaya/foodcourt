@@ -54,4 +54,17 @@ return {
   first_name: user.first_name,
   last_name: user.last_name,
 };
+callbacks: {
+  async jwt({ token, user }) {
+    if (user) {
+      token.id = user.id;
+      token.role = (user as any).role;
+      token.name = user.name;
+      token.outlet_name = (user as any).outlet_name;
+      token.owner_name = (user as any).owner_name;
+      token.first_name = (user as any).first_name;
+      token.last_name = (user as any).last_name;
+    }
+    return token;
+  },
 
