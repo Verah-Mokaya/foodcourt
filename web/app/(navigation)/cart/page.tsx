@@ -49,12 +49,12 @@ export default function CartPage() {
                     }
                 };
 
-                await fetch(`${API_URL}/orders`, {
+                 return fetcher("/orders", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(orderData)
                 });
             });
+
 
             await Promise.all(promises);
 
