@@ -7,3 +7,11 @@ import { Calendar, Users, XCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/app/lib/routes";
 
+interface Reservation {
+    id: number;
+    table_id: number;
+    time_reserved_for: string;
+    number_of_guests: number;
+    status: string;
+    created_at: string;
+}
