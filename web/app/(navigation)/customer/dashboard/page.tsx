@@ -27,4 +27,20 @@ export default function CustomerDashboardPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<"active" | "history" | "reservations">("active");
 
+    const loadData = async () => {
+        if (!user) return;
+        try {
+            const [ordersRes, reservationsRes] = await Promise.all([
+                fetcher<Order[]>(`/orders?customer_id=${user.id}&_sort=created_at&_order=desc`),
+                fetcher<{ reservations: Reservation[] }>("/reservations/my")
+            ]);
+            setOrders(ordersRes);
+            setReservations(reservationsRes.reservations);
+        } catch (err) {
+            console.error("Failed to load dashboard data", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     
