@@ -20,3 +20,11 @@ interface Reservation {
     created_at: string;
 }
 
+export default function CustomerDashboardPage() {
+    const { user } = useAuth();
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [reservations, setReservations] = useState<Reservation[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<"active" | "history" | "reservations">("active");
+
+    
