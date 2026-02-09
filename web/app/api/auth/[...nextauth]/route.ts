@@ -67,4 +67,16 @@ callbacks: {
     }
     return token;
   },
+async session({ session, token }) {
+  if (token && session.user) {
+    (session.user as any).id = token.id;
+    (session.user as any).role = token.role;
+    (session.user as any).name = token.name;
+    (session.user as any).outlet_name = token.outlet_name;
+    (session.user as any).owner_name = token.owner_name;
+    (session.user as any).first_name = token.first_name;
+    (session.user as any).last_name = token.last_name;
+  }
+  return session;
+},
 
