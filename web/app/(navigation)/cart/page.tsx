@@ -22,10 +22,11 @@ export default function CartPage() {
         setIsSubmitting(true);
 
         const itemsByOutlet = items.reduce((acc, item) => {
-            if (!acc[item.outletId]) acc[item.outletId] = [];
-            acc[item.outletId].push(item);
+            const id = String(item.outletId);
+            if (!acc[id]) acc[id] = [];
+            acc[id].push(item);
             return acc;
-        }, {} as Record<number, typeof items>);
+        }, {} as Record<string, typeof items>);
 
         try {
             const promises = Object.entries(itemsByOutlet).map(async ([outletId, outletItems]) => {
