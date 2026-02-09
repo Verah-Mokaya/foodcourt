@@ -25,3 +25,20 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
         setDescription("");
         setPreparationTime("15");
     };
+
+    return (
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+            <h2 className="text-lg font-bold text-gray-900">Add New Menu Item</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Item Name</label>
+                    <input
+                        required
+                        type="text"
+                        placeholder="e.g. Spicy Chicken"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+                </div>
