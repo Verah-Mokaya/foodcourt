@@ -44,3 +44,14 @@ if (!meRes.ok) return null;
 
 const { user } = await meRes.json();
 
+return {
+  id: String(user.id),
+  email: user.email,
+  name: user.name || user.outlet_name || user.first_name,
+  role: user.role,
+  outlet_name: user.outlet_name,
+  owner_name: user.owner_name,
+  first_name: user.first_name,
+  last_name: user.last_name,
+};
+
