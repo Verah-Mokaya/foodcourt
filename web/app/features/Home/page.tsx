@@ -1,12 +1,11 @@
 "use client";
 
-import Navbar from "@/app/components/Navbar";
 import Hero from "@/app/features/Home/components/Hero";
 import BestSellers from "@/app/features/Home/components/BestSellers";
-import Footer from "@/app/components/Footer";
-import { ArrowRight, Star, Clock, Truck } from "lucide-react";
+import { ArrowRight, Star, Clock, Store } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function Home() {
     return (
