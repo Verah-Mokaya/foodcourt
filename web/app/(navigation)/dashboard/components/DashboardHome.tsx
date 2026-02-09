@@ -9,3 +9,5 @@ interface DashboardHomeProps {
         ready: number;
     }
 }
+
+export default function DashboardHome({ stats }: DashboardHomeProps)
