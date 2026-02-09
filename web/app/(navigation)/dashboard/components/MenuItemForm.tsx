@@ -15,3 +15,13 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
     const [image, setImage] = useState("");
     const [description, setDescription] = useState("");
     const [preparationTime, setPreparationTime] = useState("15");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await onAdd({ name, price, category, image, description, preparation_time: Number(preparationTime) });
+        setName("");
+        setPrice("");
+        setImage("");
+        setDescription("");
+        setPreparationTime("15");
+    };
