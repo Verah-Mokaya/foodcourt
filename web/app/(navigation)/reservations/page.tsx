@@ -20,3 +20,15 @@ export default function ReservationsPage() {
     const { user } = useAuth();
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const loadReservations = async () => {
+        if (!user) return;
+        try {
+            const res = await fetcher<{ reservations: Reservation[] }>("/reservations/my");
+            setReservations(res.reservations);
+        } catch (err) {
+            console.error("Failed to load reservations", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
