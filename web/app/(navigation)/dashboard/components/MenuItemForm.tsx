@@ -12,3 +12,6 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("Main");
+    const [image, setImage] = useState("");
+    const [description, setDescription] = useState("");
+    const [preparationTime, setPreparationTime] = useState("15");
