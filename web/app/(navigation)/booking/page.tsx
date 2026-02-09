@@ -13,7 +13,9 @@ export default function BookingPage() {
     const { user } = useAuth();
     const router = useRouter();
     const [tables, setTables] = useState<Table[]>([]);
+    const [outlets, setOutlets] = useState<Outlet[]>([]);
     const [selectedTable, setSelectedTable] = useState<number | null>(null);
+    const [selectedOutlet, setSelectedOutlet] = useState<number | null>(null);
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
     const [guests, setGuests] = useState(2);
