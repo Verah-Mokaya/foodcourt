@@ -53,38 +53,46 @@ export default function BookingPage() {
         loadTables();
     }, [selectedOutlet, date, time]);
 
-        const handleBook = async () => {
-        if (!selectedTable || !date || !time || !user) return;
+    const handleBook = async () => {
+        if (!selectedTable || !selectedOutlet || !date || !time || !user) {
+            alert("Please select an outlet, table, date, and time.");
+            return;
+        }
+
+        // Additional validation
+        if (guests < 1 || guests > 6) {
+            alert("Guest count must be between 1 and 6.");
+            return;
+        }
+
+        const selectedDateTime = new Date(`${date}T${time}`);
+        if (selectedDateTime < new Date()) {
+            alert("Cannot book for a past date or time.");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
-            const token = localStorage.getItem("fc_token");
-            const res = await fetch(`${API_URL}/reservations/`, {
+            const res = await fetcher<any>("/reservations", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
                 body: JSON.stringify({
+                    outlet_id: selectedOutlet,
                     table_id: selectedTable,
-                    reservation_time: `${date}T${time}:00`,
+                    time_reserved_for: `${date}T${time}:00`,
                     number_of_guests: guests,
-                    customer_id: user.id
                 })
             });
 
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || "Booking failed");
-            }
-            alert("Table reserved!");
-            router.push("/features/Orders/History");
-        } catch (e) {
+            // Redirect to payment page with reservation ID
+            router.push(`${ROUTES.RESERVATIONS_PAYMENT}?reservation_id=${res.reservation_id}`);
+        } catch (e: any) {
             console.error(e);
-            alert("Booking failed");
+            alert(e.error || "Booking failed. This table might already be reserved for the selected time.");
         } finally {
             setIsSubmitting(false);
         }
     };
+
 
   return (
         <div className="p-4 space-y-6">
