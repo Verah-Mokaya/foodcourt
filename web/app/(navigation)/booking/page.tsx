@@ -1,10 +1,12 @@
 "use client";
 
-import { fetcher, API_URL } from "@/app/lib/api";
+import { fetcher } from "@/app/lib/api";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { Table } from "@/app/lib/types";
+import { Table, Outlet } from "@/app/lib/types";
+import { ROUTES } from "@/app/lib/routes";
+import { Calendar, Clock, Users, Store, Info, Loader2, CheckCircle2 } from "lucide-react";
 
 export default function BookingPage() {
     
