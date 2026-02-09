@@ -31,3 +31,40 @@ export default function TablesPage() {
         };
         loadTables();
     }, []);
+
+        const handleAdd = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            const payload = {
+                table_number: Number(newTable.table_number),
+                capacity: Number(newTable.capacity),
+                is_available: true
+            };
+
+            const savedTable = await fetcher<Table>("/food_court_tables", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            setTables([...tables, savedTable]);
+            setNewTable({ table_number: "", capacity: "" });
+        } catch (err) {
+            console.error("Failed to add table", err);
+            alert("Failed to add table");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Are you sure?")) return;
+        try {
+            await fetcher(`/food_court_tables/${id}`, { method: "DELETE" });
+            setTables(tables.filter(t => t.id !== id));
+        } catch (err) {
+            console.error("Failed to delete table", err);
+            alert("Failed to delete table");
+        }
+    };
+
