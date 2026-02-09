@@ -36,3 +36,21 @@ export default function ReservationsPage() {
     useEffect(() => {
         loadReservations();
     }, [user]);
+
+    const handleCancel = async (id: number) => {
+        if (!confirm("Are you sure you want to cancel this reservation?")) return;
+        try {
+            await fetcher(`/reservations/${id}/status`, {
+                method: "PUT",
+                body: JSON.stringify({ status: "canceled" })
+            });
+            setReservations(prev => prev.map(r => r.id === id ? { ...r, status: "canceled" } : r));
+        } catch (err) {
+            console.error("Failed to cancel reservation", err);
+            alert("Failed to cancel reservation");
+        }
+    };
+
+    if (isLoading) return <div className="p-8 text-center text-white">Loading reservations...</div>;
+
+    
