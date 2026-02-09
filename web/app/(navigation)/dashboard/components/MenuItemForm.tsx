@@ -69,4 +69,16 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
                         <option>Drink</option>
                         <option>Dessert</option>
                     </select>
-                </div>    
+                </div>  
+                 <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase">Preparation Time (Mins)</label>
+                    <input
+                        required
+                        type="number"
+                        placeholder="15"
+                        min="1"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20"
+                        value={preparationTime}
+                        onChange={e => setPreparationTime(e.target.value)}
+                    />
+                </div> 
