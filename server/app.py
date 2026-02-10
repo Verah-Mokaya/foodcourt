@@ -42,7 +42,7 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=True)
     jwt.init_app(app)
     bcrypt.init_app(app)
 
