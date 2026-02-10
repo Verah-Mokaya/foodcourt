@@ -110,15 +110,11 @@ def outlet_register():
     if Outlet.query.filter_by(email=email).first():
         return jsonify({"error": "Outlet already exists"}), 409
 
-    hashed_password = bcrypt.generate_password_hash(
-        data["password"]
-    ).decode("utf-8")
-
     new_outlet = Outlet(
         outlet_name=data["outlet_name"],
         owner_name=data["owner_name"],
         email=email,
-        password=hashed_password,
+        password=data["password"],
         cuisine_type=data["cuisine_type"],
         description=data.get("description"),
         is_active=True
