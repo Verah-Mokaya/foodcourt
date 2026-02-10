@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { User, Store, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/app/lib/utils";
+import { ROUTES } from "@/app/lib/routes";
+
 
 export default function SignupPage() {
     const { register } = useAuth();
@@ -38,6 +40,17 @@ export default function SignupPage() {
                 last_name: lastName,
                 phone_number: "0725123456"
             };
+
+            if (role === "outlet") {
+                payload = {
+                    ...payload,
+                    outlet_name: formData.outletName,
+                    owner_name: formData.name,
+                    cuisine_type: formData.cuisine,
+                    description: `Welcome to ${formData.outletName}`
+                };
+            }
+
 
             await register(payload);
 
