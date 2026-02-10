@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from server.extensions import db
+from extensions import db
 from models import Outlet, Order, OrderItem, MenuItem
 from sqlalchemy import func
 from datetime import datetime, timedelta
