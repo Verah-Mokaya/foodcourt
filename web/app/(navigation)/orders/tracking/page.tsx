@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function OrderTrackingPage() {
     const searchParams = useSearchParams();

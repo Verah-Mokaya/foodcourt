@@ -40,6 +40,7 @@ def role_required(required_role):
 
 customer_required = role_required("customer")
 outlet_required = role_required("outlet")
+admin_required = role_required("admin")
 
 import re
 

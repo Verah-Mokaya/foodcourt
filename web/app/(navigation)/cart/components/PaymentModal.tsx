@@ -159,7 +159,7 @@ export default function PaymentModal({ isOpen, onClose, total, onConfirm }: Paym
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3.5 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-4"
+                            className="w-full py-3.5 bg-gray-900 ! text-white font-bold rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-4"
                         >
                             {isLoading ? (
                                 <>

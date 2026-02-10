@@ -12,10 +12,11 @@ export default function NavigationLayout({
 }) {
     const pathname = usePathname();
 
+    // Pages that handle their own navigation or are full-screen (like Home)
     const isHome = pathname === "/" || pathname === ROUTES.HOME;
     const isAuth = pathname === ROUTES.LOGIN || pathname === ROUTES.SIGNUP;
 
-    return (
+     return (
         <div className="flex flex-col min-h-screen">
             {/* Show Navbar on all pages, but Home handles its own transparency */}
             {!isAuth && <Navbar />}

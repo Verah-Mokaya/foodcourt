@@ -2,7 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
-    get_jwt_identity
+    get_jwt_identity,
+    set_access_cookies,
+    unset_jwt_cookies
 )
 
 from extensions import db, bcrypt
@@ -37,17 +39,14 @@ def customer_register():
     if Customer.query.filter_by(email=email).first():
         return jsonify({"error": "Customer already exists"}), 409
 
-    hashed_password = bcrypt.generate_password_hash(
-        data["password"]
-    ).decode("utf-8")
-
     new_customer = Customer(
         email=email,
-        password=hashed_password,
+        password=data["password"],
         first_name=data["first_name"],
         last_name=data["last_name"],
         phone_number=data.get("phone_number")
     )
+
 
     db.session.add(new_customer)
     db.session.commit()
@@ -59,10 +58,10 @@ def customer_register():
         }
     )
 
-    return jsonify({
-        "message": "Customer registered successfully",
-        "access_token": access_token
-    }), 201
+    response = jsonify({"message": "Customer registered successfully"})
+    set_access_cookies(response, access_token)
+
+    return response, 200
 
 
 # CUSTOMER LOGIN
@@ -83,10 +82,7 @@ def customer_login():
         email=data["email"]
     ).first()
 
-    if not customer or not bcrypt.check_password_hash(
-        customer.password,
-        data["password"]
-    ):
+    if not customer or not customer.authenticate(data["password"]):
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(
@@ -116,15 +112,11 @@ def outlet_register():
     if Outlet.query.filter_by(email=email).first():
         return jsonify({"error": "Outlet already exists"}), 409
 
-    hashed_password = bcrypt.generate_password_hash(
-        data["password"]
-    ).decode("utf-8")
-
     new_outlet = Outlet(
         outlet_name=data["outlet_name"],
         owner_name=data["owner_name"],
         email=email,
-        password=hashed_password,
+        password=data["password"],
         cuisine_type=data["cuisine_type"],
         description=data.get("description"),
         is_active=True
@@ -164,10 +156,7 @@ def outlet_login():
         email=data["email"]
     ).first()
 
-    if not outlet or not bcrypt.check_password_hash(
-        outlet.password,
-        data["password"]
-    ):
+    if not outlet or not outlet.authenticate(data["password"]):
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(
@@ -217,14 +206,10 @@ def reset_password():
     if not customer and not outlet:
         return jsonify({"error": "Account not found"}), 404
 
-    hashed_password = bcrypt.generate_password_hash(
-        new_password
-    ).decode("utf-8")
-
     if customer:
-        customer.password = hashed_password
+        customer.password = new_password
     else:
-        outlet.password = hashed_password
+        outlet.password = new_password
 
     db.session.commit()
 
@@ -237,7 +222,9 @@ def reset_password():
 @auth_bp.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
-
-    return jsonify({
+    response = jsonify({
         "message": "Logout successful. Delete token on client."
-    }), 200
+    })
+    unset_jwt_cookies(response)
+
+    return response, 200

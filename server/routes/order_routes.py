@@ -71,11 +71,33 @@ def create_order():
     # Create order
     total_amount = Decimal("0.00")
 
+    # check for reservation coupon
+    target_res = None
+    if reservation_id:
+        target_res = Reservation.query.get(reservation_id)
+        if target_res and target_res.status != "confirmed":
+            target_res = None # Only apply to confirmed
+    else:
+        # Auto-find a confirmed reservation for today
+        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        target_res = Reservation.query.filter(
+            Reservation.customer_id == customer_id,
+            Reservation.outlet_id == outlet_id,
+            Reservation.status == "confirmed",
+            Reservation.time_reserved_for >= today_start,
+            Reservation.is_fee_deducted == False
+        ).first()
+
+    if target_res:
+        discount_amount = Decimal("5.00")
+        reservation_id = target_res.id
+
     order = Order(
         customer_id=customer_id,
         reservation_id=reservation_id,
         status="pending",
-        total_amount=0
+        total_amount=0,
+        discount_amount=discount_amount
     )
 
     db.session.add(order)
@@ -118,16 +140,65 @@ def create_order():
                 order_id=order.id,
                 menu_item_id=menu_item.id,
                 quantity=quantity,
-                price=menu_item.price
+                price=menu_item.price,
+                time_to_prepare=menu_item.time_to_prepare
             )
         )
 
-    order.total_amount = total_amount
+    
+    if total_amount < discount_amount:
+        discount_amount= total_amount
+        order.total_amount = total_amount-discount_amount
+
+    if target_res and discount_amount > 0:
+        target_res.is_fee_deducted = True 
+        
+    # Calculate ETA: max item prep time + 10-15 min buffer (using 12 min as default)
+    prep_times = [item.menu_item.preparation_time for item in order.order_items]
+    if prep_times:
+        order.time_till_ready = max(prep_times) + 12
+    else:
+        order.time_till_ready = 15
 
     db.session.commit()
 
     return jsonify({
         "order_id": order.id,
         "status": order.status,
-        "total_amount": float(order.total_amount)
+        "total_amount": float(order.total_amount),
+        "estimated_time": order.estimated_time
     }), 201
+
+
+# GET ORDERS (CUSTOMER ONLY)
+@order_bp.route("", methods=["GET"])
+@jwt_required()
+@customer_required
+def get_orders():
+    
+    identity = get_jwt_identity()
+    customer_id = identity["id"]
+    
+    orders = Order.query.filter_by(customer_id=customer_id).order_by(Order.created_at.desc()).all()
+    
+    output = []
+    
+    for order in orders:
+        items_data = []
+        for item in order.order_items:
+            items_data.append({
+                "item_name": item.menu_item.item_name if item.menu_item else "Unknown Item",
+                "quantity": item.quantity,
+                "price": float(item.price)
+            })
+            
+        output.append({
+            "id": order.id,
+            "created_at": order.created_at.isoformat() if order.created_at else None,
+            "total_amount": float(order.total_amount),
+            "status": order.status,
+            "estimated_time": order.estimated_time,
+            "items": items_data
+        })
+        
+    return jsonify(output), 200
