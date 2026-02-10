@@ -15,7 +15,7 @@ export default function MenuCard({ item, outletName }: MenuCardProps) {
     const { addToCart } = useCart();
     const [isAdded, setIsAdded] = useState(false);
 
-    const handleAdd = () => {
+    const handleAdd = (e: React.MouseEvent) => {
         addToCart({
             menuItemId: item.id,
             name: item.item_name,
