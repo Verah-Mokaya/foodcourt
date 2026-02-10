@@ -119,7 +119,6 @@ class MenuItem(db.Model, SerializerMixin):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.String(255))
-    time_to_prepare = db.Column(db.Integer, nullable=False, default=15)
     is_available = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
