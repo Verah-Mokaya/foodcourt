@@ -22,7 +22,7 @@ class Customer(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
+    _password = db.Column("password", db.String, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20))
