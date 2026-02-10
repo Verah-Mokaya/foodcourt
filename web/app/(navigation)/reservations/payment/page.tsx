@@ -68,3 +68,22 @@ function PaymentContent() {
 
         loadReservation();
     }, [reservationId]);
+    const handlePayment = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await fetcher(`/reservations/${reservationId}/confirm`, {
+                method: "PUT"
+            });
+
+            router.push(ROUTES.CUSTOMER_DASHBOARD);
+        } catch (err) {
+            console.error("Payment failed", err);
+            alert("Payment failed. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
