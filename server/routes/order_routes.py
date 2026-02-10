@@ -71,6 +71,27 @@ def create_order():
     # Create order
     total_amount = Decimal("0.00")
 
+    # check for reservation coupon
+    target_res = None
+    if reservation_id:
+        target_res = Reservation.query.get(reservation_id)
+        if target_res and target_res.status != "confirmed":
+            target_res = None # Only apply to confirmed
+    else:
+        # Auto-find a confirmed reservation for today
+        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        target_res = Reservation.query.filter(
+            Reservation.customer_id == customer_id,
+            Reservation.outlet_id == outlet_id,
+            Reservation.status == "confirmed",
+            Reservation.time_reserved_for >= today_start,
+            Reservation.is_fee_deducted == False
+        ).first()
+
+    if target_res:
+        discount_amount = Decimal("5.00")
+        reservation_id = target_res.id
+
     order = Order(
         customer_id=customer_id,
         reservation_id=reservation_id,
