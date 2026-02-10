@@ -37,17 +37,14 @@ def customer_register():
     if Customer.query.filter_by(email=email).first():
         return jsonify({"error": "Customer already exists"}), 409
 
-    hashed_password = bcrypt.generate_password_hash(
-        data["password"]
-    ).decode("utf-8")
-
     new_customer = Customer(
         email=email,
-        password=hashed_password,
+        password=data["password"],
         first_name=data["first_name"],
         last_name=data["last_name"],
         phone_number=data.get("phone_number")
     )
+
 
     db.session.add(new_customer)
     db.session.commit()
