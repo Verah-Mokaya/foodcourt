@@ -27,7 +27,7 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 relative">
-            <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href={ROUTES.HOME} className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
                 <div className="bg-orange-600 p-1.5 rounded-lg rotate-3">
                     <UtensilsCrossed className="h-4 w-4 text-white" />
                 </div>
@@ -92,7 +92,7 @@ export default function LoginPage() {
 
                 <p className="text-center mt-8 text-sm text-gray-500">
                     Don't have an account?{" "}
-                    <Link href="/features/Registration" className="font-semibold text-orange-600 hover:text-orange-700 hover:underline">
+                    <Link href={ROUTES.SIGNUP} className="font-semibold text-orange-600 hover:text-orange-700 hover:underline">
                         Create one
                     </Link>
                 </p>
