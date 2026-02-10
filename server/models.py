@@ -30,7 +30,6 @@ class Customer(db.Model, SerializerMixin):
     
     # relationships
     reservations = db.relationship("Reservation", back_populates="customer", cascade="all, delete-orphan")
-    orders = db.relationship("Order", back_populates="customer", cascade="all, delete-orphan")
     
     # password hashing
     def authenticate(self, password):
