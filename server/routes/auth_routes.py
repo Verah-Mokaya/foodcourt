@@ -154,10 +154,7 @@ def outlet_login():
         email=data["email"]
     ).first()
 
-    if not outlet or not bcrypt.check_password_hash(
-        outlet.password,
-        data["password"]
-    ):
+    if not outlet or not outlet.authenticate(data["password"]):
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(
