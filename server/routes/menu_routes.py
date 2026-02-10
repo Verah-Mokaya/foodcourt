@@ -212,3 +212,18 @@ def get_menu_categories(outlet_id):
         "outlet_name": outlet.outlet_name,
         "categories": category_list
     }), 200
+
+# GET ALL MENU ITEMS(PUBLIC)
+@menu_bp.route("/menu_items", methods=["GET"])
+def get_all_menu_items():
+    items=MenuItem.query.all()
+    return jsonify([
+        "id": item.id,
+        "item_name": item.description,
+        "category": item.category,
+        "price": float(item.price),
+        "image_url": item.image_url,
+        "is_available": item.is_available,
+        "preparation_time": item.preparation_time,
+        "outlet_id": item.outlet_id
+        ])
