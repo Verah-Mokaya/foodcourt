@@ -29,3 +29,42 @@ export default function ReservationPaymentPage() {
         </Suspense>
     );
 }
+function PaymentContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const reservationId = searchParams.get("reservation_id");
+
+    const [reservation, setReservation] = useState<any>(null);
+    const [method, setMethod] = useState<"mpesa" | "card">("mpesa");
+    const [isLoading, setIsLoading] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
+
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [cardDetails, setCardDetails] = useState({
+        number: "",
+        expiry: "",
+        cvv: "",
+        name: ""
+    });
+
+    useEffect(() => {
+        if (!reservationId) {
+            router.push(ROUTES.BOOKING);
+            return;
+        }
+
+        const loadReservation = async () => {
+            try {
+                const data = await fetcher<any>(`/reservations/${reservationId}`);
+                setReservation(data);
+            } catch (err) {
+                console.error("Failed to load reservation", err);
+                alert("Invalid reservation session.");
+                router.push(ROUTES.BOOKING);
+            } finally {
+                setIsFetching(false);
+            }
+        };
+
+        loadReservation();
+    }, [reservationId]);
