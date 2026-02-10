@@ -4,12 +4,13 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
 import { API_URL } from "@/app/lib/api";
+import { ROUTES } from "@/app/lib/routes";
 
 interface AuthContextType {
     user: User | null;
     isLoading: boolean;
     login: (email: string, pass: string) => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
     register: (data: any) => Promise<void>;
 }
 
