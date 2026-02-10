@@ -1,5 +1,4 @@
-from app import create_app
-app = create_app()
+from app import app
 from models import db, Customer, Outlet, MenuItem, Order, OrderItem, Reservation, FoodCourtTable
 from faker import Faker
 from random import randint, choice, uniform
