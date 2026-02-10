@@ -32,7 +32,6 @@ class Customer(db.Model, SerializerMixin):
     reservations = db.relationship("Reservation", back_populates="customer", cascade="all, delete-orphan")
     
     # password hashing
-    # password hashing
     @hybrid_property
     def password(self):
         return self._password
@@ -48,8 +47,6 @@ class Customer(db.Model, SerializerMixin):
             self._password, password.encode('utf-8')
         )
     
-
-
     # validations
     @validates("email")
     def validate_email(self, key, value):
