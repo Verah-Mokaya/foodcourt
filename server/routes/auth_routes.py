@@ -204,14 +204,10 @@ def reset_password():
     if not customer and not outlet:
         return jsonify({"error": "Account not found"}), 404
 
-    hashed_password = bcrypt.generate_password_hash(
-        new_password
-    ).decode("utf-8")
-
     if customer:
-        customer.password = hashed_password
+        customer.password = new_password
     else:
-        outlet.password = hashed_password
+        outlet.password = new_password
 
     db.session.commit()
 
