@@ -14,3 +14,9 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+import { useState } from "react";
+import { useAuth } from "@/app/context/AuthContext";
+
+export function CartProvider({ children }: { children: React.ReactNode }) {
+    const { user } = useAuth();
+    const [items, setItems] = useState<CartItem[]>([]);
