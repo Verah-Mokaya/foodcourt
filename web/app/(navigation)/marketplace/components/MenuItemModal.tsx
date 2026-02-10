@@ -120,3 +120,4 @@ export default function MenuItemModal({ item, isOpen, onClose, outletName }: Men
             </div>
         </div>
     );
+}
