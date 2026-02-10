@@ -2,7 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
-    get_jwt_identity
+    get_jwt_identity,
+    set_access_cookies,
+    unset_jwt_cookies
 )
 
 from extensions import db, bcrypt
@@ -59,10 +61,10 @@ def customer_register():
         }
     )
 
-    return jsonify({
-        "message": "Customer registered successfully",
-        "access_token": access_token
-    }), 201
+    response = jsonify({"message": "Customer registered successfully"})
+    set_access_cookies(response, access_token)
+
+    return response, 200
 
 
 # CUSTOMER LOGIN
@@ -237,7 +239,9 @@ def reset_password():
 @auth_bp.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
-
-    return jsonify({
+    response = jsonify({
         "message": "Logout successful. Delete token on client."
-    }), 200
+    })
+    unset_jwt_cookies(response)
+
+    return response, 200
