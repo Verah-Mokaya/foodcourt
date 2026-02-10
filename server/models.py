@@ -201,7 +201,6 @@ class OrderItem(db.Model, SerializerMixin):
     menu_item_id = db.Column(db.Integer, db.ForeignKey("menu_items.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
-    time_to_prepare = db.Column(db.Integer)
     
     # relationships
     order = db.relationship("Order", back_populates="order_items")
