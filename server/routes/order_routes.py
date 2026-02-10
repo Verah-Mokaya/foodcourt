@@ -96,7 +96,8 @@ def create_order():
         customer_id=customer_id,
         reservation_id=reservation_id,
         status="pending",
-        total_amount=0
+        total_amount=0,
+        discount_amount=discount_amount
     )
 
     db.session.add(order)
@@ -143,7 +144,20 @@ def create_order():
             )
         )
 
-    order.total_amount = total_amount
+    
+    if total_amount < discount_amount:
+        discount_amount= total_amount
+        order.total_amount = total_amount-discount_amount
+
+    if target_res and discount_amount > 0:
+        target_res.is_fee_deducted = True 
+        
+    # Calculate ETA: max item prep time + 10-15 min buffer (using 12 min as default)
+    prep_times = [item.menu_item.preparation_time for item in order.order_items]
+    if prep_times:
+        order.time_till_ready = max(prep_times) + 12
+    else:
+        order.time_till_ready = 15
 
     db.session.commit()
 
