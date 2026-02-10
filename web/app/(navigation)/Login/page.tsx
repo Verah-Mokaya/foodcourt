@@ -5,6 +5,7 @@ import { useState } from "react";
 import { UtensilsCrossed, Loader2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function LoginPage() {
     const { login } = useAuth();
