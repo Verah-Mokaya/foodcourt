@@ -21,41 +21,83 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
+    // --- Check auth on initial load ---
     useEffect(() => {
-        const storedUser = localStorage.getItem("fc_user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        setIsLoading(false);
+        const checkAuth = async () => {
+            try {
+                const res = await fetch(`${API_URL}/auth/me`, {
+                    credentials: "include", // <- send cookies automatically
+                });
+                if (res.ok) {
+                    const { user: identity } = await res.json();
+                    setUser({
+                        id: identity.id,
+                        email: identity.email || "",
+                        role: identity.role,
+                        name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet"),
+                        outletId: (identity.role === "outlet" || identity.role === "owner") ? identity.id : undefined
+                    });
+                } else {
+                    setUser(null);
+                }
+            } catch (e) {
+                console.error("Auth check failed", e);
+                setUser(null);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        checkAuth();
     }, []);
 
+    // --- Login ---
     const login = async (email: string, pass: string) => {
         setIsLoading(true);
         try {
-            // Fetch user from DB
-            const res = await fetch(`${API_URL}/customers?email=${email}&password=${pass}`);
-            const users = await res.json();
+            // Try customer login first
+            let res = await fetch(`${API_URL}/auth/customer/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password: pass }),
+                credentials: "include", // <- cookie-based login
+            });
 
-            if (users.length === 0) {
-              
-                throw new Error("Invalid credentials");
+            if (!res.ok) {
+                // Try outlet login
+                res = await fetch(`${API_URL}/auth/outlet/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password: pass }),
+                    credentials: "include",
+                });
             }
 
-            const loggedInUser = users[0];
-            // Normalize Name
-            loggedInUser.name = loggedInUser.first_name
-                ? `${loggedInUser.first_name} ${loggedInUser.last_name || ""}`.trim()
-                : "User";
+            if (!res.ok) throw new Error("Invalid credentials");
+
+            // Fetch /me for user details
+            const meRes = await fetch(`${API_URL}/auth/me`, {
+                credentials: "include", // <- get user from cookie
+            });
+
+            if (!meRes.ok) throw new Error("Failed to fetch user details");
+
+            const { user: identity } = await meRes.json();
+
+            const loggedInUser: User = {
+                id: identity.id,
+                email: identity.email || email,
+                role: identity.role,
+                name: identity.name || (identity.role === "customer" ? "Customer" : "Outlet Owner"),
+                outletId: (identity.role === "outlet" || identity.role === "owner") ? identity.id : undefined
+            };
 
             setUser(loggedInUser);
-            localStorage.setItem("fc_user", JSON.stringify(loggedInUser));
-            localStorage.setItem("fc_token", "mock_token_" + Date.now());
 
             // Redirect
             if (loggedInUser.role === "owner" || loggedInUser.role === "outlet") {
-                router.push("/features/Dashboard");
+                router.push(ROUTES.DASHBOARD);
             } else {
-                router.push("/features/MenuBrowsing");
+                router.push(ROUTES.MARKETPLACE);
             }
 
         } catch (error) {
@@ -66,39 +108,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    // --- Register ---
     const register = async (data: any) => {
         setIsLoading(true);
         try {
-            // Check if exists
-            const checkRes = await fetch(`${API_URL}/customers?email=${data.email}`);
-            const existing = await checkRes.json();
-            if (existing.length > 0) {
-                throw new Error("Email already exists");
-            }
+            const endpoint = data.role === "customer"
+                ? "/auth/customer/register"
+                : "/auth/outlet/register";
 
-            // POST to customers
-            const res = await fetch(`${API_URL}/customers`, {
+            const res = await fetch(`${API_URL}${endpoint}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: "include", // <- cookie login on register
             });
 
-            if (!res.ok) throw new Error("Registration failed");
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.error || "Registration failed");
+            }
 
-            const newUser = await res.json();
-            // Normalize Name
-            newUser.name = newUser.first_name
-                ? `${newUser.first_name} ${newUser.last_name || ""}`.trim()
-                : "User";
+            // Fetch /me for user details
+            const meRes = await fetch(`${API_URL}/auth/me`, {
+                credentials: "include",
+            });
+
+            if (!meRes.ok) throw new Error("Failed to fetch user info");
+
+            const { user: identity } = await meRes.json();
+
+            const newUser: User = {
+                id: identity.id,
+                email: identity.email || data.email,
+                role: identity.role,
+                name: data.first_name ? `${data.first_name} ${data.last_name || ""}`.trim() : "User",
+                outletId: (identity.role === "outlet" || identity.role === "owner") ? identity.id : undefined
+            };
 
             setUser(newUser);
-            localStorage.setItem("fc_user", JSON.stringify(newUser));
-            localStorage.setItem("fc_token", "mock_token_" + Date.now());
 
+            // Redirect
             if (newUser.role === "owner" || newUser.role === "outlet") {
-                router.push("/features/Dashboard");
+                router.push(ROUTES.DASHBOARD);
             } else {
-                router.push("/features/MenuBrowsing");
+                router.push(ROUTES.MARKETPLACE);
             }
 
         } catch (error: any) {
@@ -109,11 +162,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem("fc_token");
-        localStorage.removeItem("fc_user");
-        router.push("/features/Login");
+    // --- Logout ---
+    const logout = async () => {
+        try {
+            await fetch(`${API_URL}/auth/logout`, {
+                method: "POST",
+                credentials: "include", // <- clear cookie on backend
+            });
+        } catch (err) {
+            console.error("Logout Error", err);
+        } finally {
+            setUser(null);
+            router.push(ROUTES.LOGIN);
+        }
     };
 
     return (
