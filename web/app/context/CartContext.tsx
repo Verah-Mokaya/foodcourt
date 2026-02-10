@@ -61,4 +61,19 @@ import { useEffect } from "react";
             ];
         });
     };
+    const removeFromCart = (id: number) => {
+        setItems(prev => prev.filter(i => i.menuItemId !== id));
+    };
+
+    const updateQuantity = (id: number, delta: number) => {
+        setItems(prev =>
+            prev.map(i => {
+                if (i.menuItemId === id) {
+                    const newQty = Math.max(1, i.quantity + delta);
+                    return { ...i, quantity: newQty };
+                }
+                return i;
+            })
+        );
+    };
 
