@@ -2,7 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
-    get_jwt_identity
+    get_jwt_identity,
+    set_access_cookies,
+    unset_access_cookies
 )
 
 from extensions import db, bcrypt
@@ -100,52 +102,6 @@ def customer_login():
         "message": "Login successful",
         "access_token": access_token
     }), 200
-
-# OUTLET REGISTER
-@auth_bp.route("/outlet/register", methods=["POST"])
-def outlet_register():
-
-    data = request.get_json() or {}
-
-    error = validate_outlet_data(data)
-    if error:
-        return jsonify({"error": error}), 400
-
-    email = data["email"]
-
-    if Outlet.query.filter_by(email=email).first():
-        return jsonify({"error": "Outlet already exists"}), 409
-
-    hashed_password = bcrypt.generate_password_hash(
-        data["password"]
-    ).decode("utf-8")
-
-    new_outlet = Outlet(
-        outlet_name=data["outlet_name"],
-        owner_name=data["owner_name"],
-        email=email,
-        password=hashed_password,
-        cuisine_type=data["cuisine_type"],
-        description=data.get("description"),
-        is_active=True
-    )
-
-    db.session.add(new_outlet)
-    db.session.commit()
-
-    access_token = create_access_token(
-        identity={
-            "id": new_outlet.id,
-            "role": "outlet"
-        }
-    )
-
-    return jsonify({
-        "message": "Outlet registered successfully",
-        "access_token": access_token
-    }), 201
-
-
 # OUTLET LOGIN
 @auth_bp.route("/outlet/login", methods=["POST"])
 def outlet_login():
