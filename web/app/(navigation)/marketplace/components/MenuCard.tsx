@@ -16,6 +16,7 @@ export default function MenuCard({ item, outletName }: MenuCardProps) {
     const [isAdded, setIsAdded] = useState(false);
 
     const handleAdd = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent opening modal
         addToCart({
             menuItemId: item.id,
             name: item.item_name,
@@ -41,7 +42,14 @@ export default function MenuCard({ item, outletName }: MenuCardProps) {
                     <h3 className="font-semibold text-gray-900 line-clamp-1">{item.item_name}</h3>
                     <span className="text-sm font-semibold text-orange-600">${item.price}</span>
                 </div>
-                <p className="text-xs text-gray-500 mb-3">{outletName} • {item.category}</p>
+                <div className="flex justify-between items-center mb-1">
+                    <p className="text-xs text-gray-500">{outletName} • {item.category}</p>
+                    {item.preparation_time && (
+                        <span className="text-[10px] bg-orange-50 text-orange-700 px-2 py-0.5 rounded-full font-medium">
+                            {item.preparation_time} mins
+                        </span>
+                    )}
+                </div>
 
                 <div className="mt-auto">
                     <button
