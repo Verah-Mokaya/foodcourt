@@ -185,7 +185,6 @@ class Order(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # relationships
-    customer = db.relationship("Customer", back_populates="orders")
     reservation = db.relationship("Reservation", back_populates="orders")
     order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
     
