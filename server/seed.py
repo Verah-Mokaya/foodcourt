@@ -50,8 +50,7 @@ def seed_data():
                     price=round(uniform(5.0, 50.0), 2),
                     category=choice(categories),
                     image_url=fake.image_url(),
-                    is_available=True,
-                    time_to_prepare=randint(5, 45)
+                    is_available=True
                 )
                 db.session.add(item)
         db.session.commit()
