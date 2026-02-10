@@ -118,16 +118,55 @@ def create_order():
                 order_id=order.id,
                 menu_item_id=menu_item.id,
                 quantity=quantity,
-                price=menu_item.price
+                price=menu_item.price,
+                time_to_prepare=menu_item.time_to_prepare
             )
         )
 
     order.total_amount = total_amount
+    
+    # Calculate estimated time after adding all items
+    order.calculate_estimated_time()
 
     db.session.commit()
 
     return jsonify({
         "order_id": order.id,
         "status": order.status,
-        "total_amount": float(order.total_amount)
+        "total_amount": float(order.total_amount),
+        "estimated_time": order.estimated_time
     }), 201
+
+
+# GET ORDERS (CUSTOMER ONLY)
+@order_bp.route("", methods=["GET"])
+@jwt_required()
+@customer_required
+def get_orders():
+    
+    identity = get_jwt_identity()
+    customer_id = identity["id"]
+    
+    orders = Order.query.filter_by(customer_id=customer_id).order_by(Order.created_at.desc()).all()
+    
+    output = []
+    
+    for order in orders:
+        items_data = []
+        for item in order.order_items:
+            items_data.append({
+                "item_name": item.menu_item.item_name if item.menu_item else "Unknown Item",
+                "quantity": item.quantity,
+                "price": float(item.price)
+            })
+            
+        output.append({
+            "id": order.id,
+            "created_at": order.created_at.isoformat() if order.created_at else None,
+            "total_amount": float(order.total_amount),
+            "status": order.status,
+            "estimated_time": order.estimated_time,
+            "items": items_data
+        })
+        
+    return jsonify(output), 200
