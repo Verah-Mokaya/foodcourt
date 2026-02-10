@@ -31,4 +31,34 @@ import { useEffect } from "react";
     useEffect(() => {
         localStorage.setItem("fc_cart", JSON.stringify(items));
     }, [items]);
+    const addToCart = (newItem: any) => {
+        if (!user) {
+            alert("Please login to start your ordering process");
+            window.location.href = "/login";
+            return;
+        }
+
+        setItems(prev => {
+            const existing = prev.find(
+                i => i.menuItemId === newItem.menuItemId
+            );
+
+            if (existing) {
+                return prev.map(i =>
+                    i.menuItemId === newItem.menuItemId
+                        ? {
+                              ...i,
+                              quantity:
+                                  i.quantity + (newItem.quantity || 1),
+                          }
+                        : i
+                );
+            }
+
+            return [
+                ...prev,
+                { ...newItem, quantity: newItem.quantity || 1 },
+            ];
+        });
+    };
 
