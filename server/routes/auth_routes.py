@@ -80,10 +80,7 @@ def customer_login():
         email=data["email"]
     ).first()
 
-    if not customer or not bcrypt.check_password_hash(
-        customer.password,
-        data["password"]
-    ):
+    if not customer or not customer.authenticate(data["password"]):
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(
