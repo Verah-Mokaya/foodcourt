@@ -88,9 +88,15 @@ class Outlet(db.Model, SerializerMixin):
     menu_items = db.relationship("MenuItem", back_populates="outlet", cascade="all, delete-orphan")
 
     # password hashing
-    
-    
-    # validations
+    @validates("password")
+    def validate_password(self, key, password):
+        if not password:
+             return None
+        return bcrypt.generate_password_hash(password.encode('utf-8')).decode('utf-8')
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self.password, password.encode('utf-8'))
+
     @validates("email")
     def validate_email(self, key, value):
         if value and ("@" not in value or "." not in value.split("@")[-1]):
