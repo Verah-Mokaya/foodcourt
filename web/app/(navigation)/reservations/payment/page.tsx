@@ -94,3 +94,24 @@ function PaymentContent() {
             </div>
         );
     }
+    return (
+        <div className="min-h-screen bg-gray-50 pb-12">
+            <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+                <header className="flex items-center gap-4">
+                    <button
+                        onClick={() => router.back()}
+                        className="p-2 hover:bg-white rounded-full transition-colors"
+                    >
+                        <ChevronLeft className="w-6 h-6 text-gray-900" />
+                    </button>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">
+                            Complete Your Payment
+                        </h1>
+                        <p className="text-gray-500 text-sm">
+                            One more step to secure your table.
+                        </p>
+                    </div>
+                </header>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
