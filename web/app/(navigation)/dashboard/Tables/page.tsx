@@ -13,7 +13,7 @@ export default function TablesPage() {
     const [newTable, setNewTable] = useState({ table_number: "", capacity: "" });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-     useEffect(() => {
+    useEffect(() => {
         const loadTables = async () => {
             try {
                 // In a real app we'd filter by outlet, but mock data is global or we filter manually
@@ -32,7 +32,7 @@ export default function TablesPage() {
         loadTables();
     }, []);
 
-    const handleAdd = async (e: React.FormEvent) => {
+        const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
@@ -42,16 +42,15 @@ export default function TablesPage() {
                 is_available: true
             };
 
-            const res = await fetch(`${API_URL}/food_court_tables`, {
+            const savedTable = await fetcher<Table>("/food_court_tables", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
 
-            const savedTable = await res.json();
             setTables([...tables, savedTable]);
             setNewTable({ table_number: "", capacity: "" });
         } catch (err) {
+            console.error("Failed to add table", err);
             alert("Failed to add table");
         } finally {
             setIsSubmitting(false);
@@ -61,9 +60,10 @@ export default function TablesPage() {
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure?")) return;
         try {
-            await fetch(`${API_URL}/food_court_tables/${id}`, { method: "DELETE" });
+            await fetcher(`/food_court_tables/${id}`, { method: "DELETE" });
             setTables(tables.filter(t => t.id !== id));
         } catch (err) {
+            console.error("Failed to delete table", err);
             alert("Failed to delete table");
         }
     };
@@ -116,7 +116,7 @@ export default function TablesPage() {
                                 <span className="text-xl font-bold text-orange-600">{table.table_number}</span>
                             </div>
                             <button
-                                onClick={() => handleDelete(table.id)}
+                                onClick={() => handleDelete(Number(table.id))}
                                 className="text-gray-400 hover:text-red-500 transition-colors"
                             >
                                 <Trash2 className="h-4 w-4" />
@@ -140,3 +140,4 @@ export default function TablesPage() {
         </div>
     );
 }
+

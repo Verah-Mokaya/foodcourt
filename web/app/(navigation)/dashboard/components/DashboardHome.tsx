@@ -10,7 +10,7 @@ interface DashboardHomeProps {
     }
 }
 
-export default function DashboardHome({ stats }: DashboardHomeProps) {
+export default function DashboardHome({ stats }: DashboardHomeProps){
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
