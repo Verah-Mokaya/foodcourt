@@ -9,6 +9,24 @@ from utils import outlet_required
 
 menu_bp = Blueprint("menu", __name__, url_prefix="/menu")
 
+# GET ALL MENU(PUBLIC)
+@menu_bp.route("/outlets", methods=["GET"])
+def get_all_outlets():
+    outlets = Outlet.query.all()
+    
+    return jsonify({
+        "outlets": [
+            {
+                "id": outlet.id,
+                "outlet_name": outlet.outlet_name,
+                "cuisine_type": outlet.cuisine_type,
+                "description": outlet.description
+                "image_ur".getattr(outlet, "image_url", None)
+        
+            }
+            for outlet in outlets
+        ]
+    }), 200
 
 # GET OUTLET MENU (PUBLIC)
 @menu_bp.route("/<int:outlet_id>", methods=["GET"])
