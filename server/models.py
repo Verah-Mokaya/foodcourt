@@ -178,33 +178,16 @@ class Order(db.Model, SerializerMixin):
     serialize_rules = ("-reservation.orders", "-order_items.order")
     
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=False)
     reservation_id = db.Column(db.Integer, db.ForeignKey("reservations.id"))
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")
-    estimated_time = db.Column(db.String(20)) 
+    time_till_ready = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # relationships
     customer = db.relationship("Customer", back_populates="orders")
     reservation = db.relationship("Reservation", back_populates="orders")
     order_items = db.relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
-    
-    def calculate_estimated_time(self):
-        if not self.order_items:
-            self.estimated_time = "15-25 minutes"  # default
-            return
-        
-        max_prep_time = max(
-            (item.time_to_prepare for item in self.order_items if item.time_to_prepare),
-            default=15
-        )
-        
-        # the range
-        min_time = max_prep_time
-        max_time = max_prep_time + 10
-        
-        self.estimated_time = f"{min_time}-{max_time} minutes"
     
     def __repr__(self):
         return f"<Order id={self.id} total={self.total_amount} status={self.status}>"
