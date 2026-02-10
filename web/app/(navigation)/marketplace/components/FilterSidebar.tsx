@@ -5,13 +5,20 @@ import { cn } from "@/app/lib/utils";
 
 interface FilterSidebarProps {
     categories: string[];
+    cuisines: string[]
     selectedCategory: string | null;
     setSelectedCategory: (cat: string | null) => void;
+    selectedCuisine: string | null;
+    setSelectedCuisine: (cuisine: string | null) => void;
     search: string;
     setSearch: (val: string) => void;
     selectedPrice: string | null;
     setSelectedPrice: (val: string | null) => void;
     className?: string;
+
+   
+   
+
 }
 
 export default function FilterSidebar({
