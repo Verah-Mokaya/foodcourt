@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { User, Store, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/app/lib/utils";
+import { ROUTES } from "@/app/lib/routes";
 
 export default function SignupPage() {
     const { register } = useAuth();
@@ -21,7 +22,7 @@ export default function SignupPage() {
         cuisine: ""
     });
 
-        const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
@@ -29,15 +30,25 @@ export default function SignupPage() {
             const [firstName, ...lastNameParts] = formData.name.split(" ");
             const lastName = lastNameParts.join(" ") || "";
 
-            
+
             let payload: any = {
                 email: formData.email,
                 password: formData.password,
-                role: role === "outlet" ? "owner" : "customer", 
+                role: role === "outlet" ? "owner" : "customer",
                 first_name: firstName,
                 last_name: lastName,
                 phone_number: "0725123456"
             };
+
+            if (role === "outlet") {
+                payload = {
+                    ...payload,
+                    outlet_name: formData.outletName,
+                    owner_name: formData.name,
+                    cuisine_type: formData.cuisine,
+                    description: `Welcome to ${formData.outletName}`
+                };
+            }
 
             await register(payload);
 
@@ -50,7 +61,7 @@ export default function SignupPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 relative">
-            <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href={ROUTES.HOME} className="absolute top-6 left-6 flex items-center gap-2 text-gray-900 hover:text-orange-600 transition-colors">
                 <div className="bg-orange-600 p-1.5 rounded-lg rotate-3">
                     <Store className="h-4 w-4 text-white" />
                 </div>
@@ -93,7 +104,7 @@ export default function SignupPage() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input
                             required
-                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-500 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
                             placeholder="John Doe"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -105,7 +116,7 @@ export default function SignupPage() {
                         <input
                             required
                             type="email"
-                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-500 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
                             placeholder="name@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -117,7 +128,7 @@ export default function SignupPage() {
                         <input
                             required
                             type="password"
-                            className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-500 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
                             placeholder="••••••••"
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -134,7 +145,7 @@ export default function SignupPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant Name</label>
                                 <input
                                     required
-                                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                    className="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-500 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
                                     placeholder="Tasty Bites"
                                     value={formData.outletName}
                                     onChange={(e) => setFormData({ ...formData, outletName: e.target.value })}
@@ -144,7 +155,7 @@ export default function SignupPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Cuisine Type</label>
                                 <input
                                     required
-                                    className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                                    className="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder:text-gray-500 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
                                     placeholder="e.g. Italian, Indian, Fast Food"
                                     value={formData.cuisine}
                                     onChange={(e) => setFormData({ ...formData, cuisine: e.target.value })}
@@ -174,7 +185,7 @@ export default function SignupPage() {
 
                 <p className="text-center mt-6 text-sm text-gray-500">
                     Already have an account?{" "}
-                    <Link href="/features/Login" className="font-semibold text-orange-600 hover:text-orange-700 hover:underline">
+                    <Link href={ROUTES.LOGIN} className="font-semibold text-orange-600 hover:text-orange-700 hover:underline">
                         Log in
                     </Link>
                 </p>
