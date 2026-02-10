@@ -9,6 +9,24 @@ from utils import outlet_required, admin_required
 
 menu_bp = Blueprint("menu", __name__, url_prefix="/menu")
 
+# GET ALL MENU(PUBLIC)
+@menu_bp.route("/outlets", methods=["GET"])
+def get_all_outlets():
+    outlets = Outlet.query.all()
+    
+    return jsonify({
+        "outlets": [
+            {
+                "id": outlet.id,
+                "outlet_name": outlet.outlet_name,
+                "cuisine_type": outlet.cuisine_type,
+                "description": outlet.description
+                "image_ur".getattr(outlet, "image_url", None)
+        
+            }
+            for outlet in outlets
+        ]
+    }), 200
 
 # GET OUTLET MENU (PUBLIC)
 @menu_bp.route("/<int:outlet_id>", methods=["GET"])
@@ -242,18 +260,33 @@ def update_menu_item(item_id):
 
 
 
-# GET ALL MENUS (ADMIN ONLY)
-@menu_bp.route('/all', methods=["GET"])
-@jwt_required
-@admin_required
-def get_all_menus():
-    outlets = Outlet.query.all()
-    result = []
-    for outlet in outlets:
-        items = MenuItem.query.filter_by(outlet_id=outlet.id).all()
-        result.append({
-            "outlet_id": outlet.id,
-            "outlet_name": outlet.outlet_name,
-            "items": [item.serialize() for item in items]
-        })
-    return jsonify(result), 200
+    categories = (
+        db.session
+        .query(MenuItem.category)
+        .filter_by(outlet_id=outlet_id)
+        .distinct()
+        .all()
+    )
+
+    category_list = [c[0] for c in categories]
+
+    return jsonify({
+        "outlet_id": outlet.id,
+        "outlet_name": outlet.outlet_name,
+        "categories": category_list
+    }), 200
+
+# GET ALL MENU ITEMS(PUBLIC)
+@menu_bp.route("/menu_items", methods=["GET"])
+def get_all_menu_items():
+    items=MenuItem.query.all()
+    return jsonify([
+        "id": item.id,
+        "item_name": item.description,
+        "category": item.category,
+        "price": float(item.price),
+        "image_url": item.image_url,
+        "is_available": item.is_available,
+        "preparation_time": item.preparation_time,
+        "outlet_id": item.outlet_id
+        ])
