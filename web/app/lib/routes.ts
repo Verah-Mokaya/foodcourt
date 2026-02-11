@@ -1,0 +1,15 @@
+export const ROUTES = {
+    HOME: "/",
+    LOGIN: "/login",
+    SIGNUP: "/signup",
+    MARKETPLACE: "/marketplace",
+    CART: "/cart",
+    DASHBOARD: "/dashboard",
+    CUSTOMER_DASHBOARD: "/customer/dashboard",
+    BOOKING: "/booking",
+    PROFILE: "/customer/dashboard",
+    ORDERS_TRACKING: "/orders/tracking",
+    ORDERS_HISTORY: "/orders/history",
+    OUTLETS: "/outlets",
+    RESERVATIONS_PAYMENT: "/reservations/payment",
+};
