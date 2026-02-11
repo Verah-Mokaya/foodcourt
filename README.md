@@ -1,41 +1,13 @@
-# NextGen Food Court
+# NextGen Food Court Web Application
 
-Day 1 – Database Infrastructure & Migrations
+## Project Overview
 
-## Contributor: Member 3
-Feature Branch: feature/database-infrastructure
+**Client:** Nextgen Mall, Nairobi  
+**Location:** Mombasa Road, near Central Business District  
 
-## Overview
+A modern web application designed to digitize the food ordering process at Nextgen Mall's food court, which hosts 20-30 outlets serving diverse cuisines including Ethiopian, Nigerian, Congolese, and Kenyan food.
 
-Set up the PostgreSQL database infrastructure and configured Flask-Migrate to enable version-controlled schema management for the backend application.
+## Problem Statement
 
-## Tasks Completed
+Nextgen Mall attracts thousands of daily visitors to its food court. The current ordering system creates confusion as waiters from multiple outlets simultaneously approach customers with numerous menus, often leading to unintended orders. This application streamlines the experience by allowing customers to browse menus and place orders digitally from their table or in advance.
 
-Configured PostgreSQL database connection
-
-Integrated Flask-SQLAlchemy and Flask-Migrate
-
-Initialized database migrations
-
-Created initial database schema
-
-Applied migrations to the PostgreSQL database
-
-Verified successful schema creation using Alembic version tracking
-
-## Outcome
-
-The backend now supports controlled database schema evolution using migrations, providing a stable foundation for further backend feature development.
-
-## Verification
-
-The following tables were successfully created via migrations:
-
-alembic_version
-
-outlets
-
-## Commands Used
-flask db init
-flask db migrate -m "Initial database schema"
-flask db upgrade
