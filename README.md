@@ -102,8 +102,8 @@ foodcourt/
 
 ### Prerequisites
 - Python 3.8.13
-- Node.js (v20+)
-- PostgreSQL (or SQLite for development)
+- ReactJS
+- PostgreSQL
 - pipenv
 
 ### Backend Setup
@@ -201,6 +201,8 @@ Liban Golo
 - CORS configuration for frontend-backend communication
 - Input validation on all models
 - SQL injection protection via SQLAlchemy ORM
+- Stores tokens on httponly
+- Ensures cookies are JWT protected
 
 
 ## Contributing
