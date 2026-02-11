@@ -80,7 +80,7 @@ export default function MenuItemModal({ item, isOpen, onClose, outletName }: Men
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-gray-500">Price</span>
-                            <span className="text-2xl font-bold text-gray-900">${(item.price * quantity).toFixed(2)}</span>
+                            <span className="text-2xl font-bold text-gray-900">KSh {(item.price * quantity).toFixed(2)}</span>
                         </div>
 
                         <div className="flex items-center justify-between gap-4">

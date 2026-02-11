@@ -112,7 +112,7 @@ export default function CartPage() {
                                     <h3 className="font-medium text-gray-900 line-clamp-1">{item.name}</h3>
                                     <p className="text-xs text-gray-500">{item.outletName}</p>
                                 </div>
-                                <p className="font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
+                                <p className="font-semibold text-gray-900">KSh {(item.price * item.quantity).toFixed(2)}</p>
                             </div>
 
                             <div className="flex justify-between items-center mt-2">
@@ -205,7 +205,7 @@ export default function CartPage() {
 
                 <div className="flex justify-between items-center mb-4">
                     <span className="text-gray-500">Total</span>
-                    <span className="text-2xl font-bold text-gray-900">${total.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-gray-900">KSh {total.toFixed(2)}</span>
                 </div>
                 <button
                     onClick={() => setIsPaymentOpen(true)}

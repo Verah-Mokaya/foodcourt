@@ -19,6 +19,13 @@ export default function BookingPage() {
     const [time, setTime] = useState("");
     const [guests, setGuests] = useState(2);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+    const filteredOutlets = outlets.filter(outlet =>
+        outlet.outlet_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        outlet.cuisine_type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     useEffect(() => {
         const loadOutlets = async () => {
@@ -114,16 +121,44 @@ export default function BookingPage() {
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-xs font-bold text-gray-400 uppercase mb-2 ml-1">Select Outlet</label>
-                                    <select
-                                        className="w-full p-4 bg-gray-50 border border-transparent rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 text-gray-900 font-medium transition-all"
-                                        value={selectedOutlet || ""}
-                                        onChange={e => setSelectedOutlet(Number(e.target.value))}
-                                    >
-                                        <option value="" disabled>Search Outlets...</option>
-                                        {outlets.map(outlet => (
-                                            <option key={outlet.id} value={outlet.id}>{outlet.outlet_name}</option>
-                                        ))}
-                                    </select>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Search Outlets or Cuisines (e.g. Kenyan)..."
+                                            className="w-full p-4 bg-gray-50 border border-transparent rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 text-gray-900 font-medium transition-all"
+                                            value={searchQuery}
+                                            onChange={(e) => {
+                                                setSearchQuery(e.target.value);
+                                                setShowSuggestions(true);
+                                                if (selectedOutlet) setSelectedOutlet(null);
+                                            }}
+                                            onFocus={() => setShowSuggestions(true)}
+                                        />
+
+                                        {showSuggestions && searchQuery.trim().length > 0 && (
+                                            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto">
+                                                {filteredOutlets.length > 0 ? (
+                                                    filteredOutlets.map(outlet => (
+                                                        <button
+                                                            key={outlet.id}
+                                                            type="button"
+                                                            className="w-full p-4 text-left hover:bg-orange-50 transition-colors flex flex-col items-start gap-1"
+                                                            onClick={() => {
+                                                                setSelectedOutlet(outlet.id);
+                                                                setSearchQuery(outlet.outlet_name);
+                                                                setShowSuggestions(false);
+                                                            }}
+                                                        >
+                                                            <span className="font-bold text-gray-900">{outlet.outlet_name}</span>
+                                                            <span className="text-xs text-orange-600 font-medium uppercase tracking-wider">{outlet.cuisine_type}</span>
+                                                        </button>
+                                                    ))
+                                                ) : (
+                                                    <div className="p-4 text-gray-400 text-sm text-center">No outlets found matching "{searchQuery}"</div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -208,7 +243,7 @@ export default function BookingPage() {
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center pb-4 border-b border-gray-800">
                                     <span className="text-gray-300 text-sm">Reservation Fee</span>
-                                    <span className="font-bold text-orange-400 text-lg">$5.00</span>
+                                    <span className="font-bold text-orange-400 text-lg">KSh 500</span>
                                 </div>
 
                                 <div className="bg-gray-800/50 p-4 rounded-2xl space-y-2">

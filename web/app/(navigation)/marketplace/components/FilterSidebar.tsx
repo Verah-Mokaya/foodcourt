@@ -127,7 +127,7 @@ export default function FilterSidebar({
             <div>
                 <h3 className="font-bold text-gray-900 mb-3">Price Range</h3>
                 <div className="flex gap-2">
-                    {["$", "$$", "$$$"].map((price) => (
+                    {["KSh", "KSh x2", "KSh x3"].map((price) => (
                         <button
                             key={price}
                             onClick={() => setSelectedPrice(selectedPrice === price ? null : price)}

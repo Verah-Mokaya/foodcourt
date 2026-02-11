@@ -26,7 +26,7 @@ export default function MenuTable({ items, onDelete }: MenuTableProps) {
                             <p className="text-sm text-gray-500">{item.category}</p>
                             <p className="text-xs text-gray-400 line-clamp-2 mt-1">{item.description}</p>
                             <div className="flex justify-between items-end mt-2">
-                                <p className="font-semibold text-gray-900">${item.price !== undefined ? item.price.toFixed(2) : "0.00"}</p>
+                                <p className="font-semibold text-gray-900">KSh {item.price !== undefined ? item.price.toFixed(2) : "0.00"}</p>
                                 <div className={`text-xs px-2 py-1 rounded-full ${item.is_available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                                     {item.is_available ? 'Available' : 'Unavailable'}
                                 </div>

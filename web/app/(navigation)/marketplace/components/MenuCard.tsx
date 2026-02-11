@@ -40,7 +40,7 @@ export default function MenuCard({ item, outletName }: MenuCardProps) {
             <div className="p-4 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-1">
                     <h3 className="font-semibold text-gray-900 line-clamp-1">{item.item_name}</h3>
-                    <span className="text-sm font-semibold text-orange-600">${item.price}</span>
+                    <span className="text-sm font-semibold text-orange-600">KSh {item.price}</span>
                 </div>
                 <div className="flex justify-between items-center mb-1">
                     <p className="text-xs text-gray-500">{outletName} • {item.category}</p>

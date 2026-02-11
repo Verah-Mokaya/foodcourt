@@ -63,12 +63,12 @@ export default function MarketplacePage() {
 
             // Price Logic
             let matchesPrice = true;
-            if (selectedPrice === "$") matchesPrice = typeof item.price === 'number' ? item.price < 300 : Number(item.price) < 300;
-            else if (selectedPrice === "$$") {
+            if (selectedPrice === "KSh") matchesPrice = typeof item.price === 'number' ? item.price < 300 : Number(item.price) < 300;
+            else if (selectedPrice === "KSh x2") {
                 const p = typeof item.price === 'number' ? item.price : Number(item.price);
                 matchesPrice = p >= 300 && p <= 600;
             }
-            else if (selectedPrice === "$$$") matchesPrice = typeof item.price === 'number' ? item.price > 600 : Number(item.price) > 600;
+            else if (selectedPrice === "KSh x3") matchesPrice = typeof item.price === 'number' ? item.price > 600 : Number(item.price) > 600;
 
             return matchesSearch && matchesCategory && matchesPrice && matchesOutlet && matchesCuisine;
         });
@@ -214,7 +214,7 @@ export default function MarketplacePage() {
                         <span className="bg-white/20 px-3 py-1 rounded-lg text-sm font-bold">{itemCount}</span>
                         <span className="font-bold">View Order</span>
                     </div>
-                    <span className="font-bold text-lg">${total.toFixed(2)}</span>
+                    <span className="font-bold text-lg">KSh {total.toFixed(2)}</span>
                 </Link>
             )}
 

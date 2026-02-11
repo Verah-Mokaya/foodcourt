@@ -33,7 +33,7 @@ export default function BestSellers() {
         loadBestSellers();
     }, []);
 
- 
+
     const marqueeItems = [...items, ...items, ...items, ...items];
 
     if (isLoading) return <div className="py-20 text-center">Loading best sellers...</div>;
@@ -72,7 +72,7 @@ export default function BestSellers() {
                                             <p className="text-sm text-gray-500">{item.outlet_name}</p>
                                         </div>
                                         <span className="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded">
-                                            ${typeof item.price === 'number' ? item.price.toFixed(2) : Number(item.price).toFixed(2)}
+                                            KSh {typeof item.price === 'number' ? item.price.toFixed(2) : Number(item.price).toFixed(2)}
                                         </span>
                                     </div>
                                     <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-orange-600">

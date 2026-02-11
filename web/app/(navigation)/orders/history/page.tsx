@@ -82,14 +82,14 @@ export default function OrderHistoryPage() {
                                     </p>
                                 </div>
                             </div>
-                            <span className="font-bold text-gray-900">${order.total_amount.toFixed(2)}</span>
+                            <span className="font-bold text-gray-900">KSh {order.total_amount.toFixed(2)}</span>
                         </div>
 
                         <div className="border-t border-gray-100 pt-3 text-sm text-gray-600 space-y-1">
                             {(order.order_items || []).map((item, idx) => (
                                 <div key={idx} className="flex justify-between">
                                     <span>{item.quantity}x {item.item_name || `Item #${item.menu_item_id}`}</span>
-                                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                    <span>KSh {(item.price * item.quantity).toFixed(2)}</span>
                                 </div>
                             ))}
                         </div>

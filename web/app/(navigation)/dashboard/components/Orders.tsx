@@ -26,7 +26,7 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                     <div key={order.id} className="bg-white p-4 rounded-xl border-l-4 border-orange-500 shadow-sm">
                         <div className="flex justify-between items-start mb-2">
                             <span className="font-mono text-sm text-gray-500">#{order.id}</span>
-                            <span className="font-bold">${order.total_amount.toFixed(2)}</span>
+                            <span className="font-bold">KSh {order.total_amount.toFixed(2)}</span>
                         </div>
                         <div className="space-y-1 mb-4">
                             {(order.order_items || []).map((item, i) => (

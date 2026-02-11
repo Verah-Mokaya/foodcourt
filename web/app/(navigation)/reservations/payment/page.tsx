@@ -131,7 +131,7 @@ function PaymentContent() {
                                     />
                                     <p className="text-xs text-gray-500 flex items-start gap-2">
                                         <Info className="w-3 h-3 mt-0.5 text-gray-400" />
-                                        You'll receive an M-Pesa prompt on your phone to authorize the $5.00 payment.
+                                        You'll receive an M-Pesa prompt on your phone to authorize the KSh 500 payment.
                                     </p>
                                 </div>
                             )}
@@ -187,7 +187,7 @@ function PaymentContent() {
                                         Processing...
                                     </>
                                 ) : (
-                                    `Confirm & Pay $5.00`
+                                    `Confirm & Pay KSh 500`
                                 )}
                             </button>
                         </form>
@@ -243,7 +243,7 @@ function PaymentContent() {
                             <div className="pt-6 border-t border-gray-800 flex justify-between items-end">
                                 <div>
                                     <p className="text-gray-500 text-xs font-bold uppercase mb-1">Total Due Now</p>
-                                    <p className="text-3xl font-black text-white">$5.00</p>
+                                    <p className="text-3xl font-black text-white">KSh 500</p>
                                 </div>
                                 <div className="text-right">
                                     <span className="text-[10px] bg-orange-500/20 text-orange-500 px-2 py-1 rounded-full font-bold uppercase">Non-Refundable</span>

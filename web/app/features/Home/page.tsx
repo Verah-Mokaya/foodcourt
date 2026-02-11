@@ -80,7 +80,7 @@ export default function Home() {
                     <div className="flex-1">
                         <div className="relative">
                             <img
-                                src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1000"
+                                src="/images/dinebest/dine withebest.jpg"
                                 alt="Restaurant Interior"
                                 className="rounded-2xl shadow-2xl"
                             />
