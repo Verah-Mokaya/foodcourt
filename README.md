@@ -45,3 +45,36 @@ Nextgen Mall attracts thousands of daily visitors to its food court. The current
 - **API**: RESTful architecture with Flask-RESTFUL
 - **CORS**: Flask-CORS for cross-origin requests
 
+
+## Project Structure
+
+```
+foodcourt/
+├── server/                 # Flask backend
+│   ├── app.py             # Application factory and configuration
+│   ├── models.py          # Database models
+│   ├── extensions.py      # Flask extensions initialization
+│   ├── seed.py            # Database seeding script
+│   ├── utils.py           # Utility functions
+│   ├── routes/            # API route blueprints
+│   │   ├── auth_routes.py
+│   │   ├── menu_routes.py
+│   │   ├── order_routes.py
+│   │   ├── reservation_routes.py
+│   │   └── analytics_routes.py
+│   ├── migrations/        # Database migration files
+│   └── instance/          # SQLite database (development)
+├── web/                   # Next.js frontend
+│   ├── app/              # Next.js app directory
+│   │   ├── (navigation)/ # Main application routes
+│   │   │   ├── dashboard/
+│   │   │   ├── marketplace/
+│   │   │   ├── orders/
+│   │   │   ├── outlets/
+│   │   │   └── reservations/
+│   │   ├── api/          # API routes (NextAuth)
+│   │   └── components/   # Reusable components
+│   ├── public/           # Static assets
+│   └── package.json
+└── README.md
+```
