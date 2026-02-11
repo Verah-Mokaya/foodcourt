@@ -3,7 +3,7 @@
 import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
 import { fetcher, API_URL } from "@/app/lib/api";
-import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, Store, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
@@ -16,9 +16,18 @@ export default function CartPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+    const [orderType, setOrderType] = useState<"dine-in" | "takeaway">("dine-in");
+    const [tableNumber, setTableNumber] = useState("");
 
     const handleCheckout = async (paymentMethod: string, paymentDetails: any) => {
         if (!user) return;
+
+        // Validation for table number (required for both dine-in and takeaway)
+        if (!tableNumber.trim()) {
+            alert("Please enter a table number.");
+            return;
+        }
+
         setIsSubmitting(true);
 
         const itemsByOutlet = items.reduce((acc, item) => {
@@ -38,6 +47,8 @@ export default function CartPage() {
                     total_amount: outletTotal,
                     status: "pending",
                     created_at: new Date().toISOString(),
+                    order_type: orderType,
+                    table_number: tableNumber,
                     order_items: outletItems.map(i => ({
                         menu_item_id: i.menuItemId,
                         quantity: i.quantity,
@@ -132,7 +143,66 @@ export default function CartPage() {
                 ))}
             </div>
 
-            <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t border-gray-200 z-50">
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 z-50">
+
+                {/* Order Context Inputs - Premium Styling */}
+                <div className="mb-6 space-y-4">
+                    {/* Dine-in / Takeaway Selection (Segmented Control) */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Order Type</label>
+                        <div className="flex bg-gray-100 p-1 rounded-xl">
+                            <button
+                                onClick={() => setOrderType("dine-in")}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all ${orderType === "dine-in"
+                                    ? "bg-white text-orange-600 shadow-sm"
+                                    : "text-gray-500 hover:text-gray-700"
+                                    }`}
+                            >
+                                <span className="bg-orange-100 p-1 rounded-full"><Store className="w-4 h-4" /></span>
+                                Dine-in
+                            </button>
+                            <button
+                                onClick={() => setOrderType("takeaway")}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all ${orderType === "takeaway"
+                                    ? "bg-white text-orange-600 shadow-sm"
+                                    : "text-gray-500 hover:text-gray-700"
+                                    }`}
+                            >
+                                <span className="bg-orange-100 p-1 rounded-full"><ArrowRight className="w-4 h-4" /></span>
+                                Takeaway
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Table Number Input - Premium Styling */}
+                    <div className="animate-in fade-in slide-in-from-top-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Table Number <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                value={tableNumber}
+                                onChange={(e) => setTableNumber(e.target.value)}
+                                placeholder="Enter your table number"
+                                className={`
+                                    w-full pl-4 pr-4 py-3 bg-gray-50 border rounded-xl outline-none transition-all
+                                    ${!tableNumber.trim() ? "border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20" : "border-orange-500 bg-orange-50/30"}
+                                `}
+                            />
+                            {tableNumber.trim() && (
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-600">
+                                    <div className="w-2 h-2 rounded-full bg-orange-500" />
+                                </div>
+                            )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-gray-400" />
+                            Required for service tracking
+                        </p>
+                    </div>
+                </div>
+
                 <div className="flex justify-between items-center mb-4">
                     <span className="text-gray-500">Total</span>
                     <span className="text-2xl font-bold text-gray-900">${total.toFixed(2)}</span>

@@ -33,7 +33,7 @@ export default function BestSellers() {
         <section className="py-20 bg-white overflow-hidden">
             <div className="container mx-auto px-6 mb-12">
                 <span className="text-orange-600 font-bold uppercase tracking-wider text-sm">Customer Favorites</span>
-                <h2 className="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Best Selling African Dishes</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Best Selling Dishes</h2>
             </div>
 
             <div className="relative w-full">
@@ -51,7 +51,7 @@ export default function BestSellers() {
                 >
                     {marqueeItems.map((item, idx) => (
                         <Link
-                            href={ROUTES.MARKETPLACE} // Redirect to marketplace generally as finding specific ID might require more logic
+                            href={`${ROUTES.MARKETPLACE}?highlightId=${item.id}`} // Redirect to marketplace with highlight ID
                             key={`${item.id}-${idx}`}
                             className="group min-w-[300px] bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
                         >

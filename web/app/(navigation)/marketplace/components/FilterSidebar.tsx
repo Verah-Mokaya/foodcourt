@@ -60,7 +60,7 @@ export default function FilterSidebar({
                         </button>
                     )}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-orange-200 scrollbar-track-transparent">
                     <button
                         onClick={() => setSelectedCategory(null)}
                         className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCategory
@@ -98,7 +98,7 @@ export default function FilterSidebar({
                         </button>
                     )}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-orange-200 scrollbar-track-transparent">
                     <button
                         onClick={() => setSelectedCuisine(null)}
                         className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCuisine

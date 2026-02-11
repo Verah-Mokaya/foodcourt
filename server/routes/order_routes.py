@@ -95,12 +95,21 @@ def create_order():
         discount_amount = Decimal("5.00")
         reservation_id = target_res.id
 
+    # New fields
+    order_type = data.get("order_type", "dine-in")
+    table_number = data.get("table_number")
+
+    if not table_number:
+        return jsonify({"error": "Table number is required"}), 400
+
     order = Order(
         customer_id=customer_id,
         reservation_id=reservation_id,
         status="pending",
         total_amount=0,
-        discount_amount=discount_amount
+        discount_amount=discount_amount,
+        order_type=order_type,
+        table_number=table_number
     )
 
     db.session.add(order)

@@ -3,9 +3,12 @@ export const API_URL =
 
 export const fetcher = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
     const headers: Record<string, string> = {
-        "Content-Type": "application/json",
         ...Object.fromEntries(new Headers(options.headers).entries()),
     };
+
+    if (!(options.body instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
+    }
 
     const res = await fetch(`${API_URL}${url}`, {
         ...options,

@@ -189,6 +189,8 @@ class Order(db.Model, SerializerMixin):
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
     discount_amount = db.Column(db.Numeric(10, 2), default=0.00)
     status = db.Column(db.String(20), nullable=False, default="pending")
+    order_type = db.Column(db.String(20), default="dine-in") # dine-in or takeaway
+    table_number = db.Column(db.String(10), nullable=False, default="0")
     time_till_ready = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     

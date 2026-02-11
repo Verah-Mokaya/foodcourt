@@ -33,20 +33,25 @@ export default function MenuPage() {
         if (!user || !user.outletId) return;
         setIsSubmitting(true);
         try {
-            const payload = {
-                outlet_id: user.outletId,
-                item_name: newItem.name,
-                price: Number(newItem.price),
-                category: newItem.category,
-                image_url: newItem.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
-                description: newItem.description,
-                preparation_time: newItem.preparation_time,
-                is_available: newItem.is_available
-            };
+            const formData = new FormData();
+            formData.append("item_name", newItem.name);
+            formData.append("price", String(newItem.price));
+            formData.append("category", newItem.category);
+            formData.append("description", newItem.description || "");
+            formData.append("preparation_time", String(newItem.preparation_time));
+            // Default is_available to true if undefined, convert to string for FormData
+            formData.append("is_available", String(newItem.is_available ?? true));
+
+            if (newItem.image instanceof File) {
+                formData.append("image", newItem.image);
+            } else {
+                // Fallback image if no file provided
+                formData.append("image_url", "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80");
+            }
 
             const savedItem = await fetcher<MenuItem>("/item", {
                 method: "POST",
-                body: JSON.stringify(payload)
+                body: formData
             });
             setItems(prev => [...prev, savedItem]);
         } catch (err) {

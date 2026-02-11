@@ -12,16 +12,16 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("Main");
-    const [image, setImage] = useState("");
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [description, setDescription] = useState("");
     const [preparationTime, setPreparationTime] = useState("15");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await onAdd({ name, price, category, image, description, preparation_time: Number(preparationTime) });
+        await onAdd({ name, price, category, image: imageFile, description, preparation_time: Number(preparationTime) });
         setName("");
         setPrice("");
-        setImage("");
+        setImageFile(null);
         setDescription("");
         setPreparationTime("15");
     };
@@ -86,13 +86,16 @@ export default function MenuItemForm({ onAdd, isSubmitting }: MenuItemFormProps)
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase">Image URL (Optional)</label>
+                    <label className="text-xs font-bold text-gray-500 uppercase">Item Image</label>
                     <input
-                        type="url"
-                        placeholder="https://images.unsplash.com..."
-                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20"
-                        value={image}
-                        onChange={e => setImage(e.target.value)}
+                        type="file"
+                        accept="image/*"
+                        className="w-full p-2.5 bg-gray-50 border border-gray-100 rounded-lg outline-none focus:ring-2 focus:ring-orange-500/20 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                        onChange={e => {
+                            if (e.target.files && e.target.files[0]) {
+                                setImageFile(e.target.files[0]);
+                            }
+                        }}
                     />
                 </div>
                 <div className="space-y-1">

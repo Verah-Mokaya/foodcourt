@@ -79,6 +79,24 @@ export default function MarketplacePage() {
         return outlets.find(o => String(o.id) === forcedOutletId)?.outlet_name;
     }, [outlets, forcedOutletId]);
 
+    const highlightId = searchParams.get("highlightId");
+
+    useEffect(() => {
+        if (highlightId && !isLoading && menuItems.length > 0) {
+            const element = document.getElementById(`menu-item-${highlightId}`);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Add highlight visual (could be handled via CSS class logic too, but utilizing state or ref is fine)
+                // For simplicity here, we can rely on the className logic below or just the scroll to start.
+                // Let's verify if we want to auto-select.
+
+                // Optional: Auto-select item to show details
+                // const item = menuItems.find(i => String(i.id) === highlightId);
+                // if (item) setSelectedItem(item);
+            }
+        }
+    }, [highlightId, isLoading, menuItems]);
+
     if (isLoading) return <div className="p-8 text-center">Loading menu...</div>;
 
     return (
@@ -159,7 +177,15 @@ export default function MarketplacePage() {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {filteredItems.map(item => (
-                            <div key={item.id} onClick={() => setSelectedItem(item)} className="cursor-pointer transition-transform hover:scale-[1.02]">
+                            <div
+                                key={item.id}
+                                id={`menu-item-${item.id}`} // Add ID for scroll target
+                                onClick={() => setSelectedItem(item)}
+                                className={`
+                                    cursor-pointer transition-all duration-500 hover:scale-[1.02] 
+                                    ${String(item.id) === highlightId ? "ring-2 ring-orange-500 shadow-xl scale-[1.02]" : ""}
+                                `}
+                            >
                                 <MenuCard
                                     item={item}
                                     outletName={getOutletName(Number(item.outlet_id))}

@@ -132,13 +132,24 @@ def get_menu_item(item_id):
     }), 200
 
 
-# CREATE MENU ITEM (OUTLET ONLY)
+import os
+from werkzeug.utils import secure_filename
+from flask import current_app
+
+# ... (inside create_menu_item)
+
 @menu_bp.route("/item", methods=["POST"])
 @jwt_required()
 @outlet_required
 def create_menu_item():
 
-    data = request.get_json() or {}
+    # Check content type to distinguish between JSON and Multipart
+    if request.content_type.startswith('multipart/form-data'):
+        data = request.form
+        image_file = request.files.get("image")
+    else:
+        data = request.get_json() or {}
+        image_file = None
 
     required = ["item_name", "price", "category"]
 
@@ -146,7 +157,7 @@ def create_menu_item():
         if not data.get(field):
             return jsonify({"error": f"{field} is required"}), 400
 
-    # Get outlet from JWT (NOT from request)
+    # Get outlet from JWT
     identity = get_jwt_identity()
     outlet_id = identity["id"]
 
@@ -161,15 +172,32 @@ def create_menu_item():
     except ValueError:
         return jsonify({"error": "Invalid price"}), 400
 
+    # Handle Image Upload
+    image_url = data.get("image_url") # Default/Fallback
+    if image_file:
+        filename = secure_filename(image_file.filename)
+        upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
+        
+        # Ensure directory exists (redundant safety)
+        os.makedirs(upload_folder, exist_ok=True)
+        
+        image_path = os.path.join(upload_folder, filename)
+        image_file.save(image_path)
+        
+        # Generate URL
+        # Assumption: server is running on port 5000 and static files are served from /static
+        # In production, this might need domain config, but for now:
+        image_url = f"http://localhost:5000/static/uploads/{filename}"
+
     new_item = MenuItem(
         outlet_id=outlet_id,
         item_name=data["item_name"],
         description=data.get("description"),
         category=data["category"],
         price=price,
-        image_url=data.get("image_url"),
-        is_available=data.get("is_available", True),
-        preparation_time=data.get("preparation_time", 15)
+        image_url=image_url,
+        is_available=data.get("is_available", "true").lower() == "true", # Form data is string
+        preparation_time=int(data.get("preparation_time", 15))
     )
 
     db.session.add(new_item)
