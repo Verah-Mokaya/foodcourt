@@ -193,3 +193,24 @@ Liban Golo
 - [x] Order confirmation and status updates
 - [x] Modular codebase architecture
 
+## Security Features
+
+- Password hashing with bcrypt
+- JWT-based authentication
+- Protected API routes
+- CORS configuration for frontend-backend communication
+- Input validation on all models
+- SQL injection protection via SQLAlchemy ORM
+
+
+## Contributing
+
+1. Ensure you're working on the latest `dev` branch
+2. Create a feature branch for your work
+3. Write descriptive commit messages
+4. Ensure modular code that doesn't break unrelated features
+5. Merge only after approval
+
+## License
+
+This project is developed for Nextgen Mall as part of Phase 5 web development coursework.
