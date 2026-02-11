@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from sqlalchemy import func
+import random
 
 from extensions import db
-from models import MenuItem, Outlet
+from models import MenuItem, Outlet, OrderItem
 
 from utils import outlet_required
 
@@ -44,6 +46,55 @@ def get_all_menu_items():
             "outlet_id": item.outlet_id
         }
         for item in items
+    ]), 200
+
+
+# GET BEST SELLERS (PUBLIC)
+@menu_bp.route("/menu_items/best_sellers", methods=["GET"])
+def get_best_sellers():
+    # 1. Fetch top selling items
+    top_selling = (
+        db.session.query(MenuItem, func.count(OrderItem.id).label('sales_count'))
+        .join(OrderItem, MenuItem.id == OrderItem.menu_item_id)
+        .group_by(MenuItem.id)
+        .order_by(func.count(OrderItem.id).desc())
+        .limit(6)
+        .all()
+    )
+    
+    # Extract MenuItem objects
+    best_sellers = [item[0] for item in top_selling]
+    
+    # 2. Check if we need more items
+    if len(best_sellers) < 6:
+        needed = 6 - len(best_sellers)
+        existing_ids = [item.id for item in best_sellers]
+        
+        # Fetch potential fillers excluding already selected ones
+        potential_items = MenuItem.query.filter(MenuItem.id.notin_(existing_ids)).all()
+        
+        if potential_items:
+            # Shuffle and take needed
+            # Use min to avoid error if potential_items < needed
+            random_fillers = random.sample(potential_items, min(len(potential_items), needed))
+            best_sellers.extend(random_fillers)
+            
+    # Format response
+    return jsonify([
+        {
+            "id": item.id,
+            "item_name": item.item_name,
+            "description": item.description,
+            "category": item.category,
+            "price": float(item.price),
+            "image_url": item.image_url,
+            "is_available": item.is_available,
+            "preparation_time": item.preparation_time,
+            "outlet_id": item.outlet_id,
+            # Improve frontend display by including outlet name directly
+            "outlet_name": item.outlet.outlet_name if item.outlet else "Unknown"
+        }
+        for item in best_sellers
     ]), 200
 
 

@@ -86,13 +86,12 @@ export default function MarketplacePage() {
             const element = document.getElementById(`menu-item-${highlightId}`);
             if (element) {
                 element.scrollIntoView({ behavior: "smooth", block: "center" });
-                // Add highlight visual (could be handled via CSS class logic too, but utilizing state or ref is fine)
-                // For simplicity here, we can rely on the className logic below or just the scroll to start.
-                // Let's verify if we want to auto-select.
+            }
 
-                // Optional: Auto-select item to show details
-                // const item = menuItems.find(i => String(i.id) === highlightId);
-                // if (item) setSelectedItem(item);
+            // Auto-select item to show details (Add to Cart modal)
+            const item = menuItems.find(i => String(i.id) === highlightId);
+            if (item) {
+                setSelectedItem(item);
             }
         }
     }, [highlightId, isLoading, menuItems]);
