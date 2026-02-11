@@ -78,3 +78,23 @@ foodcourt/
 │   └── package.json
 └── README.md
 ```
+
+## Database Schema
+
+### Models
+- **Customer**: User accounts with authentication
+- **Outlet**: Food outlet/restaurant information
+- **MenuItem**: Individual food items with pricing and categories
+- **FoodCourtTable**: Table management and availability
+- **Reservation**: Table booking system
+- **Order**: Customer orders with status tracking
+- **OrderItem**: Individual items within orders
+
+### Key Relationships
+- Customers → Reservations (one-to-many)
+- Reservations → Orders (one-to-many)
+- Outlets → MenuItems (one-to-many)
+- Orders → OrderItems (one-to-many)
+- MenuItems → OrderItems (many-to-many through OrderItem)
+- FoodCourtTables → Reservations (one-to-many)
+
