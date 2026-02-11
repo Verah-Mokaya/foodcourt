@@ -1,10 +1,11 @@
 from app import create_app
 app = create_app()
 from models import db, Customer, Outlet, MenuItem, Order, OrderItem, Reservation, FoodCourtTable
-from faker import Faker
-from random import randint, choice, uniform
+from seed_data import OUTLETS
+from random import choice
 
-fake = Faker()
+# Realistic Kenyan customer data
+
 
 def seed_data():
     with app.app_context():
@@ -12,79 +13,91 @@ def seed_data():
         db.drop_all()
         db.create_all()
 
+        # Seed Food Court Tables (20 tables with varied capacity)
         print("Seeding Food Court Tables...")
         tables = []
+        capacities = [2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6, 6, 8, 8, 8, 8]
         for i in range(1, 21):
             table = FoodCourtTable(
                 table_number=i,
-                capacity=choice([2, 4, 6, 8])
+                capacity=capacities[i - 1]
             )
             tables.append(table)
         db.session.add_all(tables)
         db.session.commit()
+        print(f"  Created {len(tables)} tables")
 
-        print("Seeding Outlets...")
-        cuisines = ["Ethiopian", "Nigerian", "Congolese", "Kenyan", "Indian", "Chinese", "Italian", "Mexican", "Other"]
-        outlets = []
-        for _ in range(5):
-            outlet = Outlet(
-                owner_name=fake.name(),
-                email=fake.email(),
-                outlet_name=fake.company(),
-                cuisine_type=choice(cuisines),
-                description=fake.catch_phrase(),
-                password="password123" 
-            )
-            outlets.append(outlet)
-        db.session.add_all(outlets)
-        db.session.commit()
+        # Seed Outlets and their Menu Items
+        print("Seeding Outlets and Menu Items...")
+        total_items = 0
+        for outlet_data in OUTLETS:
+            items = outlet_data.pop("items")
+            outlet = Outlet(**outlet_data)
+            db.session.add(outlet)
+            db.session.flush()  # Get the outlet ID
 
-        print("Seeding Menu Items...")
-        categories = ["kids", "snack", "main", "appetizer", "dessert", "beverage", "other"]
-        for outlet in outlets:
-            for _ in range(10):
+            for item_tuple in items:
+                name, description, price, category, image_url = item_tuple
                 item = MenuItem(
-                    item_name=fake.word().capitalize() + " " + fake.word().capitalize(),
+                    item_name=name,
                     outlet_id=outlet.id,
-                    description=fake.sentence(),
-                    price=round(uniform(5.0, 50.0), 2),
-                    category=choice(categories),
-                    image_url=fake.image_url(),
+                    description=description,
+                    price=price,
+                    category=category,
+                    image_url=image_url,
                     is_available=True
                 )
                 db.session.add(item)
-        db.session.commit()
+                total_items += 1
 
+            # Restore items back to outlet_data for potential re-use
+            outlet_data["items"] = items
+            print(f"  Created outlet: {outlet_data['outlet_name']} ({outlet_data['cuisine_type']}) with {len(items)} items")
+
+        db.session.commit()
+        print(f"  Total: {len(OUTLETS)} outlets, {total_items} menu items")
+
+        # Seed Customers
         print("Seeding Customers...")
         customers = []
-        for _ in range(10):
+        for cust_data in CUSTOMERS:
             customer = Customer(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                email=fake.email(),
+                first_name=cust_data["first_name"],
+                last_name=cust_data["last_name"],
+                email=cust_data["email"],
                 password="password123",
-                phone_number=f"07{randint(10000000, 99999999)}"
+                phone_number=cust_data["phone_number"]
             )
             customers.append(customer)
         db.session.add_all(customers)
         db.session.commit()
-        
-        # Verify hashing
-        print("Verifying hashing...")
-        c = Customer.query.first()
-        print(f"Customer password in DB: {c.password}")
-        if c.password == "password123":
-             print("ERROR: Password is not hashed!")
-        else:
-             print("SUCCESS: Password is hashed.")
-             
-        o = Outlet.query.first()
-        print(f"Outlet password in DB: {o.password}")
-        if o.password == "password123":
-             print("ERROR: Outlet password is not hashed!")
-        else:
-             print("SUCCESS: Outlet password is hashed.")
+        print(f"  Created {len(customers)} customers")
 
+        # Verify password hashing
+        print("\nVerifying password hashing...")
+        c = Customer.query.first()
+        print(f"  Customer password in DB: {c.password[:20]}...")
+        if c.password == "password123":
+            print("  ERROR: Customer password is not hashed!")
+        else:
+            print("  SUCCESS: Customer password is hashed.")
+
+        o = Outlet.query.first()
+        print(f"  Outlet password in DB: {o.password[:20]}...")
+        if o.password == "password123":
+            print("  ERROR: Outlet password is not hashed!")
+        else:
+            print("  SUCCESS: Outlet password is hashed.")
+
+        # Print summary
+        print("\n" + "=" * 50)
+        print("SEEDING SUMMARY")
+        print("=" * 50)
+        print(f"  Tables:     {FoodCourtTable.query.count()}")
+        print(f"  Outlets:    {Outlet.query.count()}")
+        print(f"  Menu Items: {MenuItem.query.count()}")
+        print(f"  Customers:  {Customer.query.count()}")
+        print("=" * 50)
         print("Seeding completed successfully!")
 
 if __name__ == "__main__":
