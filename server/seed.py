@@ -5,7 +5,18 @@ from seed_data import OUTLETS
 from random import choice
 
 # Realistic Kenyan customer data
-
+CUSTOMERS = [
+    {"first_name": "Wanjiku", "last_name": "Kamau", "email": "wanjiku.kamau@gmail.com", "phone_number": "+254712345678"},
+    {"first_name": "Brian", "last_name": "Odhiambo", "email": "brian.odhiambo@gmail.com", "phone_number": "+254723456789"},
+    {"first_name": "Mercy", "last_name": "Chebet", "email": "mercy.chebet@yahoo.com", "phone_number": "+254734567890"},
+    {"first_name": "Kevin", "last_name": "Mwangi", "email": "kevin.mwangi@outlook.com", "phone_number": "+254745678901"},
+    {"first_name": "Faith", "last_name": "Wambui", "email": "faith.wambui@gmail.com", "phone_number": "+254756789012"},
+    {"first_name": "Dennis", "last_name": "Otieno", "email": "dennis.otieno@gmail.com", "phone_number": "+254767890123"},
+    {"first_name": "Esther", "last_name": "Njeri", "email": "esther.njeri@yahoo.com", "phone_number": "+254778901234"},
+    {"first_name": "Samuel", "last_name": "Kiprop", "email": "samuel.kiprop@gmail.com", "phone_number": "+254789012345"},
+    {"first_name": "Grace", "last_name": "Akinyi", "email": "grace.akinyi@outlook.com", "phone_number": "+254790123456"},
+    {"first_name": "Martin", "last_name": "Mutua", "email": "martin.mutua@gmail.com", "phone_number": "+254701234567"},
+]
 
 def seed_data():
     with app.app_context():
