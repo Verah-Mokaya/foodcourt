@@ -1,64 +1,218 @@
-# NextGen Food Court
+# NextGen Food Court Web Application
 
-Day 1 – Database Infrastructure & Migrations
+## Project Overview
 
-## Contributor: Member 3
-Feature Branch: feature/database-infrastructure
+**Client:** Nextgen Mall, Nairobi  
+**Location:** Mombasa Road, near Central Business District  
 
-## Overview
+A modern web application designed to digitize the food ordering process at Nextgen Mall's food court, which hosts 20-30 outlets serving diverse cuisines including Ethiopian, Nigerian, Congolese, and Kenyan food.
 
-Set up the PostgreSQL database infrastructure and configured Flask-Migrate to enable version-controlled schema management for the backend application.
+## Problem Statement
 
-## Tasks Completed
+Nextgen Mall attracts thousands of daily visitors to its food court. The current ordering system creates confusion as waiters from multiple outlets simultaneously approach customers with numerous menus, often leading to unintended orders. This application streamlines the experience by allowing customers to browse menus and place orders digitally from their table or in advance.
 
-Configured PostgreSQL database connection
+## Key Features
 
-Integrated Flask-SQLAlchemy and Flask-Migrate
+### Customer Features
+- **Mobile-First Design**: Accessible on all major platforms (iOS, Android, web browsers)
+- **Digital Menu Browsing**: View all available food items across all outlets
+- **Advanced Filtering**: Filter by cuisine type, price range, and category (kids, snacks, etc.)
+- **Shopping Cart**: Add multiple items, review order summary before placing
+- **Table Reservations**: Book tables 20-30 minutes in advance with real-time availability
+- **Order Tracking**: Real-time order status updates and estimated preparation time
+- **User Authentication**: Secure customer accounts with JWT-based authentication
 
-Initialized database migrations
+### Outlet Owner Features
+- **Dashboard Access**: Dedicated portal for outlet management
+- **Menu Management**: Add, update, and remove menu items
+- **Order Management**: View and confirm incoming orders
+- **Analytics**: Track sales, popular items, and performance metrics
+- **Outlet Registration**: Self-service outlet registration system
 
-Created initial database schema
+## Technology Stack
 
-Applied migrations to the PostgreSQL database
+### Frontend
+- **Framework**: Next.js 16.1.6 (React 19.2.3)
+- **Styling**: Tailwind CSS v4
+- **Language**: TypeScript 5
 
-Verified successful schema creation using Alembic version tracking
+### Backend
+- **Framework**: Flask (Python 3.8.13)
+- **Database**: PostgreSQL (with SQLite for development)
+- **ORM**: SQLAlchemy with Flask-SQLAlchemy
+- **Migrations**: Flask-Migrate (Alembic)
+- **Authentication**: Flask-JWT-Extended, Flask-Bcrypt
+- **API**: RESTful architecture with Flask-RESTFUL
+- **CORS**: Flask-CORS for cross-origin requests
 
-## Outcome
 
-The backend now supports controlled database schema evolution using migrations, providing a stable foundation for further backend feature development.
+## Project Structure
 
-## Verification
+```
+foodcourt/
+├── server/                 # Flask backend
+│   ├── app.py             # Application factory and configuration
+│   ├── models.py          # Database models
+│   ├── extensions.py      # Flask extensions initialization
+│   ├── seed.py            # Database seeding script
+│   ├── utils.py           # Utility functions
+│   ├── routes/            # API route blueprints
+│   │   ├── auth_routes.py
+│   │   ├── menu_routes.py
+│   │   ├── order_routes.py
+│   │   ├── reservation_routes.py
+│   │   └── analytics_routes.py
+│   ├── migrations/        # Database migration files
+│   └── instance/          # SQLite database (development)
+├── web/                   # Next.js frontend
+│   ├── app/              # Next.js app directory
+│   │   ├── (navigation)/ # Main application routes
+│   │   │   ├── dashboard/
+│   │   │   ├── marketplace/
+│   │   │   ├── orders/
+│   │   │   ├── outlets/
+│   │   │   └── reservations/
+│   │   ├── api/          # API routes (NextAuth)
+│   │   └── components/   # Reusable components
+│   ├── public/           # Static assets
+│   └── package.json
+└── README.md
+```
 
-The following tables were successfully created via migrations:
+## Database Schema
 
-alembic_version
+### Models
+- **Customer**: User accounts with authentication
+- **Outlet**: Food outlet/restaurant information
+- **MenuItem**: Individual food items with pricing and categories
+- **FoodCourtTable**: Table management and availability
+- **Reservation**: Table booking system
+- **Order**: Customer orders with status tracking
+- **OrderItem**: Individual items within orders
 
-outlets
+### Key Relationships
+- Customers → Reservations (one-to-many)
+- Reservations → Orders (one-to-many)
+- Outlets → MenuItems (one-to-many)
+- Orders → OrderItems (one-to-many)
+- MenuItems → OrderItems (many-to-many through OrderItem)
+- FoodCourtTables → Reservations (one-to-many)
 
-## Commands Used
-flask db init
-flask db migrate -m "Initial database schema"
-flask db upgrade
+## Getting Started
 
-## What changed
-- Switched JWT authentication to use HttpOnly cookies instead of returning tokens in JSON
-- Configured Flask-JWT-Extended to read tokens from cookies only
-- Updated login routes to set JWT cookies on successful authentication
-- Updated logout route to properly clear JWT cookies
-- Fixed CORS configuration to support credentials (cookies)
+### Prerequisites
+- Python 3.8.13
+- ReactJS
+- PostgreSQL
+- pipenv
 
-## Why
-- Prevents JWT access from browser JavaScript (mitigates XSS attacks)
-- Aligns authentication flow with production-ready security best practices
-- Simplifies frontend auth handling by relying on cookies
+### Backend Setup
 
-## How to test
-1. Login as customer or outlet
-2. Verify no JWT is returned in the response body
-3. Call a protected route (e.g. `/auth/me`) with credentials enabled
-4. Confirm request succeeds while token is not accessible in the browser
-5. Logout and verify protected routes are no longer accessible
+1. **Navigate to server directory**
+   ```bash
+   cd server
+   ```
 
-## Notes
-- `JWT_COOKIE_SECURE` is set to `False` for local development
-- Must be set to `True` in production (HTTPS)
+2. **Install dependencies**
+   ```bash
+   pipenv install
+   ```
+
+3. **Activate virtual environment**
+   ```bash
+   pipenv shell
+   ```
+
+4. **Set up environment variables** (optional)
+   ```bash
+   export DATABASE_URL="postgresql://user:password@localhost/foodcourt"
+   export JWT_SECRET_KEY="your-secret-key"
+   ```
+
+5. **Initialize database**
+   ```bash
+   flask db init
+   flask db migrate -m "Initial migration"
+   flask db upgrade
+   ```
+
+6. **Seed database with sample data**
+   ```bash
+   python seed.py
+   ```
+
+7. **Run the development server**
+   ```bash
+   python run.py
+   # or
+   flask run
+   ```
+
+   Backend will be available at `http://localhost:5000`
+
+### Frontend Setup
+
+1. **Navigate to web directory**
+   ```bash
+   cd web
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+   Frontend will be available at `http://localhost:3000`
+
+## Team Composition
+
+- **5 Web Developers** working collaboratively
+- **Team Members**
+Verah Mokaya
+Newton Oduor
+Samuel Murimi
+Susan Gakii
+Liban Golo
+
+## Minimum Viable Product (MVP) Checklist
+
+- [x] Mobile web application accessible on all platforms
+- [x] REST API backend with Flask
+- [x] PostgreSQL database with migrations
+- [x] Customer authentication system
+- [x] Outlet owner dashboard
+- [x] Menu browsing with filtering (cuisine, price, category)
+- [x] Shopping cart functionality
+- [x] Order placement and tracking
+- [x] Table reservation system with availability checking
+- [x] Order confirmation and status updates
+- [x] Modular codebase architecture
+
+## Security Features
+
+- Password hashing with bcrypt
+- JWT-based authentication
+- Protected API routes
+- CORS configuration for frontend-backend communication
+- Input validation on all models
+- SQL injection protection via SQLAlchemy ORM
+- Stores tokens on httponly
+- Ensures cookies are JWT protected
+
+
+## Contributing
+
+1. Ensure you're working on the latest `dev` branch
+2. Create a feature branch for your work
+3. Write descriptive commit messages
+4. Ensure modular code that doesn't break unrelated features
+5. Merge only after approval
+
+## License
+
+This project is developed for Nextgen Mall as part of Phase 5 web development coursework.
