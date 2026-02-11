@@ -168,3 +168,28 @@ foodcourt/
    ```
 
    Frontend will be available at `http://localhost:3000`
+
+## Team Composition
+
+- **5 Web Developers** working collaboratively
+- **Team Members**
+Verah Mokaya
+Newton Oduor
+Samuel Murimi
+Susan Gakii
+Liban Golo
+
+## Minimum Viable Product (MVP) Checklist
+
+- [x] Mobile web application accessible on all platforms
+- [x] REST API backend with Flask
+- [x] PostgreSQL database with migrations
+- [x] Customer authentication system
+- [x] Outlet owner dashboard
+- [x] Menu browsing with filtering (cuisine, price, category)
+- [x] Shopping cart functionality
+- [x] Order placement and tracking
+- [x] Table reservation system with availability checking
+- [x] Order confirmation and status updates
+- [x] Modular codebase architecture
+
