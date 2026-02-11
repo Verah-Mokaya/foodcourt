@@ -20,8 +20,8 @@ def get_all_outlets():
                 "id": outlet.id,
                 "outlet_name": outlet.outlet_name,
                 "cuisine_type": outlet.cuisine_type,
-                "description": outlet.description
-                "image_ur".getattr(outlet, "image_url", None)
+                "description": outlet.description,
+                "image_url": getattr(outlet, "image_url", None)
         
             }
             for outlet in outlets
@@ -281,6 +281,7 @@ def update_menu_item(item_id):
 def get_all_menu_items():
     items=MenuItem.query.all()
     return jsonify([
+        {
         "id": item.id,
         "item_name": item.description,
         "category": item.category,
@@ -289,4 +290,5 @@ def get_all_menu_items():
         "is_available": item.is_available,
         "preparation_time": item.preparation_time,
         "outlet_id": item.outlet_id
+        }
         ])

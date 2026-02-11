@@ -96,6 +96,61 @@ def customer_login():
         "message": "Login successful",
         "access_token": access_token
     }), 200
+
+# OUTLET REGISTRATION
+@auth_bp.route("/outlet/registration", methods=["POST"])
+def outlet_regsitration():
+    data = request.get_json() or {}
+
+    try:
+        # Basic required field check (avoid KeyError)
+        required_fields = ["owner_name", "email", "password", "outlet_name", "cuisine_type"]
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"error": f"{field} is required"}), 400
+
+        # Check if outlet already exists
+        if Outlet.query.filter_by(email=data["email"].lower().strip()).first():
+            return jsonify({"error": "Outlet already exists"}), 409
+
+        new_outlet = Outlet(
+            owner_name=data["owner_name"],
+            email=data["email"],
+            password=data["password"],  # hashing handled by model
+            outlet_name=data["outlet_name"],
+            cuisine_type=data["cuisine_type"],
+            description=data.get("description")
+        )
+
+        db.session.add(new_outlet)
+        db.session.commit()
+
+        access_token = create_access_token(
+            identity={
+                "id": new_outlet.id,
+                "role": "outlet"
+            }
+        )
+
+        response = jsonify({
+            "message": "Outlet registered successfully",
+            "outlet": new_outlet.to_dict()
+        })
+
+        set_access_cookies(response, access_token)
+
+        return response, 201
+
+    except ValueError as e:
+        # Catches model validation errors (email/name/password issues)
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Registration failed"}), 500
+
+
 # OUTLET LOGIN
 @auth_bp.route("/outlet/login", methods=["POST"])
 def outlet_login():
