@@ -98,3 +98,73 @@ foodcourt/
 - MenuItems → OrderItems (many-to-many through OrderItem)
 - FoodCourtTables → Reservations (one-to-many)
 
+## Getting Started
+
+### Prerequisites
+- Python 3.8.13
+- Node.js (v20+)
+- PostgreSQL (or SQLite for development)
+- pipenv
+
+### Backend Setup
+
+1. **Navigate to server directory**
+   ```bash
+   cd server
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pipenv install
+   ```
+
+3. **Activate virtual environment**
+   ```bash
+   pipenv shell
+   ```
+
+4. **Set up environment variables** (optional)
+   ```bash
+   export DATABASE_URL="postgresql://user:password@localhost/foodcourt"
+   export JWT_SECRET_KEY="your-secret-key"
+   ```
+
+5. **Initialize database**
+   ```bash
+   flask db init
+   flask db migrate -m "Initial migration"
+   flask db upgrade
+   ```
+
+6. **Seed database with sample data**
+   ```bash
+   python seed.py
+   ```
+
+7. **Run the development server**
+   ```bash
+   python run.py
+   # or
+   flask run
+   ```
+
+   Backend will be available at `http://localhost:5000`
+
+### Frontend Setup
+
+1. **Navigate to web directory**
+   ```bash
+   cd web
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+   Frontend will be available at `http://localhost:3000`
