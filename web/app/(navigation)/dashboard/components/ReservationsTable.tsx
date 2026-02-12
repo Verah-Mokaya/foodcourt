@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Users, Clock, CheckCircle, XCircle, RefreshCcw } from "lucide-react";
+import { Calendar, Users, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { fetcher } from "@/app/lib/api";
 import { Table } from "@/app/lib/types";
@@ -22,24 +22,22 @@ interface ReservationsTableProps {
 
 export default function ReservationsTable({ reservations }: ReservationsTableProps) {
     const [tables, setTables] = useState<Table[]>([]);
-    const [reassigningId, setReassigningId] = useState<number | null>(null);
 
     useEffect(() => {
         fetcher<Table[]>("/food_court_tables").then(setTables).catch(console.error);
     }, []);
 
-    const handleReassign = async (resId: number, newTableId: number) => {
+    const handleCompleteStatus = async (resId: number) => {
         try {
-            await fetcher(`/reservations/${resId}/reassign`, {
+            await fetcher(`/reservations/${resId}/status`, {
                 method: "PUT",
-                body: JSON.stringify({ new_table_id: newTableId })
+                body: JSON.stringify({ status: "completed" })
             });
-            alert("Table reassigned successfully");
-            setReassigningId(null);
-            window.location.reload(); // Quick refresh to update state
+            alert("Reservation completed");
+            window.location.reload();
         } catch (err: any) {
             console.error(err);
-            alert(err.message || "Failed to reassign table");
+            alert(err.message || "Failed to complete reservation");
         }
     };
 
@@ -71,20 +69,7 @@ export default function ReservationsTable({ reservations }: ReservationsTablePro
                             <tr key={res.id} className="hover:bg-gray-50/50 transition-colors">
                                 <td className="p-4 text-sm font-medium text-gray-900">ID #{res.customer_id}</td>
                                 <td className="p-4 text-sm text-gray-600">
-                                    {reassigningId === res.id ? (
-                                        <select
-                                            className="text-xs p-1 border rounded"
-                                            onChange={(e) => handleReassign(res.id, Number(e.target.value))}
-                                            defaultValue={res.table_id}
-                                        >
-                                            <option value={res.table_id}>Current (#{res.table_number || res.table_id})</option>
-                                            {tables.filter(t => t.id !== res.table_id).map(t => (
-                                                <option key={t.id} value={t.id}>Table {t.table_number} ({t.capacity} seats)</option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <span>Table {res.table_number || res.table_id}</span>
-                                    )}
+                                    <span>Table {res.table_number || res.table_id}</span>
                                 </td>
                                 <td className="p-4 text-sm text-gray-600">
                                     <div className="flex flex-col">
@@ -113,13 +98,15 @@ export default function ReservationsTable({ reservations }: ReservationsTablePro
                                     </span>
                                 </td>
                                 <td className="p-4">
-                                    <button
-                                        onClick={() => setReassigningId(reassigningId === res.id ? null : res.id)}
-                                        className="text-blue-600 hover:text-blue-800 text-xs font-bold flex items-center gap-1"
-                                    >
-                                        <RefreshCcw className="w-3 h-3" />
-                                        {reassigningId === res.id ? "Cancel" : "Reassign"}
-                                    </button>
+                                    {res.status !== 'completed' && res.status !== 'canceled' && (
+                                        <button
+                                            onClick={() => handleCompleteStatus(res.id)}
+                                            className="text-green-600 hover:text-green-800 text-xs font-bold flex items-center gap-1"
+                                        >
+                                            <CheckCircle className="w-3 h-3" />
+                                            Complete
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}

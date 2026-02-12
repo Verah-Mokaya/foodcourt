@@ -25,7 +25,15 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                 {pendingOrders.map(order => (
                     <div key={order.id} className="bg-white p-4 rounded-xl border-l-4 border-orange-500 shadow-sm">
                         <div className="flex justify-between items-start mb-2">
-                            <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                            <div className="flex flex-col">
+                                <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                                <div className="flex gap-2 mt-1">
+                                    <span className="text-[10px] bg-gray-100 px-2 py-0.5 rounded font-bold uppercase">{order.order_type}</span>
+                                    {order.order_type === 'dine-in' && (
+                                        <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold uppercase">Table {order.table_number}</span>
+                                    )}
+                                </div>
+                            </div>
                             <span className="font-bold">KSh {order.total_amount.toFixed(2)}</span>
                         </div>
                         <div className="space-y-1 mb-4">
@@ -56,7 +64,15 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                 {[...preparingOrders, ...readyOrders].map(order => (
                     <div key={order.id} className={`bg-white p-4 rounded-xl border-l-4 shadow-sm ${order.status === 'ready' ? 'border-green-500' : 'border-blue-500'}`}>
                         <div className="flex justify-between items-start mb-2">
-                            <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                            <div className="flex flex-col">
+                                <span className="font-mono text-sm text-gray-500">#{order.id}</span>
+                                <div className="flex gap-2 mt-1">
+                                    <span className="text-[10px] bg-gray-100 px-2 py-0.5 rounded font-bold uppercase">{order.order_type}</span>
+                                    {order.order_type === 'dine-in' && (
+                                        <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold uppercase">Table {order.table_number}</span>
+                                    )}
+                                </div>
+                            </div>
                             <span className={`text-xs font-bold px-2 py-1 rounded ${order.status === 'ready' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                                 {order.status.toUpperCase()}
                             </span>

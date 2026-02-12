@@ -163,13 +163,13 @@ export default function CustomerDashboardPage() {
                                                         <div className="flex items-center gap-2">
                                                             <p className="font-bold text-gray-900">{getStatusText(order.status)}</p>
                                                             {order.discount_amount && order.discount_amount > 0 && (
-                                                                <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">-${order.discount_amount.toFixed(2)}</span>
+                                                                <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">-KSh {order.discount_amount.toFixed(2)}</span>
                                                             )}
                                                         </div>
                                                         <p className="text-xs text-gray-500">Ordered {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                                                     </div>
                                                 </div>
-                                                <span className="font-bold text-gray-900">${order.total_amount.toFixed(2)}</span>
+                                                <span className="font-bold text-gray-900">KSh {order.total_amount.toFixed(2)}</span>
                                             </div>
 
                                             {order.status === 'ready' && (
@@ -193,7 +193,7 @@ export default function CustomerDashboardPage() {
                                                 {order.order_items.map((item, idx) => (
                                                     <div key={idx} className="flex justify-between text-sm text-gray-600">
                                                         <span>{item.quantity}x {item.item_name}</span>
-                                                        <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                                        <span>KSh {(item.price * item.quantity).toFixed(2)}</span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -228,7 +228,7 @@ export default function CustomerDashboardPage() {
                                                     <td className="px-6 py-4 text-sm text-gray-600">
                                                         {order.order_items.length} items
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm font-bold text-gray-900">${order.total_amount.toFixed(2)}</td>
+                                                    <td className="px-6 py-4 text-sm font-bold text-gray-900">KSh {order.total_amount.toFixed(2)}</td>
                                                     <td className="px-6 py-4">
                                                         <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${order.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                             {order.status}

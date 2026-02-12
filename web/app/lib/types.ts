@@ -53,6 +53,8 @@ export type Order = {
     outlet_id: number | string;
     total_amount: number;
     status: "pending" | "preparing" | "ready" | "completed" | "cancelled";
+    order_type?: string;
+    table_number?: string;
     time_till_ready?: number;
     created_at: string;
     order_items: OrderItem[];

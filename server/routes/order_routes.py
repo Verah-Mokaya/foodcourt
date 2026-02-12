@@ -220,6 +220,8 @@ def get_orders():
             "total_amount": float(o.total_amount),
             "discount_amount": float(o.discount_amount) if o.discount_amount else 0.0,
             "status": o.status,
+            "order_type": o.order_type,
+            "table_number": o.table_number,
             "time_till_ready": o.time_till_ready,
             "created_at": o.created_at.isoformat() if o.created_at else None,
             "order_items": [
