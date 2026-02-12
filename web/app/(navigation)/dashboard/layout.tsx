@@ -3,7 +3,7 @@
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { LayoutDashboard, Utensils, LogOut, Grid3X3 } from "lucide-react";
+import { LayoutDashboard, Utensils, LogOut, Grid3X3, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/app/lib/utils";
@@ -38,6 +38,10 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                         <LayoutDashboard className="h-5 w-5" />
                         <span className="hidden md:block">Orders</span>
                     </Link>
+                    <Link href="/dashboard/analytics" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/dashboard/analytics" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
+                        <TrendingUp className="h-5 w-5" />
+                        <span className="hidden md:block">Analytics</span>
+                    </Link>
                     <Link href="/dashboard/menu" className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors", pathname === "/dashboard/menu" ? "bg-orange-50 text-orange-700" : "text-gray-600 hover:bg-gray-100")}>
                         <Utensils className="h-5 w-5" />
                         <span className="hidden md:block">Menu</span>
@@ -60,7 +64,7 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                 <header className="flex justify-between items-center mb-6">
                     <div>
                         <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            {pathname === ROUTES.DASHBOARD ? "Live Orders" : pathname.includes("menu") ? "Menu Management" : "Reservations"}
+                            {pathname === ROUTES.DASHBOARD ? "Live Orders" : pathname.includes("menu") ? "Menu Management" : pathname.includes("analytics") ? "Analytics Overview" : "Reservations"}
                         </h1>
                         {user.outlet_name && (
                             <p className="text-sm text-gray-500 mt-1">

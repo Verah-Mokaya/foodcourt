@@ -12,6 +12,7 @@ from routes.menu_routes import menu_bp
 from routes.auth_routes import auth_bp
 from routes.reservation_routes import reservation_bp
 from routes.order_routes import order_bp
+from routes.analytics_routes import analytics_bp
 
 
 class Config:
@@ -55,6 +56,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(reservation_bp)
     app.register_blueprint(order_bp)
+    app.register_blueprint(analytics_bp)
 
     @app.route("/health")
     def health():

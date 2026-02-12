@@ -1,16 +1,16 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from server.extensions import db
+from extensions import db
 from models import Outlet, Order, OrderItem, MenuItem
 from sqlalchemy import func
 from datetime import datetime, timedelta
 
-analytics_bp = Blueprint('analytics', __name__)
+analytics_bp = Blueprint('analytics', __name__, url_prefix='/analytics')
 
 @analytics_bp.route('/overview', methods=['GET'])
 @jwt_required()
 def get_overview():
-    outlet_id = get_jwt_identity()
+    outlet_id = get_jwt_identity().get('id')
     
     # Get all orders for this outlet through menu items
     total_orders = db.session.query(func.count(func.distinct(Order.id)))\
@@ -53,7 +53,7 @@ def get_overview():
 @analytics_bp.route('/orders/status', methods=['GET'])
 @jwt_required()
 def get_order_status_breakdown():
-    outlet_id = get_jwt_identity()
+    outlet_id = get_jwt_identity().get('id')
     
     # Get order counts by status
     status_counts = db.session.query(Order.status, func.count(func.distinct(Order.id)))\
@@ -76,7 +76,7 @@ def get_order_status_breakdown():
 @analytics_bp.route('/popular-items', methods=['GET'])
 @jwt_required()
 def get_popular_items():
-    outlet_id = get_jwt_identity()
+    outlet_id = get_jwt_identity().get('id')
     
     # Get top 10 menu items by quantity sold
     popular_items = db.session.query(
@@ -106,7 +106,7 @@ def get_popular_items():
 @analytics_bp.route('/revenue/daily', methods=['GET'])
 @jwt_required()
 def get_daily_revenue():
-    outlet_id = get_jwt_identity()
+    outlet_id = get_jwt_identity().get('id')
     
     # Get revenue for last 7 days
     daily_revenue = []
@@ -133,7 +133,7 @@ def get_daily_revenue():
 @analytics_bp.route('/revenue/weekly', methods=['GET'])
 @jwt_required()
 def get_weekly_revenue():
-    outlet_id = get_jwt_identity()
+    outlet_id = get_jwt_identity().get('id')
     
     # Current week (last 7 days)
     current_week_start = datetime.utcnow() - timedelta(days=7)
