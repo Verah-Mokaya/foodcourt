@@ -68,3 +68,16 @@ export type Table = {
     is_available: boolean;
     outlet_id?: number | string;
 };
+
+export type Reservation = {
+    id: number | string;
+    customer_id: number | string;
+    outlet_id: number | string;
+    outlet_name: string;
+    table_number: number;
+    time_reserved_for: string;
+    number_of_guests: number;
+    status: "pending" | "confirmed" | "completed" | "canceled";
+    reservation_fee?: number;
+    is_fee_deducted?: boolean;
+};

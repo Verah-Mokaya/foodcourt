@@ -92,7 +92,7 @@ def create_order():
         ).first()
 
     if target_res:
-        discount_amount = Decimal("5.00")
+        discount_amount = Decimal("500.00")
         reservation_id = target_res.id
 
     # New fields

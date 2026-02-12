@@ -3,11 +3,11 @@
 import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
 import { fetcher, API_URL } from "@/app/lib/api";
-import { Minus, Plus, Trash2, ArrowLeft, Store, ArrowRight } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, Store, ArrowRight, Info } from "lucide-react";
 import Link from "next/link";
 import { ROUTES } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PaymentModal from "./components/PaymentModal";
 
 export default function CartPage() {
@@ -18,6 +18,33 @@ export default function CartPage() {
     const [isPaymentOpen, setIsPaymentOpen] = useState(false);
     const [orderType, setOrderType] = useState<"dine-in" | "takeaway">("dine-in");
     const [tableNumber, setTableNumber] = useState("");
+    const [reservations, setReservations] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (!user) return;
+        const loadReservations = async () => {
+            try {
+                const data = await fetcher<any>("/reservations/my");
+                setReservations(data.reservations || []);
+            } catch (err) {
+                console.error("Failed to load reservations", err);
+            }
+        };
+        loadReservations();
+    }, [user]);
+
+    const activeOutletsInCart = Array.from(new Set(items.map(i => String(i.outletId))));
+
+    // Find matching confirmed reservations
+    const applicableReservations = reservations.filter(res =>
+        res.status === "confirmed" &&
+        !res.is_fee_deducted &&
+        activeOutletsInCart.includes(String(res.outlet_id))
+    );
+
+    const discountAmount = applicableReservations.length * 500;
+    const finalTotal = Math.max(0, total - discountAmount);
+
 
     const handleCheckout = async (paymentMethod: string, paymentDetails: any) => {
         if (!user) return;
@@ -41,6 +68,9 @@ export default function CartPage() {
             const promises = Object.entries(itemsByOutlet).map(async ([outletId, outletItems]) => {
                 const outletTotal = outletItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
+                // Find if there's an applicable reservation for THIS specific outlet
+                const outletRes = applicableReservations.find(res => String(res.outlet_id) === outletId);
+
                 const orderData = {
                     customer_id: user.id,
                     outlet_id: Number(outletId),
@@ -49,6 +79,7 @@ export default function CartPage() {
                     created_at: new Date().toISOString(),
                     order_type: orderType,
                     table_number: tableNumber,
+                    reservation_id: outletRes?.id || null,
                     order_items: outletItems.map(i => ({
                         menu_item_id: i.menuItemId,
                         quantity: i.quantity,
@@ -59,6 +90,7 @@ export default function CartPage() {
                         ...paymentDetails
                     }
                 };
+
 
                 return fetcher("/orders", {
                     method: "POST",
@@ -203,23 +235,39 @@ export default function CartPage() {
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center mb-4">
-                    <span className="text-gray-500">Total</span>
-                    <span className="text-2xl font-bold text-gray-900">KSh {total.toFixed(2)}</span>
+                <div className="space-y-2 mb-4">
+                    <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-500">Subtotal</span>
+                        <span className="text-gray-900 font-medium">KSh {total.toFixed(2)}</span>
+                    </div>
+                    {discountAmount > 0 && (
+                        <div className="flex justify-between items-center text-sm animate-in fade-in slide-in-from-right-1">
+                            <span className="text-green-600 font-medium flex items-center gap-1">
+                                <Info className="w-3 h-3" />
+                                Reservation Deposit
+                            </span>
+                            <span className="text-green-600 font-bold">-KSh {discountAmount.toFixed(2)}</span>
+                        </div>
+                    )}
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                        <span className="text-gray-900 font-bold">Payable Now</span>
+                        <span className="text-2xl font-black text-orange-600">KSh {finalTotal.toFixed(2)}</span>
+                    </div>
                 </div>
+
                 <button
                     onClick={() => setIsPaymentOpen(true)}
                     disabled={isSubmitting}
-                    className="w-full py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-4 bg-orange-600 text-white font-black rounded-2xl shadow-lg shadow-orange-900/20 hover:bg-orange-500 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                    Proceed to Checkout
+                    Proceed to Payment
                 </button>
             </div>
 
             <PaymentModal
                 isOpen={isPaymentOpen}
                 onClose={() => setIsPaymentOpen(false)}
-                total={total}
+                total={finalTotal}
                 onConfirm={handleCheckout}
             />
         </div>

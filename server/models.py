@@ -165,7 +165,7 @@ class Reservation(db.Model, SerializerMixin):
     status = db.Column(db.String(20), nullable=False, default="pending")
     is_reassigned = db.Column(db.Boolean, default=False)
     previous_table_number = db.Column(db.Integer)
-    reservation_fee = db.Column(db.Numeric(10, 2), default=5.00)
+    reservation_fee = db.Column(db.Numeric(10, 2), default=500.00)
     is_fee_deducted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     

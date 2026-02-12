@@ -246,7 +246,7 @@ function PaymentContent() {
                                     <p className="text-3xl font-black text-gray-900">KSh 500</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-1 rounded-full font-bold uppercase">Non-Refundable</span>
+                                    <span className="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold uppercase">Refundable (Deposit)</span>
                                 </div>
                             </div>
                         </div>
