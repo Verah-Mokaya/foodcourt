@@ -70,6 +70,7 @@ class Outlet(db.Model, SerializerMixin):
     outlet_name = db.Column(db.String(100), nullable=False)
     cuisine_type = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text)
+    image_url = db.Column(db.String(255))
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
