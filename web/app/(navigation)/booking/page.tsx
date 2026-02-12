@@ -144,7 +144,7 @@ export default function BookingPage() {
                                                             type="button"
                                                             className="w-full p-4 text-left hover:bg-orange-50 transition-colors flex flex-col items-start gap-1"
                                                             onClick={() => {
-                                                                setSelectedOutlet(outlet.id);
+                                                                setSelectedOutlet(Number(outlet.id));
                                                                 setSearchQuery(outlet.outlet_name);
                                                                 setShowSuggestions(false);
                                                             }}
@@ -237,18 +237,18 @@ export default function BookingPage() {
 
                     {/* Right Column: Summary & Confirmation */}
                     <div className="space-y-6">
-                        <div className="bg-gray-900 text-white p-6 rounded-3xl shadow-xl space-y-6 sticky top-24">
-                            <h3 className="font-bold text-xl text-white">Booking Summary</h3>
+                        <div className="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 space-y-6 sticky top-24">
+                            <h3 className="font-bold text-xl text-gray-900">Booking Summary</h3>
 
                             <div className="space-y-4">
-                                <div className="flex justify-between items-center pb-4 border-b border-gray-800">
-                                    <span className="text-gray-300 text-sm">Reservation Fee</span>
-                                    <span className="font-bold text-orange-400 text-lg">KSh 500</span>
+                                <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+                                    <span className="text-gray-500 text-sm">Reservation Fee</span>
+                                    <span className="font-bold text-orange-600 text-lg">KSh 500</span>
                                 </div>
 
-                                <div className="bg-gray-800/50 p-4 rounded-2xl space-y-2">
-                                    <div className="flex items-center gap-2 text-xs text-gray-300">
-                                        <Info className="w-3 h-3 text-orange-400" />
+                                <div className="bg-gray-50 p-4 rounded-2xl space-y-2">
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                        <Info className="w-3 h-3 text-orange-500" />
                                         <span>Fee Policy</span>
                                     </div>
                                     <p className="text-[10px] text-gray-400 leading-relaxed">
@@ -257,11 +257,11 @@ export default function BookingPage() {
                                 </div>
 
                                 <div className="pt-4 space-y-3">
-                                    <div className="flex items-center gap-3 text-sm">
+                                    <div className="flex items-center gap-3 text-sm text-gray-600">
                                         <CheckCircle2 className="w-4 h-4 text-green-500" />
                                         <span>Instant Confirmation</span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-sm">
+                                    <div className="flex items-center gap-3 text-sm text-gray-600">
                                         <CheckCircle2 className="w-4 h-4 text-green-500" />
                                         <span>Deductible Amount</span>
                                     </div>

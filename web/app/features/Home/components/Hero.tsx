@@ -60,7 +60,7 @@ export default function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                    <h1 className="text-5xl md:text-7xl font-bold text-gray-300 mb-6">
+                    <h1 className="text-5xl md:text-7xl font-bold text-gray-400 mb-6">
                         {slides[current].title}
                     </h1>
                     <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto">

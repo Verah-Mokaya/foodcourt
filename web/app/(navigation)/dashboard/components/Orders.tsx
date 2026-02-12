@@ -38,7 +38,7 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         </div>
                         <div className="space-y-1 mb-4">
                             {(order.order_items || []).map((item, i) => (
-                                <div key={i} className="text-sm flex justify-between">
+                                <div key={i} className="text-sm flex justify-between font-medium text-gray-700">
                                     <span>{item.quantity}x {item.item_name || `Item #${item.menu_item_id}`}</span>
                                 </div>
                             ))}
@@ -79,7 +79,7 @@ export default function Orders({ orders, updateStatus }: OrdersProps) {
                         </div>
                         <div className="space-y-1 mb-4">
                             {(order.order_items || []).map((item, i) => (
-                                <div key={i} className="text-sm">
+                                <div key={i} className="text-sm font-medium text-gray-700">
                                     <span>{item.quantity}x {item.item_name || `Item #${item.menu_item_id}`}</span>
                                 </div>
                             ))}

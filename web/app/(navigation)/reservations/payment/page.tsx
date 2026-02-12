@@ -195,58 +195,58 @@ function PaymentContent() {
 
                     {/* Right: Booking Summary Details */}
                     <div className="space-y-6 order-1 md:order-2">
-                        <div className="bg-gray-900 text-white p-8 rounded-3xl shadow-xl space-y-8">
+                        <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
                             <div>
-                                <h3 className="font-bold text-lg text-gray-300 uppercase tracking-wider mb-6">Reservation Details</h3>
+                                <h3 className="font-bold text-lg text-gray-900 uppercase tracking-wider mb-6">Reservation Details</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="bg-gray-800 p-3 rounded-2xl">
-                                            <MapPin className="w-5 h-5 text-orange-400" />
+                                        <div className="bg-gray-50 p-3 rounded-2xl">
+                                            <MapPin className="w-5 h-5 text-orange-600" />
                                         </div>
                                         <div>
                                             <p className="text-xs text-gray-500 font-bold uppercase">Outlet</p>
-                                            <p className="font-bold">{reservation.outlet_name}</p>
+                                            <p className="font-bold text-gray-900">{reservation.outlet_name}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <div className="bg-gray-800 p-3 rounded-2xl">
-                                            <Info className="w-5 h-5 text-orange-400" />
+                                        <div className="bg-gray-50 p-3 rounded-2xl">
+                                            <Info className="w-5 h-5 text-orange-600" />
                                         </div>
                                         <div>
                                             <p className="text-xs text-gray-500 font-bold uppercase">Table</p>
-                                            <p className="font-bold">Table #{reservation.table_number}</p>
+                                            <p className="font-bold text-gray-900">Table #{reservation.table_number}</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="bg-gray-800 p-3 rounded-2xl">
-                                                <Calendar className="w-5 h-5 text-orange-400" />
+                                            <div className="bg-gray-50 p-3 rounded-2xl">
+                                                <Calendar className="w-5 h-5 text-orange-600" />
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 font-bold uppercase">Date</p>
-                                                <p className="font-bold">{new Date(reservation.time_reserved_for).toLocaleDateString()}</p>
+                                                <p className="font-bold text-gray-900">{new Date(reservation.time_reserved_for).toLocaleDateString()}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <div className="bg-gray-800 p-3 rounded-2xl">
-                                                <Users className="w-5 h-5 text-orange-400" />
+                                            <div className="bg-gray-50 p-3 rounded-2xl">
+                                                <Users className="w-5 h-5 text-orange-600" />
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 font-bold uppercase">Guests</p>
-                                                <p className="font-bold">{reservation.number_of_guests}</p>
+                                                <p className="font-bold text-gray-900">{reservation.number_of_guests}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="pt-6 border-t border-gray-800 flex justify-between items-end">
+                            <div className="pt-6 border-t border-gray-100 flex justify-between items-end">
                                 <div>
                                     <p className="text-gray-500 text-xs font-bold uppercase mb-1">Total Due Now</p>
-                                    <p className="text-3xl font-black text-white">KSh 500</p>
+                                    <p className="text-3xl font-black text-gray-900">KSh 500</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-[10px] bg-orange-500/20 text-orange-500 px-2 py-1 rounded-full font-bold uppercase">Non-Refundable</span>
+                                    <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-1 rounded-full font-bold uppercase">Non-Refundable</span>
                                 </div>
                             </div>
                         </div>

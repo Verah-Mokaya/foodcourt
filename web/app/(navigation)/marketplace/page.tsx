@@ -209,12 +209,12 @@ export default function MarketplacePage() {
 
             {/* Floating Cart Button (Mobile) */}
             {itemCount > 0 && (
-                <Link href={ROUTES.CART} className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900 text-white p-4 rounded-xl shadow-xl flex justify-between items-center z-40 animate-in slide-in-from-bottom-5 hover:bg-gray-800 transition-colors">
+                <Link href={ROUTES.CART} className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-white text-gray-900 p-4 rounded-xl shadow-2xl border border-gray-100 flex justify-between items-center z-40 animate-in slide-in-from-bottom-5 hover:bg-gray-50 transition-colors">
                     <div className="flex items-center gap-3">
-                        <span className="bg-white/20 px-3 py-1 rounded-lg text-sm font-bold">{itemCount}</span>
+                        <span className="bg-orange-600 text-white px-3 py-1 rounded-lg text-sm font-bold">{itemCount}</span>
                         <span className="font-bold">View Order</span>
                     </div>
-                    <span className="font-bold text-lg">KSh {total.toFixed(2)}</span>
+                    <span className="font-bold text-lg text-orange-600 font-mono">KSh {total.toFixed(2)}</span>
                 </Link>
             )}
 
