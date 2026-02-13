@@ -334,6 +334,14 @@ API base URL is configured in `lib/api.ts` and can be customized via environment
 4. Push to the branch: `git push origin feature/your-feature`
 5. Open a pull request for review
 
+## Development Team
+
+1. Verah Mokaya
+2. Susan Gakii
+3. Newton Oduor
+4. Samuel Muchiri
+5. Liban Golo
+
 ## License
 
 This project is private and proprietary. All rights reserved by Verah-Mokaya/foodcourt.
