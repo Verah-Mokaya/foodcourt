@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "cd web && npm run dev",
+    "build": "cd web && npm run build",
+    "start": "cd web && npm start"
+  },
   "dependencies": {
     "framer-motion": "^12.29.2",
     "lucide-react": "^0.563.0",
