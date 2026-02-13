@@ -28,22 +28,23 @@ const marqueeItems = [...featuredItems, ...featuredItems, ...featuredItems];
 
 export default function BestSellers() {
     return (
-        <section className="py-20 bg-white overflow-hidden">
-            <div className="container mx-auto px-6 mb-12">
-                <span className="text-orange-600 font-bold uppercase tracking-wider text-sm">Customer Favorites</span>
-                <h2 className="text-3xl md:text-4xl font-bold mt-2 text-gray-900">Best Selling African Dishes</h2>
+        <section className="py-24 bg-gray-50">
+            <div className="container mx-auto px-6 mb-16">
+                <span className="text-blue-600 font-semibold uppercase tracking-widest text-xs">Customer Favorites</span>
+                <h2 className="text-4xl md:text-5xl font-bold mt-3 text-gray-900">Best Selling African Dishes</h2>
+                <p className="text-gray-600 mt-4 max-w-2xl leading-relaxed">Discover our most popular dishes loved by thousands of customers</p>
             </div>
 
             <div className="relative w-full">
-                <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10" />
-                <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10" />
+                <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gray-50 to-transparent z-10" />
+                <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-gray-50 to-transparent z-10" />
 
                 <motion.div
-                    className="flex gap-8 w-max"
+                    className="flex gap-6 w-max"
                     animate={{ x: [0, -1000] }}
                     transition={{
                         repeat: Infinity,
-                        duration: 20,
+                        duration: 25,
                         ease: "linear"
                     }}
                 >
@@ -51,27 +52,29 @@ export default function BestSellers() {
                         <Link
                             href={ROUTES.MARKETPLACE}
                             key={`${item.id}-${idx}`}
-                            className="group min-w-[300px] bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
+                            className="group min-w-[320px] bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg hover:border-gray-300 transition-all duration-300"
                         >
-                            <div className="h-48 overflow-hidden">
+                            <div className="h-56 overflow-hidden bg-gray-100">
                                 <img
                                     src={item.image}
                                     alt={item.name}
-                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                                 />
                             </div>
-                            <div className="p-6">
-                                <div className="flex justify-between items-start mb-2">
-                                    <div>
+                            <div className="p-5">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div className="flex-1">
                                         <h3 className="font-bold text-lg text-gray-900 line-clamp-1">{item.name}</h3>
-                                        <p className="text-sm text-gray-500">{item.outletName}</p>
+                                        <p className="text-sm text-gray-500 mt-1">{item.outletName}</p>
                                     </div>
-                                    <span className="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded hidden">
+                                </div>
+                                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                                    <span className="font-bold text-lg text-gray-900">
                                         ${item.price}
                                     </span>
-                                </div>
-                                <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-orange-600 group-hover:gap-3 transition-all">
-                                    Order Now <ArrowRight className="w-4 h-4" />
+                                    <div className="flex items-center gap-1 text-sm font-semibold text-blue-600 group-hover:gap-2 transition-all">
+                                        Order <ArrowRight className="w-4 h-4" />
+                                    </div>
                                 </div>
                             </div>
                         </Link>

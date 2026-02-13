@@ -6,6 +6,8 @@ import { Order } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 import DashboardHome from "./components/DashboardHome";
 import Orders from "./components/Orders";
+import { LayoutDashboard } from "lucide-react";
+
 export default function OwnerDashboardPage() {
     const { user } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
@@ -37,14 +39,22 @@ export default function OwnerDashboardPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: newStatus })
             });
-            // here is the Optimistic update
+            // Optimistic update
             setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } as Order : o));
         } catch (e) {
             console.error("Failed to update status", e);
             alert("Failed to update status");
         }
     };
-    if (isLoading) return <div className="p-8">Loading dashboard...</div>;
+
+    if (isLoading) return (
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+                <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"></div>
+                <p className="text-gray-600 font-medium">Loading dashboard...</p>
+            </div>
+        </div>
+    );
 
     const stats = {
         pending: orders.filter(o => o.status === "pending").length,
@@ -53,10 +63,29 @@ export default function OwnerDashboardPage() {
     };
 
     return (
-        <div className="space-y-8 p-6">
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <DashboardHome stats={stats} />
-            <Orders orders={orders} updateStatus={updateStatus} />
+        <div className="min-h-screen bg-gray-50">
+            <div className="container mx-auto px-4 py-8 md:py-12">
+                {/* Header */}
+                <div className="mb-10">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-blue-600 p-3 rounded-lg">
+                            <LayoutDashboard className="w-6 h-6 text-white" />
+                        </div>
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Order Dashboard</h1>
+                    </div>
+                    <p className="text-gray-600 text-lg">Manage and track all orders in real-time</p>
+                </div>
+
+                {/* Stats Cards */}
+                <div className="mb-10">
+                    <DashboardHome stats={stats} />
+                </div>
+
+                {/* Orders Section */}
+                <div>
+                    <Orders orders={orders} updateStatus={updateStatus} />
+                </div>
+            </div>
         </div>
     );
 }

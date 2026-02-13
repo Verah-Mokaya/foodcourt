@@ -79,26 +79,25 @@ export default function MarketplacePage() {
         return outlets.find(o => String(o.id) === forcedOutletId)?.outlet_name;
     }, [outlets, forcedOutletId]);
 
-    if (isLoading) return <div className="p-8 text-center">Loading menu...</div>;
+    if (isLoading) return <div className="p-8 text-center text-gray-600">Loading menu...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-24">
+        <div className="min-h-screen bg-white pb-24">
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-20 px-4 py-4 md:hidden">
-                <div className="flex gap-4">
+            <div className="bg-white border-b border-gray-200 sticky top-0 z-20 px-4 py-3 md:hidden">
+                <div className="flex gap-3">
                     <div className="flex-1 relative">
-                        {/* Mobile Search - syncing with main search state */}
                         <input
                             type="text"
                             placeholder="Search food..."
-                            className="w-full pl-4 pr-4 py-2 bg-gray-100 rounded-lg text-sm"
+                            className="w-full pl-3 pr-3 py-2 bg-gray-100 rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
                     <button
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        className="p-2 bg-gray-100 rounded-lg text-gray-600"
+                        className="p-2 bg-gray-100 rounded-lg text-gray-600 hover:bg-gray-200 transition-colors"
                     >
                         <Filter className="h-5 w-5" />
                     </button>
@@ -124,12 +123,14 @@ export default function MarketplacePage() {
                     </div>
                 </div>
 
-                {/* Mobile Filter Drawer (Simplified) */}
+                {/* Mobile Filter Drawer */}
                 {isSidebarOpen && (
-                    <div className="fixed inset-0 z-50 bg-white p-4 md:hidden animate-in slide-in-from-right">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold">Filters</h2>
-                            <button onClick={() => setIsSidebarOpen(false)} className="text-gray-500">Done</button>
+                    <div className="fixed inset-0 z-50 bg-white p-4 md:hidden overflow-y-auto">
+                        <div className="flex justify-between items-center mb-6 sticky top-0 bg-white pb-4 border-b border-gray-200">
+                            <h2 className="text-lg font-bold text-gray-900">Filters</h2>
+                            <button onClick={() => setIsSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
+                                <Filter className="w-6 h-6" />
+                            </button>
                         </div>
                         <FilterSidebar
                             categories={categories}
@@ -148,12 +149,12 @@ export default function MarketplacePage() {
 
                 {/* Content */}
                 <div className="flex-1">
-                    <div className="mb-6">
-                        <h1 className="text-2xl font-bold text-gray-900">
-                            {activeOutletName ? `Menu for ${activeOutletName}` : "What do you crave?"}
+                    <div className="mb-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                            {activeOutletName ? `${activeOutletName}'s Menu` : "What are you craving?"}
                         </h1>
-                        <p className="text-gray-500 text-sm">
-                            {activeOutletName ? `Showing curated items from ${activeOutletName}` : "Find your favorite food from our outlets."}
+                        <p className="text-gray-600 text-lg mt-2">
+                            {activeOutletName ? `Browse delicious items from ${activeOutletName}` : "Find your favorite food from our partner outlets."}
                         </p>
                     </div>
 
@@ -170,10 +171,10 @@ export default function MarketplacePage() {
 
                     {filteredItems.length === 0 && (
                         <div className="text-center py-20">
-                            <p className="text-gray-500">No items found matching your criteria.</p>
+                            <p className="text-gray-600 text-lg mb-6">No items found matching your criteria.</p>
                             <button
-                                onClick={() => { setSearch(""); setSelectedCategory(null); setSelectedPrice(null); }}
-                                className="mt-4 text-orange-600 font-bold hover:underline"
+                                onClick={() => { setSearch(""); setSelectedCategory(null); setSelectedPrice(null); setSelectedCuisine(null); }}
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 text-blue-700 font-semibold rounded-lg hover:bg-blue-100 transition-colors"
                             >
                                 Clear Filters
                             </button>
@@ -184,10 +185,10 @@ export default function MarketplacePage() {
 
             {/* Floating Cart Button (Mobile) */}
             {itemCount > 0 && (
-                <Link href={ROUTES.CART} className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900 text-white p-4 rounded-xl shadow-xl flex justify-between items-center z-40 animate-in slide-in-from-bottom-5 hover:bg-gray-800 transition-colors">
+                <Link href={ROUTES.CART} className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:w-96 bg-gray-900 text-white p-4 rounded-lg shadow-xl flex justify-between items-center z-40 animate-in slide-in-from-bottom-5 hover:bg-gray-800 transition-colors">
                     <div className="flex items-center gap-3">
-                        <span className="bg-white/20 px-3 py-1 rounded-lg text-sm font-bold">{itemCount}</span>
-                        <span className="font-bold">View Order</span>
+                        <span className="bg-white/20 px-3 py-1 rounded text-sm font-bold">{itemCount}</span>
+                        <span className="font-semibold">View Order</span>
                     </div>
                     <span className="font-bold text-lg">${total.toFixed(2)}</span>
                 </Link>

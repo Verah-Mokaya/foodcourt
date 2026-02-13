@@ -31,16 +31,16 @@ export default function FilterSidebar({
     className
 }: FilterSidebarProps) {
     return (
-        <aside className={`w-full md:w-64 space-y-8 ${className}`}>
+        <aside className={`w-full md:w-64 space-y-6 ${className}`}>
             {/* Search */}
             <div>
-                <h3 className="font-bold text-gray-900 mb-3">Search</h3>
+                <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Search</h3>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
                         type="text"
                         placeholder="Search food..."
-                        className="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                        className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -49,12 +49,12 @@ export default function FilterSidebar({
 
             {/* Categories */}
             <div>
-                <div className="flex justify-between items-center mb-3">
-                    <h3 className="font-bold text-gray-900">Categories</h3>
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">Categories</h3>
                     {selectedCategory && (
                         <button
                             onClick={() => setSelectedCategory(null)}
-                            className="text-xs text-orange-600 font-medium hover:underline"
+                            className="text-xs text-blue-600 font-semibold hover:text-blue-700 transition-colors"
                         >
                             Clear
                         </button>
@@ -63,9 +63,9 @@ export default function FilterSidebar({
                 <div className="space-y-2">
                     <button
                         onClick={() => setSelectedCategory(null)}
-                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCategory
-                            ? "bg-orange-50 text-orange-700"
-                            : "text-gray-600 hover:bg-gray-50"
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all ${!selectedCategory
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
+                            : "text-gray-600 hover:bg-gray-50 border border-transparent"
                             }`}
                     >
                         All Categories
@@ -74,9 +74,9 @@ export default function FilterSidebar({
                         <button
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
-                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCategory === cat
-                                ? "bg-orange-50 text-orange-700"
-                                : "text-gray-600 hover:bg-gray-50"
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all border ${selectedCategory === cat
+                                ? "bg-blue-50 text-blue-700 border-blue-200"
+                                : "text-gray-600 hover:bg-gray-50 border-transparent"
                                 }`}
                         >
                             {cat}
@@ -85,14 +85,14 @@ export default function FilterSidebar({
                 </div>
             </div>
 
-                        {/* Cuisines */}
+            {/* Cuisines */}
             <div>
-                <div className="flex justify-between items-center mb-3">
-                    <h3 className="font-bold text-gray-900">Cuisine</h3>
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-gray-900 text-sm uppercase tracking-wider">Cuisine</h3>
                     {selectedCuisine && (
                         <button
                             onClick={() => setSelectedCuisine(null)}
-                            className="text-xs text-orange-600 font-medium hover:underline"
+                            className="text-xs text-blue-600 font-semibold hover:text-blue-700 transition-colors"
                         >
                             Clear
                         </button>
@@ -101,9 +101,9 @@ export default function FilterSidebar({
                 <div className="space-y-2">
                     <button
                         onClick={() => setSelectedCuisine(null)}
-                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCuisine
-                            ? "bg-orange-50 text-orange-700"
-                            : "text-gray-600 hover:bg-gray-50"
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all border ${!selectedCuisine
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "text-gray-600 hover:bg-gray-50 border-transparent"
                             }`}
                     >
                         All Cuisines
@@ -112,9 +112,9 @@ export default function FilterSidebar({
                         <button
                             key={cuisine}
                             onClick={() => setSelectedCuisine(cuisine)}
-                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCuisine === cuisine
-                                ? "bg-orange-50 text-orange-700"
-                                : "text-gray-600 hover:bg-gray-50"
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all border ${selectedCuisine === cuisine
+                                ? "bg-blue-50 text-blue-700 border-blue-200"
+                                : "text-gray-600 hover:bg-gray-50 border-transparent"
                                 }`}
                         >
                             {cuisine}
@@ -123,19 +123,19 @@ export default function FilterSidebar({
                 </div>
             </div>
 
-            {/* Price Range (Visual Only for now) */}
+            {/* Price Range */}
             <div>
-                <h3 className="font-bold text-gray-900 mb-3">Price Range</h3>
+                <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Price Range</h3>
                 <div className="flex gap-2">
                     {["$", "$$", "$$$"].map((price) => (
                         <button
                             key={price}
                             onClick={() => setSelectedPrice(selectedPrice === price ? null : price)}
                             className={cn(
-                                "flex-1 py-1 border rounded-lg text-sm font-medium transition-colors",
+                                "flex-1 py-2 border rounded-lg text-sm font-medium transition-all",
                                 selectedPrice === price
-                                    ? "bg-orange-600 text-white border-orange-600"
-                                    : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                                    ? "bg-blue-600 text-white border-blue-600"
+                                    : "border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
                             )}
                         >
                             {price}

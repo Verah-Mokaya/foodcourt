@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "framer-motion": "^12.29.2",
-    "lucide-react": "^0.563.0"
+    "lucide-react": "^0.563.0",
+    "react": "^19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
